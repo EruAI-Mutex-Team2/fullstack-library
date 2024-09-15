@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using libraryApp.backend.Entity;
+using libraryApp.backend.Repository.Abstract;
+using libraryApp.backend.Repository.Concrete;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<libraryDBContext>(options =>
@@ -14,6 +16,10 @@ builder.Services.AddDbContext<libraryDBContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IuserRepository, EfuserRepository>();
+builder.Services.AddScoped<ImesajRepository, EfmesajRepository>();
+builder.Services.AddScoped<IpuanRepository, EfpuanRepository>();
 
 var app = builder.Build();
 
