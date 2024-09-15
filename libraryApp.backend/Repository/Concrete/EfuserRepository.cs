@@ -8,7 +8,7 @@ namespace libraryApp.backend.Repository.Concrete
     {
         public IQueryable<user> users => _context.users;
         private libraryDBContext _context;
-        public EfuserRepository()
+        public EfuserRepository(libraryDBContext context)
         {
             _context = context;
         }

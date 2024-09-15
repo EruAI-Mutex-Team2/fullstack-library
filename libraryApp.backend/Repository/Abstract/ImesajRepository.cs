@@ -8,6 +8,6 @@ namespace libraryApp.backend.Repository.Abstract
         Task<mesaj> GetmesajByIdAsync(int id);
         Task AddmesajAsync(mesaj entity);
         Task UpdatemesajAsync(mesaj entity);
-        Task DeletemesajAsync(int id);
+        Task DeletemesajAsync(mesaj mesaj);
     }
 }
