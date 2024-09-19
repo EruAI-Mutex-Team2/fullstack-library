@@ -1,13 +1,14 @@
 ﻿using libraryApp.backend.Entity;
+using libraryApp.backend.Repository.Abstract;
 using Microsoft.EntityFrameworkCore;
 
 namespace libraryApp.backend.Repository.Concrete
 {
-    public class EfmesajRepository
+    public class EfmesajRepository : ImesajRepository
     {
         public IQueryable<mesaj> mesajlar => _context.mesajlar;
         private libraryDBContext _context;
-        public EfmesajRepository()
+        public EfmesajRepository(libraryDBContext context)
         {
             _context = context;
         }

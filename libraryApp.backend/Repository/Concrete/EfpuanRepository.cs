@@ -8,7 +8,7 @@ namespace libraryApp.backend.Repository.Concrete
     {
         public IQueryable<puan> puanlar => _context.puanlar;
         private libraryDBContext _context;
-        public EfpuanRepository()
+        public EfpuanRepository(libraryDBContext context)
         {
             _context = context;
         }

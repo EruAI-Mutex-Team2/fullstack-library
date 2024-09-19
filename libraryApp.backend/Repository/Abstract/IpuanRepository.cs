@@ -8,6 +8,6 @@ namespace libraryApp.backend.Repository.Abstract
         Task<puan> GetpuanByIdAsync(int id);
         Task AddpuanAsync(puan entity);
         Task UpdatepuanAsync(puan entity);
-        Task DeletepuanAsync(int id);
+        Task DeletepuanAsync(puan puan);
     }
 }
