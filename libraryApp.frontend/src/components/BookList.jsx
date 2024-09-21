@@ -1,20 +1,32 @@
 import React from 'react';
-
 export default function BookList() {
   return (
-    <div>
-       <div className='pl-6 pr-6 pt-6'>
+<div>
       <div className="flex justify-between items-center bg-purple-500 text-white p-4 rounded-md shadow-lg mb-6 ">
-        <h1 className="text-3xl font-bold">Book List</h1>
+        <h1 className="text-3xl font-bold">Books List</h1>
         <div className="flex">
+        <a href="/logout" className="hover:text-gray-300">Logout</a>
+
+        </div>
+      </div>
+      
+       <div className='pl-6 pr-6 pt-2'>
+      <div className="flex justify-between items-center bg-purple-500 text-white p-4 rounded-md shadow-lg mb-6 ">
+        <div className="flex">
+
           <input
             id="book-search"
-            className="p-2 border border-gray-300 rounded-lg shadow-sm"
+            className="pr-10 pl-10 border text-black border-gray-300 rounded-lg shadow-sm"
             type="text"
-            placeholder="Search for a book..."
+            placeholder="Book Name..."
           />
+
           <button className="bg-purple-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
             Search
+          </button>
+
+          <button className="bg-purple-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
+            view borrow books
           </button>
         </div>
       </div>
@@ -37,11 +49,11 @@ export default function BookList() {
 
 
             <tr className="border-b">
-              <td className="p-6">Example Book</td>
+            <td className="p-6">Example Book</td>
               <td className="p-6">01/01/2024</td>
               <td className="p-6">Yes</td>
               <td className="p-6">
-                <button className="bg-blue-500 text-white py-1 px-2 rounded-lg mr-2">
+              <button className="bg-blue-500 text-white py-1 px-2 rounded-lg mr-2">
                 Preview
                 </button>
                 <button className="bg-green-500 text-white py-1 px-2 rounded-lg">
