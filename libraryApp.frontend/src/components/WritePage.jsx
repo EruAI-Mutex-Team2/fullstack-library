@@ -1,21 +1,20 @@
 import React, { useState } from "react";
 
 const BookEditor = () => {
-  const [pageContents, setPageContents] = useState([""]); // Dizi ile içerik saklama
+  const [pageContents, setPageContents] = useState([""]); 
   const [currentPage, setCurrentPage] = useState(0);
 
   const handleContentChange = (e) => {
     const newContents = [...pageContents];
-    newContents[currentPage] = e.target.value; // Geçerli sayfanın içeriğini güncelle
+    newContents[currentPage] = e.target.value;
     setPageContents(newContents);
   };
 
   const handleNextPage = () => {
-    // Geçerli sayfanın içeriğini güncellemeden geçiş yapmamak için kontrol
     if (currentPage < pageContents.length - 1) {
       setCurrentPage(currentPage + 1);
     } else {
-      setPageContents([...pageContents, ""]); // Yeni sayfa ekle
+      setPageContents([...pageContents, ""]);
       setCurrentPage(currentPage + 1);
     }
   };
