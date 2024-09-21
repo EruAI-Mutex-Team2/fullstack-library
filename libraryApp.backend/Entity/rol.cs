@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity;
 namespace libraryApp.backend.Entity;
 public class rol
 {
