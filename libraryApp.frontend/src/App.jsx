@@ -1,11 +1,12 @@
 import React from 'react';
 import MessagePage from './components/messagePage';
+
 function App() {
   return (
     <div>
       <MessagePage />
-    </div>
+    </div> // Kapanış div etiketi
   );
 }
 
-export default App;
+export default App; // Kapanış parantezi
