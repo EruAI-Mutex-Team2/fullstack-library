@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 
 const MessagePage = () => {
-  const [receiver, setReceiver] = useState('');//string olcak demek
+  const [receiver, setReceiver] = useState('');
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);//dizi olcak demek
-  const [viewInbox, setViewInbox] = useState(false);//boolean ifade olcak
+  const [messages, setMessages] = useState([]);
+  const [viewInbox, setViewInbox] = useState(false);
 
   // Sayfa yüklendiğinde localStorage'dan mesajları çek
   useEffect(() => {
     const storedMessages = localStorage.getItem('messages');
     if (storedMessages) {
-      setMessages(JSON.parse(storedMessages)); // localStorage'dan alınan veriler JSON olarak parse edilir
+      setMessages(JSON.parse(storedMessages));
     }
   }, []);
 
@@ -20,7 +20,7 @@ const MessagePage = () => {
     if (receiver && title && message) {
       const newMessages = [...messages, { receiver, title, message }];
       setMessages(newMessages);
-      localStorage.setItem('messages', JSON.stringify(newMessages)); // Mesajları JSON formatında kaydeder
+      localStorage.setItem('messages', JSON.stringify(newMessages));
 
       // Alanları sıfırlama
       setReceiver('');
@@ -32,21 +32,21 @@ const MessagePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-white text-black"> {/* Arka plan rengini pembe yaptık */}
       <div className="container mx-auto p-8">
-        <div className="bg-gray-800 p-4 rounded-lg">
+        <div className="bg-indigo-200 p-4 rounded-lg">
           <h2 className="text-xl font-bold mb-4">Message Operations</h2>
           
-          <div className="flex mb-4 ">
-            <div className=" p-2  ">
+          <div className="flex mb-4">
+            <div className="p-2">
               <button 
-                className="bg-purple-600 px-4 py-2 h-30 w-30 rounded-lg mb-4 block"
+                className="bg-purple-500 px-4 py-2 h-30 w-30 rounded-lg mb-4 block"
                 onClick={() => setViewInbox(false)} // Mesaj gönderme alanını gösterir
               >
                 Send message
               </button>
               <button 
-                className="bg-purple-600 px-4 py-2 h-30 w-30 rounded-lg mb-4 block"
+                className="bg-purple-500 px-4 py-2 h-30 w-30 rounded-lg mb-4 block"
                 onClick={() => setViewInbox(true)} // Gelen kutusunu (Inbox) gösterir
               >
                 View inbox
@@ -54,12 +54,12 @@ const MessagePage = () => {
             </div>
 
             <div className="w-3/4 ml-4">
-              {!viewInbox ? (//bu satır ile
+              {!viewInbox ? (
                 <div>
                   <div className="mb-4">
                     <label>Select receiver</label>
                     <select 
-                      className="w-full mt-1 p-2 rounded-lg bg-gray-700"
+                      className="w-full mt-1 p-2 rounded-lg bg-blue-50"
                       value={receiver}
                       onChange={(e) => setReceiver(e.target.value)}
                     >
@@ -73,7 +73,7 @@ const MessagePage = () => {
                     <label>Title</label>
                     <input
                       type="text"
-                      className="w-full mt-1 p-2 rounded-lg bg-gray-700"
+                      className="w-full mt-1 p-2 rounded-lg bg-blue-50"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                     />
@@ -82,7 +82,7 @@ const MessagePage = () => {
                   <div className="mb-4">
                     <label>Your message</label>
                     <textarea
-                      className="w-full mt-1 p-2 rounded-lg bg-gray-700 h-24"
+                      className="w-full mt-1 p-2 rounded-lg bg-blue-50 h-24"
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                     />
@@ -90,11 +90,11 @@ const MessagePage = () => {
 
                   <button
                     onClick={handleSend}
-                    className="bg-green-600 px-4 py-2 rounded-lg"
+                    className="bg-purple-500 px-4 py-2 rounded-lg"
                   >
                     Send
                   </button>
-                </div>// 57-97. satırlar arası select receiverden send butonuna kadar olan ksımın kodu
+                </div>
               ) : (
                 <div>
                   <h3 className="text-lg font-bold mb-4">Inbox</h3>
@@ -103,7 +103,7 @@ const MessagePage = () => {
                   ) : (
                     <ul className="space-y-4">
                       {messages.map((msg, index) => (
-                        <li key={index} className="p-4 bg-gray-700 rounded-lg">
+                        <li key={index} className="p-4 bg-blue-50rounded-lg">
                           <strong>To:</strong> {msg.receiver} <br />
                           <strong>Title:</strong> {msg.title} <br />
                           <strong>Message:</strong> {msg.message}
@@ -112,8 +112,7 @@ const MessagePage = () => {
                     </ul>
                   )}
                 </div>
-              )
-              }
+              )}
             </div>
           </div>
         </div>
