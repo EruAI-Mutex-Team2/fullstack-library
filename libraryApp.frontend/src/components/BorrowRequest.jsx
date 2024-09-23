@@ -42,8 +42,8 @@ export default function BorrowRequests() {
             <tbody>
               {/* Örnek Satır */}
               <tr className="border-b">
-                <td className="p-6">Jane Eyre</td>
-                <td className="p-6">NameOfManager Anderson</td>
+                <td className="p-6">Example Book</td>
+                <td className="p-6">Ezgi</td>
                 <td className="p-6">9/16/2024</td>
                 <td className="p-6">9/30/2024</td>
                 <td className="p-6 flex space-x-2">
