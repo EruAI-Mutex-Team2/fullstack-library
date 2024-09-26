@@ -11,7 +11,7 @@ import BookEditor from './components/WritePage';
 function App() {
   return (
     <div>
-      <BookEditor/>
+      <Register/>
     </div>
   );
 }

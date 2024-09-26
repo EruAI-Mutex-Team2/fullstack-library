@@ -4,6 +4,19 @@ using libraryApp.backend.Repository.Abstract;
 using libraryApp.backend.Repository.Concrete;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add CORS services to the container
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("TestOrigin",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173") // Replace with your frontend domain
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddDbContext<libraryDBContext>(options =>
 {
     var connStr = builder.Configuration["ConnectionStrings:DefaultConnection"];
