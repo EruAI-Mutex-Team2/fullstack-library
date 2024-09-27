@@ -2,7 +2,7 @@ import React from 'react';
 export default function BookList() {
   return (
 <div>
-      <div className="flex justify-between items-center bg-purple-500 text-white p-4 rounded-md shadow-lg mb-6 ">
+      <div className="flex justify-between items-center bg-violet-500 text-white p-4 rounded-md shadow-lg mb-6 ">
         <h1 className="text-3xl font-bold">Books List</h1>
         <div className="flex">
         <a href="/logout" className="hover:text-gray-300">Logout</a>
@@ -11,7 +11,7 @@ export default function BookList() {
       </div>
       
        <div className='pl-6 pr-6 pt-2'>
-      <div className="flex justify-between items-center bg-purple-500 text-white p-4 rounded-md shadow-lg mb-6 ">
+      <div className="flex justify-between items-center bg-violet-500 text-white p-4 rounded-md shadow-lg mb-6 ">
         <div className="flex">
 
           <input
@@ -21,11 +21,11 @@ export default function BookList() {
             placeholder="Book Name..."
           />
 
-          <button className="bg-purple-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
+          <button className="bg-violet-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
             Search
           </button>
 
-          <button className="bg-purple-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
+          <button className="bg-violet-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
             view borrow books
           </button>
         </div>
@@ -36,7 +36,7 @@ export default function BookList() {
       <div className="bg-white shadow-lg rounded-lg p-6">
         <table className="min-w-full">
           <thead>
-            <tr className="bg-purple-600 text-white">
+            <tr className="bg-violet-600 text-white">
               <th className="p-6 text-left">Title</th>
               <th className="p-6 text-left">Publication Date</th>
               <th className="p-6 text-left">Is Borrowed</th>
