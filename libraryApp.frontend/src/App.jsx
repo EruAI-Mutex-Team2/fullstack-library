@@ -1,12 +1,12 @@
 import React from 'react';
-import MessagePage from './components/messagePage';
+import BorrowRequestsPage from './components/borrowRequestsPage'; // BorrowRequestsPage bileşenini içe aktar
 
 function App() {
   return (
-    <div>
-      <MessagePage />
-    </div> // Kapanış div etiketi
+    <div className="App">
+      <BorrowRequestsPage /> {/* BorrowRequestsPage bileşenini burada render ediyoruz */}
+    </div>
   );
 }
 
-export default App; // Kapanış parantezi
+export default App;
