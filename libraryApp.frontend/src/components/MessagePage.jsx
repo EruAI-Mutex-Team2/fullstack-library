@@ -36,16 +36,16 @@ const MessagePage = () => {
       <div className="container mx-auto p-8">
         <div className="bg-indigo-200 p-4 rounded-lg">
           <h2 className="text-xl font-bold mb-4">Message Operations</h2>
-          
+//butonları message op yanına alcam
           <div className="flex mb-4">
             <div className="p-2">
-              <button 
+              <button
                 className="bg-purple-500 px-4 py-2 h-30 w-30 rounded-lg mb-4 block"
                 onClick={() => setViewInbox(false)} // Mesaj gönderme alanını gösterir
               >
                 Send message
               </button>
-              <button 
+              <button
                 className="bg-purple-500 px-4 py-2 h-30 w-30 rounded-lg mb-4 block"
                 onClick={() => setViewInbox(true)} // Gelen kutusunu (Inbox) gösterir
               >
@@ -58,7 +58,7 @@ const MessagePage = () => {
                 <div>
                   <div className="mb-4">
                     <label>Select receiver</label>
-                    <select 
+                    <select
                       className="w-full mt-1 p-2 rounded-lg bg-blue-50"
                       value={receiver}
                       onChange={(e) => setReceiver(e.target.value)}
@@ -102,14 +102,17 @@ const MessagePage = () => {
                     <p>No messages in your inbox.</p>
                   ) : (
                     <ul className="space-y-4">
-                      {messages.map((msg, index) => (
-                        <li key={index} className="p-4 bg-blue-50rounded-lg">
-                          <strong>To:</strong> {msg.receiver} <br />
-                          <strong>Title:</strong> {msg.title} <br />
-                          <strong>Message:</strong> {msg.message}
-                        </li>
-                      ))}
-                    </ul>
+                    {messages.map((msg, index) => (
+                      <li
+                        key={index}
+                        className="p-4 rounded-lg bg-blue-50" // Tek renk olarak belirledik
+                      >
+                        <strong>To:</strong> {msg.receiver} <br />
+                        <strong>Title:</strong> {msg.title} <br />
+                        <strong>Message:</strong> {msg.message}
+                      </li>
+                    ))}
+                  </ul>
                   )}
                 </div>
               )}
@@ -117,6 +120,7 @@ const MessagePage = () => {
           </div>
         </div>
       </div>
+      
     </div>
   );
 };
