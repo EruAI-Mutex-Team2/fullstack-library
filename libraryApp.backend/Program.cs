@@ -33,6 +33,19 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IuserRepository, EfuserRepository>();
 builder.Services.AddScoped<ImesajRepository, EfmesajRepository>();
 builder.Services.AddScoped<IpuanRepository, EfpuanRepository>();
+builder.Services.AddScoped<IcezaRepository, EfcezaRepository>();
+builder.Services.AddScoped<IrolRepository, EfrolRepository>();
+builder.Services.AddScoped<IhesapAcmaTalebiRepository, EfhesapAcmaTalebiRepository>();
+builder.Services.AddScoped<IkitapOduncRepository, EfkitapOduncRepository>();
+builder.Services.AddScoped<IkitapRepository, EfkitapRepository>();
+builder.Services.AddScoped<IkitapYayinTalebiRepository, EfkitapYayinTalebiRepository>();
+builder.Services.AddScoped<IkitapYazariRepository, EfkitapYazariRepository>();
+builder.Services.AddScoped<IsayfaRepository, EfsayfaRepository>();
+
+
+
+
+
 
 var app = builder.Build();
 

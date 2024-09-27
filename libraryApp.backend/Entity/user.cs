@@ -7,4 +7,6 @@ public class user
     public string Email { get; set; }
     public string Password { get; set; }
     public int RollId { get; set; }
+
+    public rol rol { get; set; }
 }

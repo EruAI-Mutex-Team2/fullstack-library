@@ -1,101 +1,174 @@
 using libraryApp.backend.Entity;
+using libraryApp.backend.Repository.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 
 
 namespace libraryApp.backend.Controllers
+
 {
-    public class UserController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UserController : ControllerBase
     {
-        private static List<user> users = new List<user>();
+        private readonly IuserRepository _userRepo;
+        private readonly IrolRepository _rolRepo;
 
-        public IActionResult Index()
+        private readonly IcezaRepository _cezaRepo;
+
+        public UserController(IuserRepository userRepo, IrolRepository rolRepo, IcezaRepository cezaRepo)
         {
-            return View(users);
+            _userRepo = userRepo;
+            _rolRepo = rolRepo;
+            _cezaRepo = cezaRepo;
+        }
+        [HttpGet("rolleriGetir")]
+        public async Task<IActionResult> rolleriGetir()
+        {
+            var roller = await _rolRepo.roller.ToListAsync();
+            return Ok(roller);
         }
 
-        public IActionResult KullaniciBilgi(int id)
+        [HttpPut("roluGuncelle")]
+        public async Task<IActionResult> rolleriDegistir([FromBody] rolDegistirmedto rolDegistirdto)
         {
-            var user = users.Find(u => u.Id == id);
+            var user = await _userRepo.GetuserByIdAsync(rolDegistirdto.userId);
             if (user == null)
             {
                 return NotFound();
             }
-            return View(user);
-        }
-
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(user newUser)
-        {
-            if (ModelState.IsValid)
+            else
             {
-                users.Add(newUser);
-                return RedirectToAction(nameof(Index));
+                user.RollId = rolDegistirdto.yeniRolId;
+                await _userRepo.UpdateuserAsync(user);
+                return Ok();
             }
-            return View(newUser);
+        }
+        [HttpGet("rolDegistirilecekUserlariGetir")]
+        public async Task<IActionResult> rolUserGetir()
+        {
+            List<user> userlar = await _userRepo.users.Where(user => user.RollId < 4).Include(user => user.rol).ToListAsync();
+
+            List<rolUserGetirdto> userGetirdtolar = userlar.Select(user => new rolUserGetirdto
+            {
+                Isım = user.Isim,
+                rolIsmi = user.rol.RolIsmi,
+                Soyisim = user.SoyIsim,
+                userId = user.Id,
+            }).ToList();
+
+            return Ok(userGetirdtolar);
         }
 
-        public IActionResult Edit(int id)
+        [HttpGet("cezaVerilebilecekUserlariGetir")]
+        public async Task<IActionResult> cezaUserGetir([FromRoute] int rolId)
         {
+            var users = await _userRepo.users.Where(u => u.RollId < rolId).Include(u => u.rol).ToListAsync();
+            var userGetirdtolar = users.Select(u => new rolUserGetirdto
+            {
+                Isım = u.Isim,
+                rolIsmi = u.rol.RolIsmi,
+                Soyisim = u.SoyIsim,
+                userId = u.Id,
 
-            var user = users.Find(u => u.Id == id);
+            }).ToList();
+
+            return Ok(userGetirdtolar);
+        }
+
+        [HttpPost("cezaVer")]
+        public async Task<IActionResult> cezaVer([FromBody] int userId)
+        {
+            var user = await _userRepo.GetuserByIdAsync(userId);
             if (user == null)
             {
                 return NotFound();
             }
-            return View(user);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, user guncelledUser)
-        {
-            if (ModelState.IsValid)
+            else
             {
-                var user = users.Find(u => u.Id == id);
-                if (user == null)
+                var ceza = new ceza
                 {
-                    return NotFound();
-                }
-
-                user.Isim = guncelledUser.Isim;
-                user.SoyIsim = guncelledUser.SoyIsim;
-                user.Email = guncelledUser.Email;
-                user.Password = guncelledUser.Password;
-                user.RollId = guncelledUser.RollId;
-
-                return RedirectToAction(nameof(Index));
+                    UserId = userId,
+                    CezaAktifMi = true,
+                    CezaBitisGunu = DateTime.Now.AddDays(14),
+                    CezaGunu = DateTime.Now,
+                };
+                await _cezaRepo.AddcezaAsync(ceza);
+                return Ok();
             }
-            return View(guncelledUser);
+
         }
 
-        public IActionResult Delete(int id)
+        [HttpPut("cezaKaldir")]
+        public async Task<IActionResult> cezaKaldir([FromBody] int userId)
         {
-            var user = users.Find(u => u.Id == id);
-            if (user == null)
+            var cezaKaydi = await _cezaRepo.cezalar.Where(c => c.UserId == userId && c.CezaAktifMi == true).FirstOrDefaultAsync();
+            if (cezaKaydi == null)
             {
                 return NotFound();
             }
-            return View(user);
+            else
+            {
+                cezaKaydi.CezaAktifMi = false;
+                await _cezaRepo.UpdatecezaAsync(cezaKaydi);
+                return Ok();
+            }
+        }
+        [HttpGet("mesajGonderilebilecekUserlarGetir")]
+        public async Task<IActionResult> mesajGonderilebilecekUserlarGetir([FromRoute] int rolId)
+        {
+            //1-user 2-yazar 3-gorevli 4-yonetici 
+            var roller = new List<int>();
+
+            if (rolId == 1)
+            {
+                roller.Add(3);
+            }
+            else if (rolId == 2)
+            {
+                roller.Add(3);
+                roller.Add(4);
+            }
+            else if (rolId == 3)
+            {
+                roller.Add(1);
+                roller.Add(2);
+                roller.Add(4);
+            }
+            else if (rolId == 4)
+            {
+                roller.Add(2);
+                roller.Add(3);
+            }
+
+            var users = await _userRepo.users.Where(u => roller.Contains(u.RollId)).Include(u => u.rol).ToListAsync();
+            var userGetirdtolar = users.Select(u => new rolUserGetirdto
+            {
+                Isım = u.Isim,
+                rolIsmi = u.rol.RolIsmi,
+                Soyisim = u.SoyIsim,
+                userId = u.Id,
+
+            }).ToList();
+            return Ok(userGetirdtolar);
+
+
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            var user = users.Find(u => u.Id == id);
-            if (user != null)
-            {
-                users.Remove(user);
-            }
-            return RedirectToAction(nameof(Index));
-        }
+
+
+
+
+
+
     }
+
 }
+
+
+
+
+
