@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 const MessagePage = () => {
-  const [receiver, setReceiver] = useState('');
+  const [receiver, setReceiver] = useState('');//bu constlar sabit değerlerimiz
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([]);//bütün mesajları biz diziye atıyor
   const [viewInbox, setViewInbox] = useState(false);
 
   // Sayfa yüklendiğinde localStorage'dan mesajları çek
@@ -12,6 +12,7 @@ const MessagePage = () => {
     const storedMessages = localStorage.getItem('messages');
     if (storedMessages) {
       setMessages(JSON.parse(storedMessages));
+      /*The JSON.parse function is used to convert this JSON string back into a JavaScript object. */
     }
   }, []);
 
@@ -20,7 +21,7 @@ const MessagePage = () => {
     if (receiver && title && message) {
       const newMessages = [...messages, { receiver, title, message }];
       setMessages(newMessages);
-      localStorage.setItem('messages', JSON.stringify(newMessages));
+      localStorage.setItem('messages', JSON.stringify(newMessages));//sayfa yenilensede mesajlar kalır
 
       // Alanları sıfırlama
       setReceiver('');
@@ -30,23 +31,21 @@ const MessagePage = () => {
       alert('Lütfen tüm alanları doldurun.');
     }
   };
-
   return (
-    <div className="min-h-screen bg-white text-black"> {/* Arka plan rengini pembe yaptık */}
-      <div className="container mx-auto p-8">
-        <div className="bg-indigo-200 p-4 rounded-lg">
+    <div className="min-h-screen bg-blue-50 text-black"> {/* Arka plan rengini pembe yaptık */}
+      <div className="container mx-auto p-5">
+        <div className="bg-indigo-200  p-4 rounded-xl">
           <h2 className="text-xl font-bold mb-4">Message Operations</h2>
-//butonları message op yanına alcam
-          <div className="flex mb-4">
+          <div className="flex mb-10">
             <div className="p-2">
               <button
-                className="bg-purple-500 px-4 py-2 h-30 w-30 rounded-lg mb-4 block"
+                className="bg-purple-600 px-4 py-2 h-30 w-30 rounded-lg mb-4 block"
                 onClick={() => setViewInbox(false)} // Mesaj gönderme alanını gösterir
               >
                 Send message
               </button>
               <button
-                className="bg-purple-500 px-4 py-2 h-30 w-30 rounded-lg mb-4 block"
+                className="bg-purple-600 px-4 py-2 h-30 w-30 rounded-lg mb-4 block"
                 onClick={() => setViewInbox(true)} // Gelen kutusunu (Inbox) gösterir
               >
                 View inbox
@@ -63,7 +62,7 @@ const MessagePage = () => {
                       value={receiver}
                       onChange={(e) => setReceiver(e.target.value)}
                     >
-                      <option value="">Select receiver</option>
+                      <option>Select receiver</option>
                       <option value="Beyzanur Aslan">Beyzanur Aslan</option>
                       <option value="Ezgi Yücel">Ezgi Yücel</option>
                     </select>
@@ -90,7 +89,7 @@ const MessagePage = () => {
 
                   <button
                     onClick={handleSend}
-                    className="bg-purple-500 px-4 py-2 rounded-lg"
+                    className="bg-green-500 px-4 py-2 rounded-lg"
                   >
                     Send
                   </button>

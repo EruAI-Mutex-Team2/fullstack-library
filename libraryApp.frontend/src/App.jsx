@@ -1,11 +1,11 @@
 import React from 'react';
-import MessagePage from './components/messagePage';
+import LoginPage from './components/Login';
 
 function App() {
   return (
     <div>
-      <MessagePage />
-    </div> // Kapanış div etiketi
+      <LoginPage />
+    </div> 
   );
 }
 
