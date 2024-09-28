@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Pme8zopByyrca+f+3uFTfHDAw0BTnP/dPj97fso0GBchZqGvk539xtbtdtpZqw6w6BTiykIYL/9qmuj4PIrOtA==",
+  "dgSpecHash": "8ah/9GHqpctzZVkZtxeT9ZNN7FJ5w2QK4G6LtHSFqbLAN6nsW8ldsn2ILg12aZhtWk4yy9Lr4qNt5OKsaXFLrg==",
   "success": true,
   "projectFilePath": "/Users/melekaltun/Desktop/mutexpurple/fullstack-library/libraryApp.backend/libraryApp.backend.csproj",
   "expectedPackageFiles": [
+    "/Users/melekaltun/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/Users/melekaltun/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/Users/melekaltun/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/8.0.8/microsoft.aspnetcore.authentication.jwtbearer.8.0.8.nupkg.sha512",
     "/Users/melekaltun/.nuget/packages/microsoft.aspnetcore.openapi/8.0.7/microsoft.aspnetcore.openapi.8.0.7.nupkg.sha512",

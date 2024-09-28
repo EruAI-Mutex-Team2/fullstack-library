@@ -8,4 +8,6 @@ public class kitapYayinTalebi
     public bool OnaylandiMi { get; set; }
     public bool BeklemedeMi { get; set; }
 
+    public kitap kitap { get; set; }
+    public user yazar { get; set; }
 }

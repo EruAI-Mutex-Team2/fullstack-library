@@ -9,4 +9,7 @@ public class kitapOdunc
     public bool OnaylandiMi { get; set; }
     public bool BeklemedeMi { get; set; }
     public bool DondurulduMu { get; set; }
+
+    public kitap kitap { get; set; }
+    public user user { get; set; }
 }
