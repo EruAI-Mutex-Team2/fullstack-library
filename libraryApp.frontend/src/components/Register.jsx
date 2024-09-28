@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Register() {
   return (
@@ -66,9 +67,11 @@ export default function Register() {
 
             <div className='mt-8 flex justify-center items-center'>
               <p className='font-medium text-base'>Already have an account?</p>
+              <Link to="/Login">
               <button className='text-violet-500 text-base font-medium ml-2'>
                 Sign in
               </button>
+              </Link>
             </div>
           </div>
         </div>
