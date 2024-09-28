@@ -1,8 +1,8 @@
 public class kayitOldto
 {
-    public static string Isim { get; set; }
-    public static string SoyIsim { get; set; }
-    public static string Email { get; set; }
-    public static string Password { get; set; }
+    public string Isim { get; set; }
+    public string SoyIsim { get; set; }
+    public string Email { get; set; }
+    public string Password { get; set; }
 
 }

@@ -74,16 +74,16 @@ namespace libraryApp.backend.Controllers
         }
 
         [HttpPost("KayitOl")]
-        public async Task<IActionResult> KayitOl(kayitOldto kayitdto)
+        public async Task<IActionResult> KayitOl([FromBody] kayitOldto kayitdto)
         {
-            if (_userRepo.users.Any(u => u.Email == kayitOldto.Email)) return BadRequest("Email zaten kayıtlı.");
+            if (_userRepo.users.Any(u => u.Email == kayitdto.Email)) return BadRequest("Email zaten kayıtlı.");
 
             await _userRepo.AdduserAsync(new user
             {
-                Isim = kayitOldto.Isim,
-                SoyIsim = kayitOldto.SoyIsim,
-                Email = kayitOldto.Email,
-                Password = BCrypt.Net.BCrypt.HashPassword(kayitOldto.Password),
+                Isim = kayitdto.Isim,
+                SoyIsim = kayitdto.SoyIsim,
+                Email = kayitdto.Email,
+                Password = BCrypt.Net.BCrypt.HashPassword(kayitdto.Password),
             });
             return Ok(new { message = "Kayıt gerçekleşti" });
         }

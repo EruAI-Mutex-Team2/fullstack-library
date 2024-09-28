@@ -1,28 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\KEVSER\\OneDrive\\Masaüstü\\bluemutex\\fullstack-libraryyy\\libraryApp.backend\\libraryApp.backend.csproj": {}
+    "/Users/melekaltun/Desktop/mutexpurple/fullstack-library/libraryApp.backend/libraryApp.backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\KEVSER\\OneDrive\\Masaüstü\\bluemutex\\fullstack-libraryyy\\libraryApp.backend\\libraryApp.backend.csproj": {
+    "/Users/melekaltun/Desktop/mutexpurple/fullstack-library/libraryApp.backend/libraryApp.backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\KEVSER\\OneDrive\\Masaüstü\\bluemutex\\fullstack-libraryyy\\libraryApp.backend\\libraryApp.backend.csproj",
+        "projectUniqueName": "/Users/melekaltun/Desktop/mutexpurple/fullstack-library/libraryApp.backend/libraryApp.backend.csproj",
         "projectName": "libraryApp.backend",
-        "projectPath": "C:\\Users\\KEVSER\\OneDrive\\Masaüstü\\bluemutex\\fullstack-libraryyy\\libraryApp.backend\\libraryApp.backend.csproj",
-        "packagesPath": "C:\\Users\\KEVSER\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\KEVSER\\OneDrive\\Masaüstü\\bluemutex\\fullstack-libraryyy\\libraryApp.backend\\obj\\",
+        "projectPath": "/Users/melekaltun/Desktop/mutexpurple/fullstack-library/libraryApp.backend/libraryApp.backend.csproj",
+        "packagesPath": "/Users/melekaltun/.nuget/packages/",
+        "outputPath": "/Users/melekaltun/Desktop/mutexpurple/fullstack-library/libraryApp.backend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\KEVSER\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/melekaltun/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -35,11 +32,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -96,7 +88,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
