@@ -42,6 +42,7 @@ builder.Services.AddScoped<IkitapYayinTalebiRepository, EfkitapYayinTalebiReposi
 builder.Services.AddScoped<IkitapYazariRepository, EfkitapYazariRepository>();
 builder.Services.AddScoped<IsayfaRepository, EfsayfaRepository>();
 
+builder.Services.AddControllers();
 
 
 

@@ -9,6 +9,7 @@ const MessagePage = () => {
 
   // Sayfa yüklendiğinde localStorage'dan mesajları çek
   useEffect(() => {
+    
     const storedMessages = localStorage.getItem('messages');
     if (storedMessages) {
       setMessages(JSON.parse(storedMessages));
@@ -28,7 +29,7 @@ const MessagePage = () => {
       setTitle('');
       setMessage('');
     } else {
-      alert('Lütfen tüm alanları doldurun.');
+      alert('Lütfen tüm alanlari doldurun.');
     }
   };
   return (

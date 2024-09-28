@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const BorrowRequestsPage = () => {
+const borrowAndUserRequest = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingMembers, setPendingMembers] = useState([]);
 
@@ -134,4 +134,4 @@ const BorrowRequestsPage = () => {
   );
 };
 
-export default BorrowRequestsPage;
+export default borrowAndUserRequest;

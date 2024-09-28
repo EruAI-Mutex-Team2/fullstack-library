@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-const ChangeRole = () => {
+const ChangeRole = () => { 
   const [users, setUsers] = useState([]); // Kullanıcıları tutmak için state
+  const [roles, setRoles] = useState([]); 
   const [selectedUser, setSelectedUser] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
   const [isPunishmentModalOpen, setIsPunishmentModalOpen] = useState(false);
@@ -11,20 +12,52 @@ const ChangeRole = () => {
     // Burada kullanıcıları API'den alıyormuş gibi sabit bir veri kullanıyoruz.
     const fetchUsers = async () => {
       // Bu kısımda API çağrısı yapmalısınız.
-      const dummyUsers = [
-        { id: 'Admin', name: 'Admin' },
-        { id: 'User', name: 'User' },
-        { id: 'Author', name: 'Author' },
-        { id: 'Officer', name: 'Officer' },
-      ];
-      setUsers(dummyUsers); // Kullanıcıları state'e atıyoruz.
+      const response = await fetch("http://localhost:5075/api/User/rolDegistirilecekUserlariGetir",{
+        method: "GET",
+        //yanıtı json türünden aldık
+
+      });
+      if (response.ok) {
+        const dummyUsers = response.json();// jsondan objeye dönüştü
+        setUsers(dummyUsers); 
+      }
+    
     };
+    const fetchRoles = async () => {
+      // Bu kısımda API çağrısı yapmalısınız.
+      const response = await fetch("http://localhost:5075/api/User/rolleriGetir",{
+        method: "GET",
+        //yanıtı json türünden aldık
+
+      });
+      if (response.ok) {
+        const dummyRoles = response.json();// jsondan objeye dönüştü
+        setRoles(dummyRoles); 
+      }
+    
+    };     
 
     fetchUsers();
+    fetchRoles();
   }, []);
 
   const handleUpdate = () => {
-    alert(`User: ${selectedUser}, Role: ${selectedRole} updated!`);
+    const updateRole = async () => {
+      // Bu kısımda API çağrısı yapmalısınız.
+      const response = await fetch("http://localhost:5075/api/User/roluGuncelle",{
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: 
+          JSON.stringify(
+            {"userId": selectedUser,
+          "yeniRolId": selectedRole,}
+        ),
+        
+        //yanıtı json türünden aldık
+
+      }); 
+    };
+    updateRole();
   };
 
   const handlePunishmentSubmit = () => {
@@ -48,7 +81,8 @@ const ChangeRole = () => {
       {/* Main Content */}
       <main className="w-2/4 p-8 text-black">
         <h1 className="text-2xl mb-10 mt-10">Change Role</h1>
-        <div className="mb-6">
+       <div>
+       <div className="mb-6">
           <label className="block mb-2">Select user</label>
           <select
             value={selectedUser}
@@ -57,17 +91,33 @@ const ChangeRole = () => {
           >
             <option value="">Select someone</option>
             {users.map(user => (
-              <option key={user.id} value={user.id}>{user.name}</option>
+              <option key={user.userId} value={user.userId}>{user.isim}</option>
             ))}
           </select>
         </div>
 
-        <button
-          className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded"
+        <div>
+        <select
+            value={selectedRole}
+            onChange={(e) => setSelectedRole(e.target.value)}
+            className="w-full p-2 bg-blue-50 border bg-blue-50 rounded"
+          >
+            <option value="">Select role</option>
+            {roles.map(role => (
+              <option key={role.id} value={role.id}>{role.rolIsmi}</option>
+            ))}
+          </select>
+        </div>
+       </div>
+
+     <div>
+         <button
+          className="bg-green-600 mt-5 hover:bg-green-700 text-white py-2 px-4 rounded"
           onClick={handleUpdate}
         >
           Update
         </button>
+     </div>
       </main>
 
       {/* Top Bar */}
