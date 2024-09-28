@@ -57,6 +57,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("TestOrigin");
 app.UseHttpsRedirection();
 
 app.Run();
