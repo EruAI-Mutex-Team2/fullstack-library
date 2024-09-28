@@ -2,7 +2,7 @@
   "version": 2,
   "dgSpecHash": "8ah/9GHqpctzZVkZtxeT9ZNN7FJ5w2QK4G6LtHSFqbLAN6nsW8ldsn2ILg12aZhtWk4yy9Lr4qNt5OKsaXFLrg==",
   "success": true,
-  "projectFilePath": "/Users/melekaltun/Desktop/mutexpurple/fullstack-library/libraryApp.backend/libraryApp.backend.csproj",
+  "projectFilePath": "C:\\Users\\KEVSER\\OneDrive\\Masaüstü\\bluemutex\\fullstack-libraryyy\\libraryApp.backend\\libraryApp.backend.csproj",
   "expectedPackageFiles": [
     "/Users/melekaltun/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/Users/melekaltun/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
