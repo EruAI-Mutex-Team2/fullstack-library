@@ -11,10 +11,12 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace libraryApp.backend.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController]// Bu sınıfın bir API (frontend ve backend arasındaki veri akışını sağlyan bir arayüz) kontrolcüsü olduğunu belirtiyor.
+    [Route("api/[controller]")]// İsteklerin URL’de yönlendirileceği yolu  belirtir.
     public class KitapController : ControllerBase
     {
+        //Kitap, sayfa, ödünç, kullanıcı, mesaj ve yayın talepleri depoları
+
         private readonly IkitapRepository _kitapRepo;
         private readonly IsayfaRepository _sayfaRepo;
         private readonly IkitapOduncRepository _kitapOduncRepo;
@@ -109,7 +111,7 @@ namespace libraryApp.backend.Controllers
                 YayinlanmaTarihi = DateTime.MinValue,
                 kitapYazarlari = [
                     new kitapYazari(){
-                        UserId = yazarId,
+                        jwefnwf = yazarId,
                     }
                 ]
             });
@@ -137,7 +139,7 @@ namespace libraryApp.backend.Controllers
 
         public async Task<IActionResult> yazarinKitaplariniGetir([FromRoute] int yazarId)
         {
-            var kitaplar = await _kitapRepo.kitaplar.Include(k => k.kitapYazarlari).Where(k => k.kitapYazarlari.Any(ky => ky.UserId == yazarId)).ToListAsync();
+            var kitaplar = await _kitapRepo.kitaplar.Include(k => k.kitapYazarlari).Where(k => k.kitapYazarlari.Any(ky => ky.jwefnwf == yazarId)).ToListAsync();
 
             var kitapdtos = kitaplar.Select(b => new kitapdto
             {
