@@ -107,11 +107,12 @@ namespace libraryApp.backend.Controllers
             if (!_userRepo.users.Any(u => u.Id == yazarId)) return NotFound(new { Message = "Yazar bulunamadı." });
             await _kitapRepo.AddkitapAsync(new kitap
             {
+                Isim = "Yeni kitap",
                 KitapYayinlandiMi = false,
                 YayinlanmaTarihi = DateTime.MinValue,
                 kitapYazarlari = [
                     new kitapYazari(){
-                        jwefnwf = yazarId,
+                        UserId = yazarId,
                     }
                 ]
             });
@@ -139,7 +140,7 @@ namespace libraryApp.backend.Controllers
 
         public async Task<IActionResult> yazarinKitaplariniGetir([FromRoute] int yazarId)
         {
-            var kitaplar = await _kitapRepo.kitaplar.Include(k => k.kitapYazarlari).Where(k => k.kitapYazarlari.Any(ky => ky.jwefnwf == yazarId)).ToListAsync();
+            var kitaplar = await _kitapRepo.kitaplar.Include(k => k.kitapYazarlari).Where(k => k.kitapYazarlari.Any(ky => ky.UserId== yazarId)).ToListAsync();
 
             var kitapdtos = kitaplar.Select(b => new kitapdto
             {
@@ -215,8 +216,8 @@ namespace libraryApp.backend.Controllers
                 BeklemedeMi = true,
                 OnaylandiMi = false,
                 DondurulduMu = false,
-                TalepTarihi = DateTime.Now,
-                DonusTarihi = DateTime.Now.AddDays(14),
+                TalepTarihi = DateTime.UtcNow,
+                DonusTarihi = DateTime.UtcNow.AddDays(14),
                 KitapId = oduncTalebidto.kitapId,
                 UserId = oduncTalebidto.isteyenId,
             };

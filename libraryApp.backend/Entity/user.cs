@@ -6,7 +6,7 @@ public class user
     public string SoyIsim { get; set; }
     public string Email { get; set; }
     public string Password { get; set; }
-    public int RollId { get; set; }
+    public int RolId { get; set; }
 
     public rol rol { get; set; }
 }

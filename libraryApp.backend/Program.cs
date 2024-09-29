@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using libraryApp.backend.Entity;
 using libraryApp.backend.Repository.Abstract;
 using libraryApp.backend.Repository.Concrete;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,11 +47,28 @@ builder.Services.AddScoped<IsayfaRepository, EfsayfaRepository>();
 
 builder.Services.AddControllers();
 
-
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("AppSettings:Secret").Value ?? "")),
+        ValidateLifetime = true,
+        RoleClaimType = "roleName"
+    };
+});
 
 
 var app = builder.Build();
-
+app.UseRouting();
+app.MapControllers();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

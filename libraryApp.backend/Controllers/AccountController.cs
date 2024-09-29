@@ -28,7 +28,7 @@ namespace libraryApp.backend.Controllers
 
 
         }
-        [HttpGet("girisYap")]
+        [HttpPost("girisYap")]
         public async Task<IActionResult> girisYap(girisYapdto girisdto) //kullanıcı giriş fonksiyonu
         {
             // Veritabanında email'e göre kullanıcıyı ve kullanıcının rolünü kontrol eder.
@@ -40,7 +40,7 @@ namespace libraryApp.backend.Controllers
             userdto dto = new userdto
             {
                 Id = user.Id,
-                rolId = user.RollId,
+                rolId = user.RolId,
                 rolIsmi = user.rol.RolIsmi,
                 Isim = user.Isim,
                 SoyIsim = user.SoyIsim,

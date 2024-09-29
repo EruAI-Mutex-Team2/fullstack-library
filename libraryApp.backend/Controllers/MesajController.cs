@@ -5,50 +5,47 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace libraryApp.backend.Controllers
-{   
-    public class MesajController
+{
+    [ApiController]
+    [Route("api/[controller]")]
+
+    public class MesajController : ControllerBase
     {
-        [ApiController]
-        [Route ("api/[controller]")]
+        private readonly ImesajRepository _mesajRepo;
 
-     public class MesajController : ControllerBase
+        public MesajController(ImesajRepository mesajRepo)
         {
-            private readonly ImesajRepository _mesajRepo;
+            _mesajRepo = mesajRepo;
+        }
 
-            public MesajController(ImesajRepository mesajRepo)
+        [HttpGet("mesajAlmakutusu/{aliciId}")]
+        public async Task<IActionResult> mesajAlmakutusu(int aliciId)
+        {
+            List<mesaj> mesajlar = await _mesajRepo.mesajlar.Where(mesaj => mesaj.AlanId == aliciId).Include(mesaj => mesaj.gonderen).ToListAsync();
+            List<mesajdto> mesajdtolar = mesajlar.Select(mesaj => new mesajdto
             {
-                _mesajRepo = mesajRepo;
-            }
+                MesajId = mesaj.Id,
+                GonderenIsmi = mesaj.gonderen.Isim,
+                baslik = mesaj.Konu,
+                detaylar = mesaj.Icerik,
+            }).ToList();
 
-            [HttpGet("mesajAlmakutusu/{aliciId}")]
-            public async Task<IActionResult> mesajAlmakutusu(int aliciId)
+            return Ok(mesajdtolar);
+        }
+
+        [HttpPost("mesajOlustur")]
+        public async Task<IActionResult> mesajOlustur([FromBody] mesajdto dto)
+        {
+            mesaj msj = new mesaj
             {
-                List<mesaj> mesajlar = await _mesajRepo.mesajlar.Where(mesaj => mesaj.AlanId == aliciId).Include(mesaj => mesaj.gonderen).ToListAsync();
-                List<mesajdto> mesajdtolar = mesajlar.Select(mesaj => new mesajdto
-                {
-                    MesajId = mesaj.Id,
-                    GonderenIsmi = mesaj.gonderen.Isim,
-                    baslik = mesaj.Konu,
-                    detaylar = mesaj.Icerik,
-                }).ToList();
+                AlanId = dto.alanId,
+                GonderenId = dto.gonderenId,
+                Icerik = dto.detaylar,
+                Konu = dto.baslik,
 
-                return Ok(mesajdtolar);
-            }
-
-            [HttpPost("mesajOlustur")]
-            public async Task<IActionResult> mesajOlustur([FromBody] mesajdto dto)
-            {
-                mesaj msj = new mesaj
-                {
-                    AlanId = dto.alanId,
-                    GonderenId = dto.gonderenId,
-                    Icerik = dto.detaylar,
-                    Konu = dto.baslik,
-
-                };
-                await _mesajRepo.CreateMessageAsync(msj);
-                return Ok();
-            }
+            };
+            await _mesajRepo.AddmesajAsync(msj);
+            return Ok();
         }
     }
 }
