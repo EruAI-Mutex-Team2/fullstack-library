@@ -27,7 +27,7 @@ const BookEditor = () => {
 
   return (
     <div className="min-h-screen bg-White textblack-">
-      <header className="flex items-center justify-between p-4 bg-violet-500 text-white shadow-lg">
+      <header className="flex items-center justify-between p-4 bg-indigo-200 text-white shadow-lg">
         <h1 className="text-3xl font-bold">Book Editor</h1>
         <div className="flex">
           <a href="/logout" className="hover:text-gray-300">Logout</a>
@@ -70,7 +70,7 @@ const BookEditor = () => {
         <div className="mt-6">
           <input
             type="file"
-            className="file:bg-violet-600 file:text-white file:rounded-lg file:px-4 file:py-2 file:shadow file:hover:bg-violet-700 cursor-pointer"
+            className="file:bg-violet-600 file:text-white file:rounded-lg file:px-4 file:py-2  file:hover:bg-violet-700 cursor-pointer"
           />
         </div>
 

@@ -42,7 +42,7 @@ builder.Services.AddScoped<IkitapYayinTalebiRepository, EfkitapYayinTalebiReposi
 builder.Services.AddScoped<IkitapYazariRepository, EfkitapYazariRepository>();
 builder.Services.AddScoped<IsayfaRepository, EfsayfaRepository>();
 
-
+builder.Services.AddControllers();
 
 
 
@@ -57,6 +57,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("TestOrigin");
 app.UseHttpsRedirection();
 
 app.Run();
