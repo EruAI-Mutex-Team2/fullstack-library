@@ -27,7 +27,7 @@ namespace libraryApp.backend.Controllers
             _configuration = configuration;
 
         }
-        [HttpGet("girisYap")]
+        [HttpPost("girisYap")]
         public async Task<IActionResult> girisYap(girisYapdto girisdto)
         {
             var user = await _userRepo.users.Include(u => u.rol).FirstOrDefaultAsync(u => u.Email == girisdto.Email);
