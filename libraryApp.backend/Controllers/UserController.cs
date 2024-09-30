@@ -12,12 +12,12 @@ using static System.Net.WebRequestMethods;
 namespace libraryApp.backend.Controllers
 
 {
-    [ApiController] // Bu sınıfın bir API controller olduğunu belirttik. Böylece, bu sınıf gelen HTTP isteklerini işleyebilir.
+    [ApiController] // Bu sınıfın bir API controller (frontend ve backend arasındaki veri akışını sağlayan bir arayüz) olduğunu belirttik. Böylece, bu sınıf gelen HTTP isteklerini işleyebilir.
     [Route("api/[controller]")] // API'nin URL'deki rotasının "api/UserController" olduğunu gösterdik.
     public class UserController : ControllerBase
     {
-        // Gerekli repository'leri (veritabanı işlemleri için kullanılır) private alanlar olarak tanımladık.
-        //Bağımlılık enjeksiyonu(Dependency Injection) ile bu repository'ler otomatik olarak controller'a dışarıdan sağlanacak, böylece sınıf içindeki veritabanı işlemlerinde kullanabileceğiz.
+        // Gerekli repository'leri (veritabanı işlemleri için kullanacaklarımızı) private alanlar olarak tanımladık.
+        //Bağımlılık enjeksiyonu(Dependency Injection) (uygulamanın çalışması için gerekli dış bileşenler)ile bu repository'ler otomatik olarak controller'a dışarıdan sağlanacak, böylece sınıf içindeki veritabanı işlemlerinde kullanabileceğiz.
         private readonly IuserRepository _userRepo;
         private readonly IrolRepository _rolRepo;
 
@@ -27,7 +27,7 @@ namespace libraryApp.backend.Controllers
         // Constructer:
         public UserController(IuserRepository userRepo, IrolRepository rolRepo, IcezaRepository cezaRepo)
         {
-            _userRepo = userRepo; // userRepo'yu sınıf içinde kullanmak için _userRepo'ya atadık.
+            _userRepo = userRepo; // userRepo'yu sınıf içinde kullanmak için _userRepo'ya atadık.(user veri tabanına ulaşabilmek için)
             _rolRepo = rolRepo; // rolRepo'yu sınıf içinde kullanmak için _rolRepo'ya atadık.
             _cezaRepo = cezaRepo; // cezaRepo'yu sınıf içinde kullanmak için _cezaRepo'ya atadık.
         }

@@ -69,7 +69,7 @@ namespace libraryApp.backend.Controllers
         }
 
 
-        [HttpGet("kitapArama")] //getbooksbyname
+        [HttpGet("kitapArama")] //kitap arama URL'i
 
         public async Task<IActionResult> kitapArama([FromQuery] string? kitapIsmi)
         {
@@ -140,7 +140,7 @@ namespace libraryApp.backend.Controllers
 
         public async Task<IActionResult> yazarinKitaplariniGetir([FromRoute] int yazarId)
         {
-            var kitaplar = await _kitapRepo.kitaplar.Include(k => k.kitapYazarlari).Where(k => k.kitapYazarlari.Any(ky => ky.UserId== yazarId)).ToListAsync();
+            var kitaplar = await _kitapRepo.kitaplar.Include(k => k.kitapYazarlari).Where(k => k.kitapYazarlari.Any(ky => ky.UserId == yazarId)).ToListAsync();
 
             var kitapdtos = kitaplar.Select(b => new kitapdto
             {
