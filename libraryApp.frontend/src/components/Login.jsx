@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 export default function Login() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+  const [mail, setMail] = useState('');
+  const [password, setPassword] = useState('');
 
   const [isSubmit, setIsSubmit] = useState(false);
 
@@ -16,7 +14,6 @@ export default function Login() {
         setIsSubmit(false);
         return;
       }
-      
 
       setIsSubmit(false);
     }
@@ -31,7 +28,23 @@ export default function Login() {
     e.preventDefault();
     setIsSubmit(true);
   };
-
+  const handleSignInClick = async () =>{
+    const response = await fetch('http://localhost:5075/api/Account/girisYap', {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: 
+        JSON.stringify(
+          {
+           "email":mail ,
+           "password":password ,
+          }
+      ),
+    } ); 
+    if (response.ok) {
+      const user = response.json();// jsondan objeye dönüştü
+    }
+  
+  }
   return (
     <div className='bg-white px-10 py-20 rounded-3xl border-2 border-gray-50 max-w-lg mx-auto'>
       <h1 className='text-4xl font-bold text-center text-gray-800'>
@@ -49,7 +62,7 @@ export default function Login() {
             placeholder='Enter your email'
             name='email'
             value={formData.email}
-            onChange={handleChange}
+            onChange={(e) => setMail(e.target.value)}
           />
         </div>
 
@@ -61,12 +74,12 @@ export default function Login() {
             type='password'
             name='password'
             value={formData.password}
-            onChange={handleChange}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
 
         <div className='mt-8 flex flex-col gap-y-4'>
-          <button type='submit' className='py-3 rounded-xl bg-violet-500 text-white text-lg font-bold'>
+          <button onClick={handleSignInClick} type='submit' className='py-3 rounded-xl bg-violet-500 text-white text-lg font-bold'>
             Sign In
           </button>
         </div>
