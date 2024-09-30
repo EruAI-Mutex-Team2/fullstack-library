@@ -1,35 +1,35 @@
 import React, { useState, useEffect } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 export default function Login() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+// http://localhost:5075/api/Account/girisYap
+  const [email,setEmail] = useState("");
+  const [password,setPassword] = useState("");
+  const nav = useNavigate();
 
-  const [isSubmit, setIsSubmit] = useState(false);
-
-  useEffect(() => {
-    if (isSubmit) {
-      // Password confirmation check
-      if (formData.password !== formData.passwordConfirm) {
-        alert('Passwords do not match!');
-        setIsSubmit(false);
-        return;
-      }
-      
-
-      setIsSubmit(false);
-    }
-  }, [isSubmit, formData]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value })
- 
+  const data = {
+    email: email,
+    password: password,
   };
-  const handleSubmit = (e) => {
+
+  const handleSigninClick = async (e) => {
     e.preventDefault();
-    setIsSubmit(true);
+    
+    const yanit = await fetch("http://localhost:5075/api/Account/girisYap",{
+      method:"POST",
+      headers: { "Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    });
+
+    if(yanit.ok)
+    {
+      const data = await yanit.json();
+      console.log(data);
+      localStorage.setItem("userData",JSON.stringify(data.userdto));
+      nav("/HomePage");
+    }else
+    {
+    }
   };
 
   return (
@@ -37,19 +37,14 @@ export default function Login() {
       <h1 className='text-4xl font-bold text-center text-gray-800'>
        Login
       </h1>
-
-
-      <form className='mt-8' onSubmit={handleSubmit}>
-
-
+      <form className='mt-8' >
         <div className='mt-4'>
           <label className='text-base font-medium'>Email</label>
           <input
             className='bg-blue-50 w-full h-12 border-2 border-gray-100 rounded-xl p-4 mt-1 '
             placeholder='Enter your email'
             name='email'
-            value={formData.email}
-            onChange={handleChange}
+            onChange={e => setEmail(e.target.value)}
           />
         </div>
 
@@ -60,13 +55,12 @@ export default function Login() {
             placeholder='Enter your password'
             type='password'
             name='password'
-            value={formData.password}
-            onChange={handleChange}
+            onChange={e => setPassword(e.target.value)}
           />
         </div>
 
         <div className='mt-8 flex flex-col gap-y-4'>
-          <button type='submit' className='py-3 rounded-xl bg-violet-500 text-white text-lg font-bold'>
+          <button onClick={e => handleSigninClick(e)} type='submit' className='py-3 rounded-xl bg-violet-500 text-white text-lg font-bold'>
             Sign In
           </button>
         </div>
