@@ -4,24 +4,23 @@ export default function BookList() {
   const [books, setBooks] = useState([]); // State to hold books
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
-
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        // Simulate API call
-        const response = await fetch('https://jsonplaceholder.typicode.com/posts'); // Mock API
-        if (!response.ok) {
-          throw new Error('Failed to fetch books');
-        }
-        const data = await response.json();
-        setBooks(data.slice(0, 5)); // Taking a few items from the mock data
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false); // Stop loading once the fetch is done
+  const [bookName, setbookName] = useState(''); 
+  const fetchBooks = async () => {
+    try {
+      // Simulate API call
+      const response = await fetch('http://localhost:5075/api/Kitap/kitapArama?kitapIsmi=' + bookName); // Mock API
+      if (!response.ok) {
+        throw new Error('Failed to fetch books');
       }
-    };
-
+      const data = await response.json();
+      setBooks(data.slice(0,10)); // Taking a few items from the mock data
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false); // Stop loading once the fetch is done
+    }
+  };
+  useEffect(() => {
     fetchBooks(); // Call the function to fetch books
   }, []); // Empty dependency array ensures the effect runs once on mount
 
@@ -44,10 +43,12 @@ export default function BookList() {
             <input
               id="book-search"
               className="pr-10 pl-10 border text-black border-gray-300 rounded-lg shadow-sm"
+              onChange={(e) => setbookName(e.target.value)}
               type="text"
               placeholder="Book Name..."
             />
-            <button className="bg-purple-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
+            <button onClick={fetchBooks}
+             className="bg-purple-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
               Search
             </button>
             <button className="bg-purple-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
@@ -69,15 +70,17 @@ export default function BookList() {
                   <th className="p-6 text-left">Title</th>
                   <th className="p-6 text-left">Publication Date</th>
                   <th className="p-6 text-left">Is Borrowed</th>
+                  <th className="p-6 text-left">Authors</th>
                   <th className="p-6 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {books.map((book, index) => (
                   <tr key={index} className="border-b">
-                    <td className="p-6">{book.title}</td>
-                    <td className="p-6">01/01/2024</td>
-                    <td className="p-6">{index % 2 === 0 ? 'Yes' : 'No'}</td>
+                    <td className="p-6">{book.kitapIsmi}</td>
+                    <td className="p-6">{book.YayinlanmaTarihi}</td>
+                    <td className="p-6">{book.oduncAlindiMi}</td>
+                    <td className="p-6">{book.kitapYazarlari.join(" , ")}</td>
                     <td className="p-6">
                       <button className="bg-blue-500 text-white py-1 px-2 rounded-lg mr-2">
                         Preview
