@@ -26,9 +26,8 @@ export default function BookList() {
   }, []); // Empty dependency array ensures the effect runs once on mount
 
   return (
-    <div>
-      {/* Header */}
-      <div className="flex justify-between items-center bg-purple-500 text-white p-4 rounded-md shadow-lg mb-6">
+<div>
+      <div className="flex justify-between items-center bg-violet-500 text-white p-4 rounded-md shadow-lg mb-6 ">
         <h1 className="text-3xl font-bold">Books List</h1>
         <div className="flex">
           <a href="/logout" className="hover:text-gray-300">
@@ -36,26 +35,40 @@ export default function BookList() {
           </a>
         </div>
       </div>
+      
+       <div className='pl-6 pr-6 pt-2'>
+      <div className="flex justify-between items-center bg-violet-500 text-white p-4 rounded-md shadow-lg mb-6 ">
+        <div className="flex">
 
-      {/* Search Bar */}
-      <div className="pl-6 pr-6 pt-2">
-        <div className="flex justify-between items-center bg-purple-500 text-white p-4 rounded-md shadow-lg mb-6">
-          <div className="flex">
-            <input
-              id="book-search"
-              className="pr-10 pl-10 border text-black border-gray-300 rounded-lg shadow-sm"
-              type="text"
-              placeholder="Book Name..."
-            />
-            <button className="bg-purple-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
-              Search
-            </button>
-            <button className="bg-purple-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
-              View Borrowed Books
-            </button>
-          </div>
+          <input
+            id="book-search"
+            className="pr-10 pl-10 border text-black border-gray-300 rounded-lg shadow-sm"
+            type="text"
+            placeholder="Book Name..."
+          />
+
+          <button className="bg-violet-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
+            Search
+          </button>
+
+          <button className="bg-violet-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
+            view borrow books
+          </button>
         </div>
       </div>
+      </div>
+    
+      <div className='pl-10 pr-10'>
+      <div className="bg-white shadow-lg rounded-lg p-6">
+        <table className="min-w-full">
+          <thead>
+            <tr className="bg-violet-600 text-white">
+              <th className="p-6 text-left">Title</th>
+              <th className="p-6 text-left">Publication Date</th>
+              <th className="p-6 text-left">Is Borrowed</th>
+              <th className="p-6 text-left">Actions</th>
+            </tr>
+          </thead>
 
       {/* Book Table */}
       <div className="pl-10 pr-10">
