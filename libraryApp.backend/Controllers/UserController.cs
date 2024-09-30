@@ -1,159 +1,166 @@
 using libraryApp.backend.Entity;
 using libraryApp.backend.Repository.Abstract;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using static System.Net.WebRequestMethods;
 
 
 
 namespace libraryApp.backend.Controllers
 
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController] // Bu sınıfın bir API controller (frontend ve backend arasındaki veri akışını sağlayan bir arayüz) olduğunu belirttik. Böylece, bu sınıf gelen HTTP isteklerini işleyebilir.
+    [Route("api/[controller]")] // API'nin URL'deki rotasının "api/UserController" olduğunu gösterdik.
     public class UserController : ControllerBase
     {
+        // Gerekli repository'leri (veritabanı işlemleri için kullanacaklarımızı) private alanlar olarak tanımladık.
+        //Bağımlılık enjeksiyonu(Dependency Injection) (uygulamanın çalışması için gerekli dış bileşenler)ile bu repository'ler otomatik olarak controller'a dışarıdan sağlanacak, böylece sınıf içindeki veritabanı işlemlerinde kullanabileceğiz.
         private readonly IuserRepository _userRepo;
         private readonly IrolRepository _rolRepo;
 
         private readonly IcezaRepository _cezaRepo;
 
+        // Constructor aracılığıyla bağımlılıkları (userRepo, rolRepo, cezaRepo) sınıfa aktardık.
+        // Constructer:
         public UserController(IuserRepository userRepo, IrolRepository rolRepo, IcezaRepository cezaRepo)
         {
-            _userRepo = userRepo;
-            _rolRepo = rolRepo;
-            _cezaRepo = cezaRepo;
+            _userRepo = userRepo; // userRepo'yu sınıf içinde kullanmak için _userRepo'ya atadık.(user veri tabanına ulaşabilmek için)
+            _rolRepo = rolRepo; // rolRepo'yu sınıf içinde kullanmak için _rolRepo'ya atadık.
+            _cezaRepo = cezaRepo; // cezaRepo'yu sınıf içinde kullanmak için _cezaRepo'ya atadık.
         }
-        [HttpGet("rolleriGetir")]
-        public async Task<IActionResult> rolleriGetir()
+        [HttpGet("rolleriGetir")] // HTTP GET isteği ile "rolleriGetir" metoduna ulaşılacağını belirttik.
+        public async Task<IActionResult> rolleriGetir() // rolleri veritabanından alıp dönderen bir method.
         {
-            var roller = await _rolRepo.roller.ToListAsync();
-            return Ok(roller);
+            var roller = await _rolRepo.roller.ToListAsync(); // rolRepo'daki roller listesini veritabanından çekeriz.
+            return Ok(roller); // Alınan roller listesini döndürür.
         }
 
-        [HttpPut("roluGuncelle")]
-        public async Task<IActionResult> rolleriDegistir([FromBody] rolDegistirmedto rolDegistirdto)
+        [HttpPut("roluGuncelle")] // HTTP PUT isteği ile "roluGuncelle" metoduna ulaşılacağını belirttik.
+        public async Task<IActionResult> rolleriDegistir([FromBody] rolDegistirmedto rolDegistirdto) // rol değiştirme işlemini yapan method.
         {
-            var user = await _userRepo.GetuserByIdAsync(rolDegistirdto.userId);
-            if (user == null)
+            var user = await _userRepo.GetuserByIdAsync(rolDegistirdto.userId); // Gönderilen userId ile kullanıcıyı veritabanından buluruz.
+            if (user == null) // Eğer kullanıcı bulunamazsa
             {
-                return NotFound();
+                return NotFound(); // Kullanıcı bulunamadı hatası döndürülür (HTTP 404 Not Found).
             }
             else
             {
-                user.RollId = rolDegistirdto.yeniRolId;
-                await _userRepo.UpdateuserAsync(user);
-                return Ok();
+                user.RolId = rolDegistirdto.yeniRolId; // Kullanıcının rolü değiştirdik.
+                await _userRepo.UpdateuserAsync(user); // Değişiklikler veritabanına kaydettik.
+                return Ok(); // Başarılı bir şekilde güncellendi bilgisi döndürülür.
             }
         }
-        [HttpGet("rolDegistirilecekUserlariGetir")]
-        public async Task<IActionResult> rolUserGetir()
+        [HttpGet("rolDegistirilecekUserlariGetir")] // HTTP GET isteği ile "rolDegistirilecekUserlariGetir" metoduna ulaşılacağını belirttik.
+        public async Task<IActionResult> rolUserGetir() // Rolü değiştirilebilecek kullanıcıları getiren method.
         {
-            List<user> userlar = await _userRepo.users.Where(user => user.RollId < 4).Include(user => user.rol).ToListAsync();
+            List<user> userlar = await _userRepo.users.Where(user => user.RolId < 4).Include(user => user.rol).ToListAsync(); // RollId'si 4'ten küçük olan kullanıcıları (kısıtlı roller) ve onlara ait rolleri veritabanından çektik.
 
-            List<rolUserGetirdto> userGetirdtolar = userlar.Select(user => new rolUserGetirdto
+            List<rolUserGetirdto> userGetirdtolar = userlar.Select(user => new rolUserGetirdto // Kullanıcıları DTO'ya dönüştürürüz.
             {
-                Isım = user.Isim,
-                rolIsmi = user.rol.RolIsmi,
-                Soyisim = user.SoyIsim,
-                userId = user.Id,
+                Isım = user.Isim, // Kullanıcının ismi.
+                rolIsmi = user.rol.RolIsmi, // Kullanıcının rolünün ismi.
+                Soyisim = user.SoyIsim, // Kullanıcının soyismi.
+                userId = user.Id, // Kullanıcının ID'si.
             }).ToList();
 
-            return Ok(userGetirdtolar);
+            return Ok(userGetirdtolar); // DTO'ya dönüştürülen kullanıcıları döndürürüz.
         }
 
-        [HttpGet("cezaVerilebilecekUserlariGetir")]
-        public async Task<IActionResult> cezaUserGetir([FromRoute] int rolId)
+        [HttpGet("cezaVerilebilecekUserlariGetir")] // HTTP GET isteği ile "cezaVerilebilecekUserlariGetir" metoduna ulaşılacağını belirttik.
+        public async Task<IActionResult> cezaUserGetir([FromRoute] int rolId) // Ceza verilebilecek kullanıcıları getiren method.
         {
-            var users = await _userRepo.users.Where(u => u.RollId < rolId).Include(u => u.rol).ToListAsync();
-            var userGetirdtolar = users.Select(u => new rolUserGetirdto
+            var users = await _userRepo.users.Where(u => u.RolId < rolId).Include(u => u.rol).ToListAsync();  // rolId'den küçük rollere sahip kullanıcıları ve onlara ait rolleri veritabanından çekeriz.
+            var userGetirdtolar = users.Select(u => new rolUserGetirdto // Kullanıcıları DTO'ya dönüştürürüz.
             {
-                Isım = u.Isim,
-                rolIsmi = u.rol.RolIsmi,
-                Soyisim = u.SoyIsim,
-                userId = u.Id,
+                Isım = u.Isim, // Kullanıcının ismi.
+                rolIsmi = u.rol.RolIsmi, // Kullanıcının rolünün ismi.
+                Soyisim = u.SoyIsim, // Kullanıcının soyismi.
+                userId = u.Id, // Kullanıcının ID'si.
 
             }).ToList();
 
-            return Ok(userGetirdtolar);
+            return Ok(userGetirdtolar); // DTO'ya dönüştürülen kullanıcıları döndürürüz.
         }
 
-        [HttpPost("cezaVer")]
-        public async Task<IActionResult> cezaVer([FromBody] int userId)
+        [HttpPost("cezaVer")] // HTTP POST isteği ile "cezaVer" metoduna ulaşılacağını belirttik.
+        public async Task<IActionResult> cezaVer([FromBody] int userId) // Ceza verme işlemini yapan method.
         {
-            var user = await _userRepo.GetuserByIdAsync(userId);
-            if (user == null)
+            var user = await _userRepo.GetuserByIdAsync(userId); // Verilen userId ile kullanıcıyı veritabanından buluruz.
+            if (user == null) // Eğer kullanıcı bulunamazsa
             {
-                return NotFound();
+                return NotFound(); // Kullanıcı bulunamadı hatası döndürülür (HTTP 404 Not Found).
             }
             else
             {
-                var ceza = new ceza
+                var ceza = new ceza // Yeni ceza kaydı oluştururuz.
                 {
-                    UserId = userId,
-                    CezaAktifMi = true,
-                    CezaBitisGunu = DateTime.Now.AddDays(14),
-                    CezaGunu = DateTime.Now,
+                    UserId = userId, // Cezanın kullanıcısının ID'si.
+                    CezaAktifMi = true, // Ceza aktif olarak işaretlenir.
+                    CezaBitisGunu = DateTime.UtcNow.AddDays(14), // Cezanın bitiş tarihi(14 gün sonra).
+                    CezaGunu = DateTime.UtcNow, // Cezanın başlama tarihi (şu anki zaman).
                 };
-                await _cezaRepo.AddcezaAsync(ceza);
-                return Ok();
+                await _cezaRepo.AddcezaAsync(ceza); // Yeni ceza kaydı veritabanına eklenir.
+                return Ok(); // Ceza başarıyla eklendi bilgisi döndürülür.
             }
 
         }
 
-        [HttpPut("cezaKaldir")]
-        public async Task<IActionResult> cezaKaldir([FromBody] int userId)
+        [HttpPut("cezaKaldir")] // HTTP PUT isteği ile "cezaKaldir" metoduna ulaşılacağını belirttik.
+        public async Task<IActionResult> cezaKaldir([FromBody] int userId) // Ceza kaldırma işlemini yapan method.
         {
-            var cezaKaydi = await _cezaRepo.cezalar.Where(c => c.UserId == userId && c.CezaAktifMi == true).FirstOrDefaultAsync();
-            if (cezaKaydi == null)
+            var cezaKaydi = await _cezaRepo.cezalar.Where(c => c.UserId == userId && c.CezaAktifMi == true).FirstOrDefaultAsync(); // Verilen userId ile aktif cezayı buluruz.
+            if (cezaKaydi == null) // Eğer aktif ceza kaydı bulunamazsa
             {
-                return NotFound();
+                return NotFound(); // Ceza bulunamadı hatası döndürülür (HTTP 404 Not Found).
             }
             else
             {
-                cezaKaydi.CezaAktifMi = false;
-                await _cezaRepo.UpdatecezaAsync(cezaKaydi);
-                return Ok();
+                cezaKaydi.CezaAktifMi = false; // Ceza pasif duruma getirilir.
+                await _cezaRepo.UpdatecezaAsync(cezaKaydi); // Ceza güncellenir ve veritabanına kaydedilir.
+                return Ok(); // Ceza başarıyla kaldırıldı bilgisi döndürülür.
             }
         }
-        [HttpGet("mesajGonderilebilecekUserlarGetir")]
-        public async Task<IActionResult> mesajGonderilebilecekUserlarGetir([FromRoute] int rolId)
+        [HttpGet("mesajGonderilebilecekUserlarGetir")] // HTTP GET isteği ile "mesajGonderilebilecekUserlarGetir" metoduna ulaşılacağını belirttik.
+        public async Task<IActionResult> mesajGonderilebilecekUserlarGetir([FromRoute] int rolId) // Mesaj gönderilebilecek kullanıcıları getiren method.
         {
+            // Mesaj gönderilebilecek roller belirlenir. Rol ID'ye göre mesaj gönderilebilecek roller listeye eklenir.
             //1-user 2-yazar 3-gorevli 4-yonetici 
             var roller = new List<int>();
 
-            if (rolId == 1)
+            if (rolId == 1) // Eğer kullanıcı rolId'si 1 (user) ise, sadece 3 numaralı role (görevli) mesaj gönderebilir.
             {
                 roller.Add(3);
             }
-            else if (rolId == 2)
+            else if (rolId == 2) // Eğer rolId 2 (yazar) ise, 3 ve 4 numaralı rollere (görevli ve yönetici) mesaj gönderebilir.
             {
                 roller.Add(3);
                 roller.Add(4);
             }
-            else if (rolId == 3)
+            else if (rolId == 3) // Eğer rolId 3 (görevli) ise, 1, 2 ve 4 numaralı rollere mesaj gönderebilir.
             {
                 roller.Add(1);
                 roller.Add(2);
                 roller.Add(4);
             }
-            else if (rolId == 4)
+            else if (rolId == 4) // Eğer rolId 4 (yönetici) ise, 2 ve 3 numaralı rollere mesaj gönderebilir.
             {
                 roller.Add(2);
                 roller.Add(3);
             }
 
-            var users = await _userRepo.users.Where(u => roller.Contains(u.RollId)).Include(u => u.rol).ToListAsync();
-            var userGetirdtolar = users.Select(u => new rolUserGetirdto
+            var users = await _userRepo.users.Where(u => roller.Contains(u.RolId)).Include(u => u.rol).ToListAsync(); // Yukarıda belirlenen rollerle eşleşen kullanıcıları ve onların rollerini veritabanından çekeriz.
+            var userGetirdtolar = users.Select(u => new rolUserGetirdto // Kullanıcıları DTO'ya dönüştürürüz.
             {
-                Isım = u.Isim,
-                rolIsmi = u.rol.RolIsmi,
-                Soyisim = u.SoyIsim,
-                userId = u.Id,
+                Isım = u.Isim, // Kullanıcının ismi.
+                rolIsmi = u.rol.RolIsmi, // Kullanıcının rolünün ismi.
+                Soyisim = u.SoyIsim, // Kullanıcının soyismi.
+                userId = u.Id, // Kullanıcının ID'si.
 
             }).ToList();
-            return Ok(userGetirdtolar);
+            return Ok(userGetirdtolar); // DTO'ya dönüştürülen kullanıcılar başarılı bir şekilde döndürülür.
 
 
         }

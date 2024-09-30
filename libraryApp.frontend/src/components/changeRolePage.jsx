@@ -7,7 +7,6 @@ const ChangeRole = () => {
   const [selectedRole, setSelectedRole] = useState('');
   const [isPunishmentModalOpen, setIsPunishmentModalOpen] = useState(false);
   const [punishmentType, setPunishmentType] = useState('');
-
   useEffect(() => {
     // Burada kullanıcıları API'den alıyormuş gibi sabit bir veri kullanıyoruz.
     const fetchUsers = async () => {

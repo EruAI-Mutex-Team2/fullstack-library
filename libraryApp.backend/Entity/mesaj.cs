@@ -9,5 +9,6 @@ namespace libraryApp.backend.Entity
         public string Konu { get; set; }
         public string Icerik { get; set; }
 
+        public user gonderen { get; set; }
     }
 }

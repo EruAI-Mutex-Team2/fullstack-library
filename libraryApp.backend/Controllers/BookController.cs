@@ -11,10 +11,12 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace libraryApp.backend.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController]// Bu sınıfın bir API (frontend ve backend arasındaki veri akışını sağlyan bir arayüz) kontrolcüsü olduğunu belirtiyor.
+    [Route("api/[controller]")]// İsteklerin URL’de yönlendirileceği yolu  belirtir.
     public class KitapController : ControllerBase
     {
+        //Kitap, sayfa, ödünç, kullanıcı, mesaj ve yayın talepleri depoları
+
         private readonly IkitapRepository _kitapRepo;
         private readonly IsayfaRepository _sayfaRepo;
         private readonly IkitapOduncRepository _kitapOduncRepo;
@@ -67,7 +69,7 @@ namespace libraryApp.backend.Controllers
         }
 
 
-        [HttpGet("kitapArama")] //getbooksbyname
+        [HttpGet("kitapArama")] //kitap arama URL'i
 
         public async Task<IActionResult> kitapArama([FromQuery] string? kitapIsmi)
         {
@@ -105,6 +107,7 @@ namespace libraryApp.backend.Controllers
             if (!_userRepo.users.Any(u => u.Id == yazarId)) return NotFound(new { Message = "Yazar bulunamadı." });
             await _kitapRepo.AddkitapAsync(new kitap
             {
+                Isim = "Yeni kitap",
                 KitapYayinlandiMi = false,
                 YayinlanmaTarihi = DateTime.MinValue,
                 kitapYazarlari = [
@@ -213,8 +216,8 @@ namespace libraryApp.backend.Controllers
                 BeklemedeMi = true,
                 OnaylandiMi = false,
                 DondurulduMu = false,
-                TalepTarihi = DateTime.Now,
-                DonusTarihi = DateTime.Now.AddDays(14),
+                TalepTarihi = DateTime.UtcNow,
+                DonusTarihi = DateTime.UtcNow.AddDays(14),
                 KitapId = oduncTalebidto.kitapId,
                 UserId = oduncTalebidto.isteyenId,
             };
