@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const BookEditor = () => {
+const WritePage = () => {
   const [pageContents, setPageContents] = useState([""]); 
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -82,4 +82,4 @@ const BookEditor = () => {
   );
 };
 
-export default BookEditor;
+export default WritePage;
