@@ -2,31 +2,52 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function BorrowedBooksList() {
-  const [borrowedBooks, setBorrowedBooks] = useState([]); // State to hold borrowed books data
+
+  const [borrowedBooks, setBorrowedBooks] = useState([]);//kitapların olduğu array
 
   useEffect(() => {
+
     const fetchBorrowedBooks = async () => {
-      try {
-        // Simulating an API call with a fetch request (Replace with real API)
-        const response = await fetch('https://jsonplaceholder.typicode.com/posts'); // Mock API
-        if (!response.ok) {
-          throw new Error('Failed to fetch borrowed books');
-        }
-        const data = await response.json();
-        setBorrowedBooks(data.slice(0, 5)); // Limit to 5 mock records for demo purposes
-      } catch (error) {
-        setError(error.message); // Handle any errors that occur during fetch
-      } finally {
-        setLoading(false); // End loading state
-      }
+      const userId = localStorage.getItem('userId'); //giriş yapan kişi id
+      const yanit = await fetch(`http://localhost:5075/api/Kitap/oduncAlinanKitaplariGetir/`+userId,
+        {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await yanit;//dönen sonucu çevirip borrowedbooks içine attık
+      setBorrowedBooks(data);
     };
 
-    fetchBorrowedBooks(); // Fetch data when component mounts
-  }, []); // Empty dependency array ensures effect only runs once
+    fetchBorrowedBooks();//sayfa açılınca metodu çağırmış olduk
+  }, []);
+
+
+  const returnBook = async (kitapId) => {
+    try {
+      const yanit2 = await fetch('http://localhost:5075/api/Kitap/kitapIadeEt',
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(kitapId),//bodyden gönderdiğimiz için linkle göndermedik
+      });
+
+      if (!yanit2.ok) {
+        throw new Error('Failed to return the book');
+      }
+
+      setBorrowedBooks(borrowedBooks.filter(book => book.id !== kitapId));
+    } 
+    catch (error) {                //belirli şartları sağlıyorsa dizide kalır sağlamıyorsa diziden atılır filterın kullanışı bu şekildedir.
+    console.error(error);
+    }
+  };
 
   return (
     <div>
-      {/* Header */}
       <div className="flex justify-between items-center bg-violet-500 text-white p-4 rounded-md shadow-lg mb-6">
         <h1 className="text-3xl font-bold">Book Operations</h1>
         <div className="flex">
@@ -37,7 +58,7 @@ export default function BorrowedBooksList() {
         </div>
       </div>
 
-      {/* Search Bar */}
+
       <div className='pl-6 pr-6 pt-2'>
         <div className="flex justify-between items-center bg-violet-500 text-white p-4 rounded-md shadow-lg mb-6">
           <div className="flex">
@@ -50,14 +71,11 @@ export default function BorrowedBooksList() {
             <button className="bg-violet-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
               Search
             </button>
-            <button className="bg-violet-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
-              View Borrowed Books
-            </button>
           </div>
         </div>
       </div>
 
-      {/* Borrowed Books Table */}
+
       <div className='pl-10 pr-10'>
         <div className="bg-white shadow-lg rounded-lg p-6">
             <table className="min-w-full">
@@ -66,24 +84,22 @@ export default function BorrowedBooksList() {
                   <th className="p-6 text-left">Title</th>
                   <th className="p-6 text-left">Authors</th>
                   <th className="p-6 text-left">Publication Date</th>
-                  <th className="p-6 text-left">Borrowed Date</th>
-                  <th className="p-6 text-left">Return Date</th>
                   <th className="p-6 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {borrowedBooks.map((book, index) => (
                   <tr key={index} className="border-b">
-                    <td className="p-6">{book.title}</td>
-                    <td className="p-6">Author Name {index + 1}</td>
-                    <td className="p-6">01/01/2024</td>
-                    <td className="p-6">02/01/2024</td>
-                    <td className="p-6">03/01/2024</td>
+                    <td className="p-6">{book.kitapIsmi}</td>
+                    <td className="p-6">{book.kitapYazarlari}</td>
+                    <td className="p-6">{book.yayinlanmaTarihi}</td>
                     <td className="p-6">
                       <button className="bg-blue-500 text-white py-1 px-2 rounded-lg mr-2">
                         Read
                       </button>
-                      <button className="bg-green-500 text-white py-1 px-2 rounded-lg">
+                      <button
+                      onClick={() => returnBook(book.id) }
+                      className="bg-green-500 text-white py-1 px-2 rounded-lg">
                         Return
                       </button>
                     </td>
