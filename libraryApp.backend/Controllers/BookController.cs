@@ -153,7 +153,7 @@ namespace libraryApp.backend.Controllers
             return Ok(kitapdtos);
         }
 
-        [HttpGet("yazarinKitaplariniGetir")]
+        [HttpGet("yazarinKitaplariniGetir/{yazarId}")]
 
         public async Task<IActionResult> yazarinKitaplariniGetir([FromRoute] int yazarId)
         {

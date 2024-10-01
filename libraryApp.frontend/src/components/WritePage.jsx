@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const WritePage = () => {
 
     const [user,setUser]=useState({});
+    
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userData"));
     if (user === null) {
@@ -16,6 +17,8 @@ const WritePage = () => {
     else{
       setUser(user);
     }
+
+    
   },[]);
 
   
