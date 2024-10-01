@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // React Router'dan navigate almak için
+import { useLocation } from "react-router-dom";
 
-const BookReader = ({ bookId }) => {
+const BookReader = ({ }) => {
   const [book, setBook] = useState({}); 
   const [page, setPage] = useState({}); 
   const navigate = useNavigate(); // Yönlendirme işlemi için useNavigate kullanıyoruz
+  const bookId = new URLSearchParams(location.search).get("bookId");
 
   // useEffect, sayfa numarası değiştiğinde tetiklenecek ve veriyi backend'den çekecek
   useEffect(() => {
     const fetchPageContent = async () => {
       const response = await fetch(
-        `http://localhost:5075/api/Kitap/kitapOku?kitapId=${1}`
+        `http://localhost:5075/api/Kitap/kitapOku?kitapId=${bookId}`
       );
 
       if (!response.ok) {
@@ -33,7 +35,7 @@ const BookReader = ({ bookId }) => {
     <div className="flex flex-col h-screen">
       {/* Navbar */}
       <nav className="bg-violet-500 text-white p-4 flex justify-between items-center shadow-md">
-        <h1 className="text-2xl font-bold">BookReader</h1>
+        <h1 className="text-2xl font-bold">Book Read</h1>
         <button
           onClick={handleLogout}
           className="bg-violet-700 hover:bg-violet-500 text-white px-4 py-2 rounded"
@@ -55,7 +57,7 @@ const BookReader = ({ bookId }) => {
         />
 
         <div className="p-6 border border-gray-400 rounded bg-white w-1/2 text-center shadow-lg">
-          <p className="text-lg text-gray-700">{page?.icerik || "Sayfa seçin"}</p>
+          <p className="text-lg text-gray-700">{page?.icerik}</p>
         </div>
       </div>
     </div>
