@@ -64,7 +64,7 @@ const ChangeRole = () => {
   };
 
   const handlePunishmentSubmit = () => {
-    alert(`User: ${selectedUser}, Punishment: ${punishmentType} applied!`);
+    alert('User: ${selectedUser}, Punishment: ${punishmentType} applied!');
     setIsPunishmentModalOpen(false); // Modalı kapat
   };
 

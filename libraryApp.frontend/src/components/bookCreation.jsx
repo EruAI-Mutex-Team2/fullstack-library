@@ -5,7 +5,17 @@ import { Link } from 'react-router-dom';
 
 const App = () => {
   const [books, setBooks] = useState([]); // State to hold the list of books
-
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userData"));
+    if (user === null) {//kullanıcı giriş yapmamışsa login sayfası
+      nav("/login");
+    }
+    else if( user.rolIsmi!=="yazar"){//giriş yapan yazar değilse homepage e at
+       nav("/HomePage");
+    }
+    else{
+      setUser(user);
+    }});
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -14,6 +24,14 @@ const App = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
+      if (yanit.ok) {
+
+        const data = await yanit.json();
+        console.log(data);
+        localStorage.setItem("bookData", JSON.stringify(data.userdto));
+        nav("/HomePage");
+      } else {
+      }
     };
 
     fetchBooks();
@@ -26,6 +44,7 @@ const App = () => {
   const handleLogoutClick = () => {
     navigate('/FirstPage'); 
   };
+  
 
   return (
     <div className="flex flex-col h-screen w-full">

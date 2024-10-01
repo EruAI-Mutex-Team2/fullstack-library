@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function BookList() {
-  const [books, setBooks] = useState([]); // State to hold books
-  const [bookName , setBookName] = useState("");
+const [books, setBooks] = useState([]); // State to hold books
+const [bookName , setBookName] = useState("");
+
 const handleSearchClick=async() => {
 const yanit= await fetch("http://localhost:5075/api/Kitap/kitapArama?kitapIsmi=" + bookName);
 if(yanit.ok){
   const data = await yanit.json();
   setBooks(data);
   }
-
 };
 
   return (
