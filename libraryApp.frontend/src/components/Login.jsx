@@ -3,9 +3,9 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 export default function Login() {
-// http://localhost:5075/api/Account/girisYap
-  const [email,setEmail] = useState("");
-  const [password,setPassword] = useState("");
+  // http://localhost:5075/api/Account/girisYap
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const nav = useNavigate();
 
   const data = {
@@ -15,21 +15,19 @@ export default function Login() {
 
   const handleSigninClick = async (e) => {
     e.preventDefault();
-    
-    const yanit = await fetch("http://localhost:5075/api/Account/girisYap",{
-      method:"POST",
-      headers: { "Content-Type": "application/json"},
+
+    const yanit = await fetch("http://localhost:5075/api/Account/girisYap", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     });
 
-    if(yanit.ok)
-    {
+    if (yanit.ok) {
       const data = await yanit.json();
       console.log(data);
-      localStorage.setItem("userData",JSON.stringify(data.userdto));
+      localStorage.setItem("userData", JSON.stringify(data.userdto));
       nav("/HomePage");
-    }else
-    {
+    } else {
     }
   };
 
@@ -49,6 +47,8 @@ export default function Login() {
               <input
                 className='w-full h-12 border border-gray-300 rounded-xl p-4 mt-1 bg-transparent'
                 placeholder='Enter your email'
+                onChange={e =>setEmail(e.target.value)}
+
               />
             </div>
 
@@ -58,6 +58,8 @@ export default function Login() {
                 className='w-full h-12 border border-gray-300 rounded-xl p-4 mt-1 bg-transparent'
                 placeholder='Enter your password'
                 type='password'
+                onChange={e =>setPassword(e.target.value)}
+
               />
             </div>
 

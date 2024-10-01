@@ -77,11 +77,10 @@ export default function HomePage() {
           </Link>)}
 
          {(user.rolIsmi==="yazar") && (<Link to="/WritePage">
-          <button className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64">
-            Borrowed Books
+          <button className="bg-violet-700 text-white py-2 px-4 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64">
+          Write Page        
           </button>
         </Link>)}
-
 
         <button onClick={handleLogoutClick} className="bg-violet-700 text-white py-2 px-4 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64">
             Logout

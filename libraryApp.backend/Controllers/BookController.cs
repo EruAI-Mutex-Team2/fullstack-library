@@ -191,7 +191,7 @@ namespace libraryApp.backend.Controllers
         }
 
         [HttpGet("kitapOku")]
-        public async Task<IActionResult> kitapOku([FromRoute] int kitapId)
+        public async Task<IActionResult> kitapOku([FromQuery] int kitapId)
         {
             kitap? kitapp = await _kitapRepo.kitaplar.Include(k => k.sayfalar).FirstOrDefaultAsync(k => k.Id == kitapId);
 

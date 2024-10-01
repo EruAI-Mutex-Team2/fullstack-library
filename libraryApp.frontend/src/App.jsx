@@ -10,6 +10,7 @@ import BorrowRequests from './components/BorrowRequests';
 import MessagePage from './components/MessagePage';
 import WritePage from './components/WritePage';
 import HomePage from './components/HomePage';
+import ChangeRole from './components/changeRolePage';
 
 function App() {
   return (
