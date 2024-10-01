@@ -13,9 +13,17 @@ namespace libraryApp.backend.Controllers
 {
     [ApiController]// Bu sınıfın bir API (frontend ve backend arasındaki veri akışını sağlyan bir arayüz) kontrolcüsü olduğunu belirtiyor.
     [Route("api/[controller]")]// İsteklerin URL’de yönlendirileceği yolu  belirtir.
-    public class KitapController : ControllerBase
+    public class KitapController : ControllerBase // ControllerBase sınıfından türetilir, API işlemleri için temel işlevsellik sağlar.
     {
+        //beklemedeMi: kitap talebine cevap verildi mi?
+        //onaylandiMi: kitap talabi onaylandı mı?
+        //dondurulduMu: teslim edildi mi?
+
+        //utcnow: evrensel zaman almaya yarar.
+
+        // Burada, farklı repository (depo) interface'leri tanımlanıyor.
         //Kitap, sayfa, ödünç, kullanıcı, mesaj ve yayın talepleri depoları
+        // Repository'ler, veri tabanının işleyeceği verileri içinde tutar.
 
         private readonly IkitapRepository _kitapRepo;
         private readonly IsayfaRepository _sayfaRepo;
@@ -24,6 +32,7 @@ namespace libraryApp.backend.Controllers
         private readonly ImesajRepository _mesajRepo;
         private readonly IkitapYayinTalebiRepository _kitapYayinTalebiRepo;
 
+        //controller'ın çalışabilmesi için ihtiyaç duyduğu repository'ler, constructor'a dışarıdan otomatik olarak aktarılır ve bu sayede controller içinde kullanılabilir hale gelir
         public KitapController(IkitapRepository kitapRepo, IkitapOduncRepository kitapOduncRepo, IuserRepository userRepo, IkitapYayinTalebiRepository kitapYayinTalebiRepository, IsayfaRepository sayfaRepository, ImesajRepository mesajRepository)
         {
             _kitapRepo = kitapRepo;
@@ -34,12 +43,15 @@ namespace libraryApp.backend.Controllers
             _mesajRepo = mesajRepository;
         }
 
-
-        [HttpGet("kitapYayinlamaİstekleri")] //getbookpublishrequests
-        public async Task<IActionResult> kitapYayinlamaİstekleri()
+        // Kitap yayınlama isteklerini getirir.
+        [HttpGet("kitapYayinlamaİstekleri")] 
+        public async Task<IActionResult> kitapYayinlamaİstekleri() //kitap yayınlama isteklerini veritabanından alıp döderen method.
         {
+            // Beklemede olan kitap yayınlama isteklerini, ilgili kitap ve yazar bilgileri ile birlikte alır.
+            //await: programın eş zamanlı çalışabilmesi için gerekli bilgilerin gelmesini bekler.
             var kitapYayinlamaİstekleri = await _kitapYayinTalebiRepo.kitapYayinTalepleri.Where(kyt => kyt.BeklemedeMi).Include(kyt => kyt.kitap).ThenInclude(k => k.kitapYazarlari).ThenInclude(ky => ky.user).OrderBy(kyt => kyt.TalepTarihi).ToListAsync();
-            return Ok(kitapYayinlamaİstekleri.Select(kyt => new kitapYayinTalepleridto
+            
+            return Ok(kitapYayinlamaİstekleri.Select(kyt => new kitapYayinTalepleridto 
             {
                 kitapYazarlari = kyt.kitap.kitapYazarlari.Select(ky => ky.user.Isim).ToList(),
                 kitapIsmi = kyt.kitap.Isim,
@@ -49,17 +61,20 @@ namespace libraryApp.backend.Controllers
             }));
         }
 
-
+        
         [HttpPost("yayinlamaIstegiAt")] //yazarın kitap yayınlama isteği atması
-        public async Task<IActionResult> yayinlamaIstegiAt([FromBody] int kitapId)
+        public async Task<IActionResult> yayinlamaIstegiAt([FromBody] int kitapId) 
         {
-            var kitap = await _kitapRepo.GetkitapByIdAsync(kitapId);
-            if (kitap == null) return NotFound(new { Message = "Kitap bulunamadı." });
-            if (kitap.KitapYayinlandiMi) return BadRequest(new { Message = "Kitabın zaten yayınlandı." });
-            if (_kitapYayinTalebiRepo.kitapYayinTalepleri.Any(kyt => kyt.BeklemedeMi && kyt.KitapId == kitapId))
+            var kitap = await _kitapRepo.GetkitapByIdAsync(kitapId); // Kitabı ID ile bulur.
+            if (kitap == null) return NotFound(new { Message = "Kitap bulunamadı." }); // Kitap yoksa hata döner.
+            if (kitap.KitapYayinlandiMi) return BadRequest(new { Message = "Kitabın zaten yayınlandı." }); // Yayınlanmışsa hata döner.
+            
+            // Aynı kitaba ait bekleyen bir istek olup olmadığını kontrol eder.
+            if (_kitapYayinTalebiRepo.kitapYayinTalepleri.Any(kyt => kyt.BeklemedeMi && kyt.KitapId == kitapId)) 
                 return BadRequest(new { Message = "Aktif isteğin var." });
 
-            await _kitapYayinTalebiRepo.AddkitapYayinTalebiAsync(new kitapYayinTalebi()
+            // Yayınlama isteği oluşturur.
+            await _kitapYayinTalebiRepo.AddkitapYayinTalebiAsync(new kitapYayinTalebi() 
             {
                 KitapId = kitapId,
                 BeklemedeMi = true,
@@ -68,10 +83,10 @@ namespace libraryApp.backend.Controllers
             return Ok(new { Message = "İstek gönderildi." });
         }
 
+        
+        [HttpGet("kitapArama")] 
 
-        [HttpGet("kitapArama")] //kitap arama URL'i
-
-        public async Task<IActionResult> kitapArama([FromQuery] string? kitapIsmi)
+        public async Task<IActionResult> kitapArama([FromQuery] string? kitapIsmi) // Kitap ismine göre kitap araması yapar.
         {
             var kitaplar = await _kitapRepo.kitaplar.Where(k => k.Isim.Contains(kitapIsmi ?? "") && k.KitapYayinlandiMi).Take(20).Include(k => k.kitapOduncIstekleri).Select(k => new kitapdto
             {
@@ -83,8 +98,10 @@ namespace libraryApp.backend.Controllers
             }).ToListAsync();
             return Ok(kitaplar);
         }
-        [HttpGet("kitapOduncIstekleri")] //kitap ödünç istekleri
+        [HttpGet("kitapOduncIstekleri")] 
 
+
+        
         public async Task<IActionResult> kitapOduncIstekleri()
         {
 
@@ -166,7 +183,7 @@ namespace libraryApp.backend.Controllers
             return Ok();
         }
 
-        [HttpPut("yayinlamaIstegineCevapVer")]
+        [HttpPut("yayinlamaIstegineCevapVer")] //yazarın yayınlama isteğine görevli cevap verir
         public async Task<IActionResult> yayinlamaIstegineCevapVer([FromBody] yayinlamaIstegidto yayinIstekDto)
         {
             var yayinlamaIstegi = await _kitapYayinTalebiRepo.kitapYayinTalepleri.FirstOrDefaultAsync(kyt => kyt.Id == yayinIstekDto.yayinIstekId);
@@ -178,7 +195,7 @@ namespace libraryApp.backend.Controllers
             return Ok();
         }
 
-        [HttpPut("kitapIadeEt")]
+        [HttpPut("kitapIadeEt")] 
         public async Task<IActionResult> kitapIadeEt([FromBody] int kitapId)
         {
             var kitapOdunc = await _kitapOduncRepo.kitapOduncler.FirstOrDefaultAsync(ko => ko.KitapId == kitapId && ko.DondurulduMu == false && ko.OnaylandiMi);
@@ -206,7 +223,7 @@ namespace libraryApp.backend.Controllers
             return Ok(okudto);
         }
 
-        [HttpPost("kitapOduncTalepEt")]
+        [HttpPost("kitapOduncTalepEt")] //kitap ödünç istekleri
         public async Task<IActionResult> kitapOduncTalepEt([FromBody] kitapOduncTalebidto oduncTalebidto)
         {
             if (_kitapOduncRepo.kitapOduncler.Any(ko => !ko.DondurulduMu && ko.OnaylandiMi)) return BadRequest();
@@ -225,7 +242,7 @@ namespace libraryApp.backend.Controllers
             return Ok();
         }
 
-        [HttpPut("gorevliOduncCevapVer")]
+        [HttpPut("gorevliOduncCevapVer")] //görevli ödünç kitap isteyenlere geri dönüş sağlıyor.
         public async Task<IActionResult> gorevliOduncCevapVer([FromBody] oduncCevapdto oduncdto)
         {
             kitapOdunc odunc = await _kitapOduncRepo.GetkitapOduncByIdAsync(oduncdto.oduncIstegiId);

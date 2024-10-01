@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function BookList() {
-
 const [books, setBooks] = useState([]); // State to hold books
 const [bookName , setBookName] = useState("");
 

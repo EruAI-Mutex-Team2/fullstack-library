@@ -30,7 +30,23 @@ export default function Login() {
     } else {
     }
   };
-
+  const handleSignInClick = async () =>{
+    const response = await fetch('http://localhost:5075/api/Account/girisYap', {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: 
+        JSON.stringify(
+          {
+           "email":mail ,
+           "password":password ,
+          }
+      ),
+    } ); 
+    if (response.ok) {
+      const user = response.json();// jsondan objeye dönüştü
+    }
+  
+  }
   return (
     <div className="flex w-full h-screen">
 
