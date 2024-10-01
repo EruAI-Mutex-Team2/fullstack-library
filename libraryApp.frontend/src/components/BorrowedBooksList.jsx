@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 
 export default function BorrowedBooksList() {
   const [borrowedBooks, setBorrowedBooks] = useState([]); // State to hold borrowed books data
-  const [loading, setLoading] = useState(true); // State for loading
-  const [error, setError] = useState(null); // State for error handling
 
   useEffect(() => {
     const fetchBorrowedBooks = async () => {
@@ -62,9 +60,6 @@ export default function BorrowedBooksList() {
       {/* Borrowed Books Table */}
       <div className='pl-10 pr-10'>
         <div className="bg-white shadow-lg rounded-lg p-6">
-          {loading && <p>Loading borrowed books...</p>}
-          {error && <p className="text-red-500">{error}</p>}
-          {!loading && !error && (
             <table className="min-w-full">
               <thead>
                 <tr className="bg-violet-600 text-white">
@@ -96,7 +91,6 @@ export default function BorrowedBooksList() {
                 ))}
               </tbody>
             </table>
-          )}
         </div>
       </div>
     </div>
