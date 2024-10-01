@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function BorrowedBooksList() {
   const [borrowedBooks, setBorrowedBooks] = useState([]); // State to hold borrowed books data
@@ -31,7 +32,10 @@ export default function BorrowedBooksList() {
       <div className="flex justify-between items-center bg-violet-500 text-white p-4 rounded-md shadow-lg mb-6">
         <h1 className="text-3xl font-bold">Book Operations</h1>
         <div className="flex">
-          <a href="/logout" className="hover:text-gray-300">Logout</a>
+        <Link to="/FirstPage">
+        <a href="/logout" className="hover:text-gray-300">Logout</a>
+        </Link>
+
         </div>
       </div>
 

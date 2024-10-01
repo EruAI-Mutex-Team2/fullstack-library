@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
 export default function FirstPage() {
   return (
@@ -11,13 +12,18 @@ export default function FirstPage() {
       
 
       <div className="absolute top-10 right-10">
+        <Link to="/Login">
           <button className="bg-white text-violet-700 py-2 px-4 mr-4 rounded-lg hover:bg-gray-200 transition-all">
             Sign in
           </button>
+          </Link>
 
+        <Link to="/Register">
           <button className="bg-white text-violet-700 py-2 px-4 rounded-lg hover:bg-gray-200 transition-all">
             Sign up
           </button>
+          </Link>
+
       </div>
 
 

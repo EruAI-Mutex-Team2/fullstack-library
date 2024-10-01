@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function BorrowRequests() {
   const [borrowRequests, setBorrowRequests] = useState([]); 
@@ -30,7 +31,9 @@ export default function BorrowRequests() {
       <div className="flex justify-between items-center bg-violet-500 text-white p-4 shadow-lg">
         <h1 className="text-3xl font-bold">Borrow Request</h1>
         <div className="flex space-x-6">
-          <a href="/logout" className="hover:text-white">Logout</a>
+        <Link to="/FirstPage">
+        <a href="/logout" className="hover:text-gray-300">Logout</a>
+        </Link>
         </div>
       </div>
 

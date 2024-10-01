@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; 
 import Login from './components/Login';
 import Register from './components/Register';
 import FirstPage from './components/FirstPage';
@@ -9,12 +9,16 @@ import BorrowedBooksList from './components/BorrowedBooksList';
 import BorrowRequests from './components/BorrowRequests';
 import MessagePage from './components/MessagePage';
 import WritePage from './components/WritePage';
+import HomePage from './components/HomePage';
+import BorrowAndUserRequest from './components/borrowAndUserRequest';
+import ChangeRole from './components/changeRolePage';
+
 
 function App() {
   return (
-    <Router>
+    <Router> 
       <Routes>
-        <Route path="/" element={<GirisSayfasi />} />
+        <Route path="/" element={< ChangeRole/>} />
         <Route path="/MyBooks" element={<MyBooks />} />
         <Route path="/BookList" element={<BookList />} />
         <Route path="/BorrowedBooksList" element={<BorrowedBooksList />} />
@@ -23,6 +27,7 @@ function App() {
         <Route path="/MessagePage" element={<MessagePage />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/WritePage" element={<WritePage />} />
+        <Route path="/HomePage" element={<HomePage />} />
       </Routes>
     </Router>
   );

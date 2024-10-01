@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from "react";
 
 export default function Register() {
+  const formdata = {};
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -9,7 +11,6 @@ export default function Register() {
     password: '',
     passwordConfirm: ''
   });
-
   const [isSubmit, setIsSubmit] = useState(false);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ export default function Register() {
         setIsSubmit(false);
         return;
       }
-      
+
       // Form submission logic (simulating an API call)
       console.log('Form submitted:', formData);
 
@@ -47,7 +48,7 @@ export default function Register() {
         <div className='bg-white px-10 py-20 rounded-3xl border-2 border-gray-50 max-w-lg mx-auto'>
           <h1 className='mt-3 text-4xl font-bold text-center text-gray-800'>
             Create an Account
-          </h1> 
+          </h1>
 
           <p className='font-medium text-lg text-gray-500 mt-4 text-center'>
             Please fill in your details to create a new account.
@@ -97,24 +98,24 @@ export default function Register() {
             </div>
 
             <div className='mt-8 flex flex-col gap-y-4'>
-              <button className='py-3 rounded-xl bg-violet-500 text-white text-lg font-bold'>
+              <button onClick={handleSubmit} className='py-3 rounded-xl bg-violet-500 text-white text-lg font-bold'>
                 Sign up
               </button>
             </div>
 
             <div className='mt-8 flex justify-center items-center'>
               <p className='font-medium text-base'>Already have an account?</p>
-              <Link to="/Login">
-              <button className='text-violet-500 text-base font-medium ml-2'>
+
+              <Link className='text-violet-500 text-base font-medium ml-2' to="/Login">
                 Sign in
-              </button>
               </Link>
+
             </div>
           </div>
         </div>
       </div>
 
-      
+
       <div className="hidden lg:flex w-1/2 items-center justify-center relative bg-gray-200">
         <div className="w-60 h-60 bg-gradient-to-tr from-violet-300 to-blue-950 rounded-full animate-pulse" />
         <div className="w-full h-1/2 absolute bottom-0 bg-white/10 backdrop-blur-lg" />
