@@ -89,6 +89,7 @@ namespace libraryApp.backend.Controllers
             // Yeni kullanıcı veritabanına eklenir.
             await _userRepo.AdduserAsync(new user
             {
+                RolId = 1,
                 Isim = kayitdto.Isim,
                 SoyIsim = kayitdto.SoyIsim,
                 Email = kayitdto.Email,

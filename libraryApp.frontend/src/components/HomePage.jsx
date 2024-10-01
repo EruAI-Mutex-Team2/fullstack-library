@@ -33,34 +33,59 @@ export default function HomePage() {
       {/* Üst menü */}
       <div className="flex flex-col items-center  mt-10">
         <h2 className="text-violet-700 text-xl mb-4">Select an Option:</h2>
+
+
         {(user.rolIsmi === "yazar") && ( <Link to="/MyBooks">
           <button className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64"> {/* Butonların genişliği belirlendi */}
             My Books
           </button>
         </Link>)}
+
+
         <Link to="/BookList">
           <button className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64">
             Book List
           </button>
         </Link>
-        <Link to="/BorrowRequests">
+
+
+         {(user.rolIsmi === "yonetici" || user.rolIsmi ==="gorevli") && (<Link to="/BorrowRequests">
           <button className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64">
             Borrow Requests
           </button>
-        </Link>
+        </Link>)}
+
+
+
         <Link to="/BorrowedBooksList">
           <button className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64">
             Borrowed Books
           </button>
         </Link>
+
+
         <Link to="/MessagePage">
           <button className="bg-violet-700 text-white py-2 px-4 rounded-lg hover:bg-violet-600 transition-all w-64">
             Messages
           </button>
         </Link>
-        <button onClick={handleLogoutClick} className="bg-violet-700 text-white py-2 px-4 rounded-lg hover:bg-violet-600 transition-all w-64">
+
+        {(user.rolIsmi==="yonetici") && (<Link to="/changeRolePage">
+        <button  className="bg-violet-700 text-white py-2 px-4 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64">
+            Change Role
+          </button>
+          </Link>)}
+
+         {(user.rolIsmi==="yazar") && (<Link to="/WritePage">
+          <button className="bg-violet-700 text-white py-2 px-4 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64">
+          Write Page        
+          </button>
+        </Link>)}
+
+        <button onClick={handleLogoutClick} className="bg-violet-700 text-white py-2 px-4 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64">
             Logout
           </button>
+          
       </div>
     </div>
   );
