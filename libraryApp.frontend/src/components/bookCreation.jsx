@@ -47,6 +47,26 @@ const App = () => {
     navigate('/FirstPage');
   };
 
+const createBook = async () => {
+        const response = await fetch("http://localhost:5075/api/Kitap/yeniKitapOlustur", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                yazarId: user.id,        // Yazarın id'sini POST isteğine gönderiyoruz
+                yayinlanmaTarihi: new Date().toISOString(), // Yayınlanma tarihini ekliyoruz
+            }),
+        });
+
+        if (response.ok) {
+            alert("Kitap başarıyla oluşturuldu!");
+            fetchBooks(); // Yeni kitap oluşturulduktan sonra kitapları tekrar alıyoruz
+        } else {
+            console.error("Kitap oluşturulurken hata oluştu.");
+        }
+    }
+
 
   return (
     <div className="flex flex-col h-screen w-full">
