@@ -5,7 +5,7 @@ export default function BookList() {
   const [books, setBooks] = useState([]); // State to hold books
   const [bookName , setBookName] = useState("");
 const handleSearchClick=async() => {
-const yanit= await fetch("http://localhost:5075/api/Kitap/kitapArama?kitapIsmi=" + BookName);
+const yanit= await fetch("http://localhost:5075/api/Kitap/kitapArama?kitapIsmi=" + bookName);
 if(yanit.ok){
   const data = await yanit.json();
   setBooks(data);
@@ -36,7 +36,9 @@ if(yanit.ok){
               placeholder="Book Name..."
             />
 
-            <button className="bg-violet-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
+            <button 
+            onClick={handleSearchClick}
+            className="bg-violet-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
               Search
             </button>
 
@@ -63,9 +65,9 @@ if(yanit.ok){
                       {books.map((book, index) => (
                         <tr key={index} className="border-b">
                           <td className="p-6">{book.kitapIsmi}</td>
+                          <td className="p-6">{book.kitapYazarlari.join(" , ")}</td>
                           <td className="p-6">{book.yayinlanmaTarihi}</td>
                           <td className="p-6">{book.oduncAlindiMi}</td>
-                          <td className="p-6">{book.kitapYazarlari.join(" , ")}</td>
 
                           <td className="p-6">
                             <button className="bg-blue-500 text-white py-1 px-2 rounded-lg mr-2">

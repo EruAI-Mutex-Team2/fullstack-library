@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ChangeRole = () => { 
   const [users, setUsers] = useState([]); // Kullanıcıları tutmak için state
@@ -7,6 +8,7 @@ const ChangeRole = () => {
   const [selectedRole, setSelectedRole] = useState('');
   const [isPunishmentModalOpen, setIsPunishmentModalOpen] = useState(false);
   const [punishmentType, setPunishmentType] = useState('');
+  const nav = useNavigate();
   useEffect(() => {
     // Burada kullanıcıları API'den alıyormuş gibi sabit bir veri kullanıyoruz.
     const fetchUsers = async () => {
@@ -17,8 +19,9 @@ const ChangeRole = () => {
 
       });
       if (response.ok) {
-        const dummyUsers = response.json();// jsondan objeye dönüştü
+        const dummyUsers = await response.json();// jsondan objeye dönüştü
         setUsers(dummyUsers); 
+        console.log(dummyUsers);
       }
     
     };
@@ -30,7 +33,7 @@ const ChangeRole = () => {
 
       });
       if (response.ok) {
-        const dummyRoles = response.json();// jsondan objeye dönüştü
+        const dummyRoles = await response.json();// jsondan objeye dönüştü
         setRoles(dummyRoles); 
       }
     
@@ -53,10 +56,11 @@ const ChangeRole = () => {
         ),
         
         //yanıtı json türünden aldık
-
       }); 
     };
     updateRole();
+
+    nav(0);
   };
 
   const handlePunishmentSubmit = () => {
@@ -90,7 +94,7 @@ const ChangeRole = () => {
           >
             <option value="">Select someone</option>
             {users.map(user => (
-              <option key={user.userId} value={user.userId}>{user.isim}</option>
+              <option key={user.userId} value={user.userId}>{user.isım + " " + user.soyisim + " - " + user.rolIsmi}</option>
             ))}
           </select>
         </div>
@@ -142,21 +146,12 @@ const ChangeRole = () => {
             >
               <option value="">Select user</option>
               {users.map(user => (
-                <option key={user.id} value={user.id}>{user.name}</option>
+                <option key={user.id} value={user.id}>{user.isım + " " + user.soyisim + " - " + user.rolIsmi}</option>
               ))}
             </select>
            
             <label className="block mb-2">Select Punishment Type</label>
-            <select
-              value={punishmentType}
-              onChange={(e) => setPunishmentType(e.target.value)}
-              className="w-full p-2 bg-blue-50 border rounded mb-4"
-            >
-              <option value="">Select punishment</option>
-              <option value="Warning">Warning</option>
-              <option value="Temporary Ban">Temporary Ban</option>
-              <option value="Permanent Ban">Permanent Ban</option>
-            </select>
+            <p></p>
 
             <div className="flex justify-between">
               <button
