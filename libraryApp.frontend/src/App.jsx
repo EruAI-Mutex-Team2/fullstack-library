@@ -20,7 +20,8 @@ function App() {
   return (
     <Router> 
       <Routes>
-        <Route path="/" element={<BookRead />} />
+        <Route path="/" element={<FirstPage />} />
+        <Route path="/ReadBook" element={<BookRead />} />
         <Route path="/MyBooks" element={<MyBooks />} />
         <Route path="/BookList" element={<BookList />} />
         <Route path="/BorrowedBooksList" element={<BorrowedBooksList />} />

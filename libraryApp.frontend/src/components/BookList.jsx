@@ -70,9 +70,9 @@ if(yanit.ok){
                           <td className="p-6">{book.oduncAlindiMi}</td>
 
                           <td className="p-6">
-                            <button className="bg-blue-500 text-white py-1 px-2 rounded-lg mr-2">
-                              Preview
-                            </button>
+                            <Link to={"/ReadBook?bookId="+book.id} className="bg-blue-500 text-white py-1 px-2 rounded-lg mr-2">
+                              Read
+                            </Link>
                             <button className="bg-green-500 text-white py-1 px-2 rounded-lg">
                               Borrow
                             </button>
