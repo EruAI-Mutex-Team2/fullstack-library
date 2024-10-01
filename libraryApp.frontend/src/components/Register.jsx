@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 
 export default function Register() {
@@ -12,6 +12,9 @@ export default function Register() {
     passwordConfirm: ''
   });
   const [isSubmit, setIsSubmit] = useState(false);
+  const nav = useNavigate();
+
+
 
   useEffect(() => {
     if (isSubmit) {

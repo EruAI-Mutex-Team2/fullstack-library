@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const WritePage = () => {
-  const [pageContents, setPageContents] = useState([""]); 
+  const [pageContents, setPageContents] = useState([""]);
   const [currentPage, setCurrentPage] = useState(0);
 
   const handleContentChange = (e) => {
@@ -25,9 +25,35 @@ const WritePage = () => {
     }
   };
 
+  const saveToFile = async () => {
+    try {
+      // File System Access API ile dosya seçme
+      const handle = await window.showSaveFilePicker({
+        suggestedName: "book.txt",
+        types: [
+          {
+            description: "Text Files",
+            accept: {
+              "text/plain": [".txt"],
+            },
+          },
+        ],
+      });
+
+      // Dosya yazma işlemi
+      const writableStream = await handle.createWritable();
+      await writableStream.write(pageContents.join("\n\n--- Page Break ---\n\n")); // Sayfaları ayırmak için bir ayırıcı eklenebilir
+      await writableStream.close();
+
+      alert("Dosya başarıyla kaydedildi!");
+    } catch (err) {
+      console.error("Dosya kaydedilirken bir hata oluştu:", err);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-White textblack-">
-      <header className="flex items-center justify-between p-4 bg-indigo-200 text-white shadow-lg">
+    <div className="min-h-screen bg-white text-black">
+      <header className="flex items-center justify-between p-4 bg-violet-500 text-white shadow-lg">
         <h1 className="text-3xl font-bold">Book Editor</h1>
         <div className="flex">
           <a href="/logout" className="hover:text-gray-300">Logout</a>
@@ -39,7 +65,7 @@ const WritePage = () => {
           value={pageContents[currentPage] || ""}
           onChange={handleContentChange}
           placeholder="Type the content of the page here..."
-          className="w-full max-w-5xl h-64 p-4 bg-white text-black rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-violet-700"
+          className="w-full max-w-5xl h-64 p-4 bg-white text-black rounded-lg shadow-md focus:outline-none focus:ring-2 focus:bg-blue-50"
         ></textarea>
 
         <div className="w-full max-w-5xl flex justify-between items-center mt-4">
@@ -61,6 +87,7 @@ const WritePage = () => {
           </div>
 
           <button
+            onClick={saveToFile}
             className="ml-auto px-4 py-2 bg-violet-600 text-white rounded-lg shadow hover:bg-violet-700"
           >
             Save

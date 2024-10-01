@@ -1,9 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // useNavigate'yi import et
 
 export default function MyBooks() {
+  const navigate = useNavigate(); // useNavigate hook'unu kullan
+
   return (
     <div className="p-6 bg-white min-h-screen">
-
       <div className="flex justify-between items-center bg-violet-700 text-white p-4 rounded-md shadow-lg mb-6">
         <h1 className="text-2xl font-bold">My Books</h1>
         <div className="flex">
@@ -11,13 +13,14 @@ export default function MyBooks() {
         </div>
       </div>
 
-
       <div className="flex justify-end mb-4">
-        <button className="bg-violet-500 text-white py-2 px-4 rounded-md shadow-lg">
+        <button
+          className="bg-violet-500 text-white py-2 px-4 rounded-md shadow-lg"
+          onClick={() => navigate('/WritePage')} // Butona tıklandığında yönlendirme yap
+        >
           Create a book
         </button>
       </div>
-
 
       <div className="bg-gray-100 shadow-lg rounded-lg p-6">
         <table className="min-w-full table-auto">
@@ -30,7 +33,6 @@ export default function MyBooks() {
             </tr>
           </thead>
           <tbody>
-
             <tr className="border-b border-gray-700">
               <td className="p-4">New Book</td>
               <td className="p-4">Can send request</td>
@@ -85,7 +87,6 @@ export default function MyBooks() {
                 </button>
               </td>
             </tr>
-            
           </tbody>
         </table>
       </div>
