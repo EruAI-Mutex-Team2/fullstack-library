@@ -62,16 +62,6 @@ export default function BookList() {
       <div className='pl-10 pr-10'>
         <div className="bg-white shadow-lg rounded-lg p-6">
           <table className="min-w-full">
-            <thead>
-              <tr className="bg-violet-600 text-white">
-                <th className="p-6 text-left">Title</th>
-                <th className="p-6 text-left">Publication Date</th>
-                <th className="p-6 text-left">Is Borrowed</th>
-                <th className="p-6 text-left">Actions</th>
-              </tr>
-            </thead>
-
-            {/* Book Table */}
             <div className="pl-10 pr-10">
               <div className="bg-white shadow-lg rounded-lg p-6">
                 {loading && <p>Loading books...</p>}
