@@ -1,8 +1,26 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const WritePage = () => {
-  const [pageContents, setPageContents] = useState([""]); 
+  const nav = useNavigate();
+
+  const [pageContents, setPageContents] = useState([""]);
   const [currentPage, setCurrentPage] = useState(0);
+
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userData"));
+    if (user === null) {
+      nav("/login");
+    }
+    else if (user.rolIsmi !== "yonetici") {
+      nav("/HomePage");
+    }
+    else {
+      setUser(user);
+    }
+  }
+  )
 
   const handleContentChange = (e) => {
     const newContents = [...pageContents];
@@ -79,7 +97,7 @@ const WritePage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default WritePage;

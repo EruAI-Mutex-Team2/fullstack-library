@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ChangeRole = () => { 
+
+  const nav = useNavigate();
+
   const [users, setUsers] = useState([]); // Kullanıcıları tutmak için state
   const [roles, setRoles] = useState([]); 
   const [selectedUser, setSelectedUser] = useState('');
@@ -21,7 +25,20 @@ const ChangeRole = () => {
         setUsers(dummyUsers); 
       }
     
-    };
+    }});
+
+    useEffect(() => {
+      const user = JSON.parse(localStorage.getItem("userData"));
+      if (user === null) {
+        nav("/login");
+      }
+      else if( user.rolIsmi!=="yonetici"){
+         nav("/HomePage");
+      }
+      else{
+        setUser(user);
+      }
+
     const fetchRoles = async () => {
       // Bu kısımda API çağrısı yapmalısınız.
       const response = await fetch("http://localhost:5075/api/User/rolleriGetir",{

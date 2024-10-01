@@ -1,9 +1,26 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const App = () => {
+
+  const nav = useNavigate();
+  
   const [books, setBooks] = useState([]); // State to hold the list of books
   const [loading, setLoading] = useState(true); // State to manage loading state
   const [error, setError] = useState(null); // State to manage any errors
+
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userData"));
+    if (user === null) {//kullanıcı giriş yapmamışsa login sayfası
+      nav("/login");
+    }
+    else if( user.rolIsmi!=="yazar"){//giriş yapan yazar değilse homepage e at
+       nav("/HomePage");
+    }
+    else{
+      setUser(user);
+    }});
 
   useEffect(() => {
     const fetchBooks = async () => {

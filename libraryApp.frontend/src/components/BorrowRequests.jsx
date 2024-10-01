@@ -1,10 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function BorrowRequests() {
+  
+  const nav = useNavigate();
+
   const [borrowRequests, setBorrowRequests] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userData"));
+    if (user === null) {
+      nav("/login");
+    }
+    else if( user.rolIsmi!=="gorevli" || user.rolIsmi !=="yonetici"){
+       nav("/HomePage");
+    }
+    else{
+      setUser(user);
+    }
+  });
 
   useEffect(() => {
     const fetchBorrowRequests = async () => {
@@ -42,12 +59,11 @@ export default function BorrowRequests() {
         <div className="flex justify-between items-center bg-violet-500 text-white p-4 rounded-md shadow-lg mb-6">
           <div className="flex">
             <h2 className="text-2xl font-bold">Pending Borrow Requests</h2>
-            <button className="bg-violet-700 text-white py-2 px-6 ml-2 rounded-lg shadow-lg">
-              See pending borrow requests
-            </button>
+            <Link to="/UserRequest">
             <button className="bg-violet-700 text-white py-2 px-6 ml-2 rounded-lg shadow-lg">
               See pending member registrations
             </button>
+            </Link>
           </div>
         </div>
       </div>
