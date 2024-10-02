@@ -20,7 +20,7 @@ const MessagePage = () => {
   }
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userData"));
+    const user = JSON.parse(localStorage.getItem("userData"));//ilk sayfa açılınca userşn datasını alıyoruz
     if (user === null) {
       nav("/login");
     }
@@ -30,7 +30,6 @@ const MessagePage = () => {
     fetchUsers(user);
   }, []);
 
-  // Mesaj gönderildiğinde mesajları localStorage'a kaydet
   const handleSend = () => {
   };
 
