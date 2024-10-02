@@ -79,7 +79,7 @@ namespace libraryApp.backend.Controllers
                 rolIsmi = u.rol.RolIsmi, // Kullanıcının rolünün ismi.
                 Soyisim = u.SoyIsim, // Kullanıcının soyismi.
                 userId = u.Id, // Kullanıcının ID'si.
-
+//UNUTMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
             }).ToList();
 
             return Ok(userGetirdtolar); // DTO'ya dönüştürülen kullanıcıları döndürürüz.

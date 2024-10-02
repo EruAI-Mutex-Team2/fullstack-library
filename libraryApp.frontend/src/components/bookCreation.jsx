@@ -1,101 +1,117 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
 
 const App = () => {
-  const [books, setBooks] = useState([]); // State to hold the list of books
-  const [loading, setLoading] = useState(true); // State to manage loading state
-  const [error, setError] = useState(null); // State to manage any errors
+  const [requests, setRequests] = useState([]); // dizi
+  const nav = useNavigate();
+  const [user, setUser] = useState({}); // obje
+
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userData"));
+    if (user === null) {//kullanıcı giriş yapmamışsa login sayfası
+      nav("/login");
+    }
+    else if (user.rolIsmi !== "yazar") {//giriş yapan yazar değilse homepage e at
+      nav("/HomePage");
+    }
+    else {
+      setUser(user);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchBooks = async () => {
-      try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/posts'); // Mock API for testing
-        if (!response.ok) {
-          throw new Error('Failed to fetch data from API');
-        }
-        const data = await response.json();
-        setBooks(data.slice(0, 5)); // Mock response to show a few items
-      } catch (error) {
-        setError(error.message); // Log error to state
-      } finally {
-        setLoading(false); // Set loading to false when done
+      const yanit = await fetch("http://localhost:5075/api/Kitap/kitapYayinlamaİstekleri", {
+        method: "GET",
+      });
+      if (yanit.ok) {
+
+        const data = await yanit.json();
+        setRequests(data);
+        console.log(data);
+      } else {
       }
     };
 
     fetchBooks();
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, []);
 
-  // Handler for "See pending book" button click
   const handlePendingBookClick = () => {
     alert('This will show pending book creation requests');
-    // You can add navigation or different logic here as needed
   };
 
-  return (
-    <div className="flex h-screen">
-      {/* Sol Panel */}
-      <aside className="w-1/5 bg-indigo-200 text-black p-5">
-        <h1 className="text-2xl font-bold mb-10">EruLib</h1>
-        <nav>
-          <ul>
-            <li className="mb-5">
-              <button 
-                className="bg-indigo-500 w-full py-2 text-white rounded-md hover:bg-indigo-600"
-                onClick={handlePendingBookClick} // Added onClick event
-              >
-                See pending book creation requests
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </aside>
+  const handleLogoutClick = () => {
+    navigate('/FirstPage');
+  };
 
+const createBook = async () => {
+        const response = await fetch("http://localhost:5075/api/Kitap/yeniKitapOlustur", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                yazarId: user.id,        // Yazarın id'sini POST isteğine gönderiyoruz
+                yayinlanmaTarihi: new Date().toISOString(), // Yayınlanma tarihini ekliyoruz
+            }),
+        });
+
+        if (response.ok) {
+            alert("Kitap başarıyla oluşturuldu!");
+            fetchBooks(); // Yeni kitap oluşturulduktan sonra kitapları tekrar alıyoruz
+        } else {
+            console.error("Kitap oluşturulurken hata oluştu.");
+        }
+    }
+
+
+  return (
+    <div className="flex flex-col h-screen w-full">
       {/* Sağ İçerik */}
-      <div className="w-4/5 bg-white text-black">
+      <div className="flex-grow bg-white text-white flex flex-col">
         {/* Üst Menü */}
-        <header className="flex justify-between items-center p-4 bg-indigo-200">
-          <span>manager - NameOfManager Anderson</span>
-          <nav className="flex space-x-4">
-            <a href="#" className="hover:underline">Reports</a>
-            <a href="#" className="hover:underline">Settings</a>
-            <a href="#" className="hover:underline">Logout</a>
+        <header className="flex justify-between items-center p-4 bg-violet-500">
+          <nav className="flex w-full items-center bg-violet-500">
+            <h1 className='text-2xl font-bold'>Book Create</h1>
+            <button onClick={handleLogoutClick} className="ml-auto hover:underline">
+              Logout
+            </button>
           </nav>
         </header>
-
         {/* İçerik Tablosu */}
-        <div className="p-5">
-          {loading && <p>Loading books...</p>}
-          {error && <p className="text-red-500">{error}</p>}
-          {!loading && !error && (
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-indigo-200 text-black">
-                  <th className="p-3">BOOK NAME</th>
-                  <th className="p-3">AUTHOR</th>
-                  <th className="p-3">REQUEST DATE</th>
-                  <th className="p-3">ACTIONS</th>
+        <div className="p-5 flex-grow overflow-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="bg-violet-200 text-black">
+                <th className="p-3">BOOK NAME</th>
+                <th className="p-3">AUTHOR</th>
+                <th className="p-3">REQUEST DATE</th>
+                <th className="p-3">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {requests.map((request, index) => (
+                <tr key={index} className="bg-blue-50 text-black">
+                  <td className="p-3">{request.kitapIsmi}</td> 
+                  <td className="p-3">{request.kitapYazarlari.join(" , ")}</td>
+                  <td className="p-3">{request.talepTarihi}</td>
+                  <td className="p-3 flex space-x-2">
+                    <button className="bg-green-500 hover:bg-green-600 text-black px-3 py-1 rounded">Read the book</button>
+                    <button className="bg-blue-500 hover:bg-blue-600 text-black px-3 py-1 rounded">Approve</button>
+                    <button className="bg-red-500 hover:bg-red-600 text-black px-3 py-1 rounded">Reject</button>
+                    <button className="bg-gray-500 text-black px-3 py-1 rounded opacity-50">Details</button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {books.map((book, index) => (
-                  <tr key={index} className="bg-blue-50 text-black">
-                    <td className="p-3">{book.title}</td> {/* Updated to mock data */}
-                    <td className="p-3">Author {index + 1}</td>
-                    <td className="p-3">9/16/2024</td>
-                    <td className="p-3 flex space-x-2">
-                      <button className="bg-green-500 hover:bg-green-600 text-black px-3 py-1 rounded">Read the book</button>
-                      <button className="bg-blue-500 hover:bg-blue-600 text-black px-3 py-1 rounded">Approve</button>
-                      <button className="bg-red-500 hover:bg-red-600 text-black px-3 py-1 rounded">Reject</button>
-                      <button className="bg-gray-500 text-black px-3 py-1 rounded opacity-50">Details</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   );
 };
 
-export default App;
+export default bookCreation;

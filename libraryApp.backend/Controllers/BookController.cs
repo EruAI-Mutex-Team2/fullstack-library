@@ -153,7 +153,7 @@ namespace libraryApp.backend.Controllers
             return Ok(kitapdtos);
         }
 
-        [HttpGet("yazarinKitaplariniGetir")]
+        [HttpGet("yazarinKitaplariniGetir/{yazarId}")]
 
         public async Task<IActionResult> yazarinKitaplariniGetir([FromRoute] int yazarId)
         {
@@ -207,8 +207,8 @@ namespace libraryApp.backend.Controllers
             return Ok();
         }
 
-        [HttpGet("kitapOku")] //kitap ve sayfalarını dönderir.
-        public async Task<IActionResult> kitapOku([FromRoute] int kitapId)
+        [HttpGet("kitapOku")]
+        public async Task<IActionResult> kitapOku([FromQuery] int kitapId)
         {
             kitap? kitapp = await _kitapRepo.kitaplar.Include(k => k.sayfalar).FirstOrDefaultAsync(k => k.Id == kitapId);
 

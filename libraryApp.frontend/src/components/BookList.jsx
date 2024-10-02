@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function BookList() {
-  const [books, setBooks] = useState([]); // State to hold books
-  const [bookName , setBookName] = useState("");
+const [books, setBooks] = useState([]); // State to hold books
+const [bookName , setBookName] = useState("");
+
 const handleSearchClick=async() => {
 const yanit= await fetch("http://localhost:5075/api/Kitap/kitapArama?kitapIsmi=" + bookName);
 if(yanit.ok){
   const data = await yanit.json();
   setBooks(data);
   }
-
 };
 
   return (
@@ -70,9 +70,9 @@ if(yanit.ok){
                           <td className="p-6">{book.oduncAlindiMi}</td>
 
                           <td className="p-6">
-                            <button className="bg-blue-500 text-white py-1 px-2 rounded-lg mr-2">
-                              Preview
-                            </button>
+                            <Link to={"/ReadBook?bookId="+book.id} className="bg-blue-500 text-white py-1 px-2 rounded-lg mr-2">
+                              Read
+                            </Link>
                             <button className="bg-green-500 text-white py-1 px-2 rounded-lg">
                               Borrow
                             </button>

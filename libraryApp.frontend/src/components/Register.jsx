@@ -1,45 +1,58 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 
 export default function Register() {
-  const formdata = {};
+  
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    passwordConfirm: ''
+    isim: "",
+    soyIsim: "",
+    email: "",
+    password: "",
+    passwordConfirm: ""
   });
-  const [isSubmit, setIsSubmit] = useState(false);
 
-  useEffect(() => {
-    if (isSubmit) {
-      // Password confirmation check
-      if (formData.password !== formData.passwordConfirm) {
-        alert('Passwords do not match!');
-        setIsSubmit(false);
-        return;
-      }
-
-      // Form submission logic (simulating an API call)
-      console.log('Form submitted:', formData);
-
-
-      setIsSubmit(false);
-    }
-  }, [isSubmit, formData]);
-
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({
+      ...formData,
+      [name]: value
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmit(true);
-  };
+    if (formData.password !== formData.passwordConfirm) {
+      alert("Passwords do not match!");
+      return;
+    }
 
+
+    // POST isteği ile backend'e form verilerini gönderme
+    try {
+      const response = await fetch("http://localhost:5075/api/Account/KayitOl", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          isim: formData.isim,
+          soyIsim: formData.soyIsim,
+          email: formData.email,
+          password: formData.password
+        })
+      });
+
+      if (response.ok) {
+        alert("Başvurunuz başarıyla alındı!");
+      } else {
+        alert("Bir hata oluştu, lütfen tekrar deneyin.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Sunucuya bağlanırken bir hata oluştu.");
+    }
+  };
   return (
     <div className="flex w-full h-screen">
 
@@ -60,6 +73,9 @@ export default function Register() {
               <input
                 className='w-full h-12 border border-gray-300 rounded-xl p-4 mt-1 bg-transparent'
                 placeholder='Enter your first name'
+                name="isim"
+                value={formData.isim}
+                onChange={handleInputChange}
               />
             </div>
 
@@ -68,6 +84,9 @@ export default function Register() {
               <input
                 className='w-full h-12 border border-gray-300 rounded-xl p-4 mt-1 bg-transparent'
                 placeholder='Enter your last name'
+                name="soyIsim"
+                value={formData.soyIsim}
+                onChange={handleInputChange}
               />
             </div>
 
@@ -76,6 +95,9 @@ export default function Register() {
               <input
                 className='w-full h-12 border border-gray-300 rounded-xl p-4 mt-1 bg-transparent'
                 placeholder='Enter your email'
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
               />
             </div>
 
@@ -84,7 +106,10 @@ export default function Register() {
               <input
                 className='w-full h-12 border border-gray-300 rounded-xl p-4 mt-1 bg-transparent'
                 placeholder='Enter your password'
-                type='password'
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
               />
             </div>
 
@@ -94,6 +119,9 @@ export default function Register() {
                 className='w-full h-12 border border-gray-300 rounded-xl p-4 mt-1 bg-transparent'
                 placeholder='Confirm your password'
                 type='password'
+                name="passwordConfirm"
+                value={formData.passwordConfirm}
+                onChange={handleInputChange}
               />
             </div>
 
