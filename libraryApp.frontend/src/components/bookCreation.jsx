@@ -14,7 +14,7 @@ const bookCreation = () => {
     if (user === null) {//kullanıcı giriş yapmamışsa login sayfası
       nav("/login");
     }
-    else if (user.rolIsmi !== "yazar") {//giriş yapan yazar değilse homepage e at
+    else if (user.rolIsmi !== "yonetici") {//giriş yapan yonetici değilse homepage e at
       nav("/HomePage");
     }
     else {
@@ -38,10 +38,6 @@ const bookCreation = () => {
 
     fetchBooks();
   }, []);
-
-  const handlePendingBookClick = () => {
-    alert('This will show pending book creation requests');
-  };
 
   const handleLogoutClick = () => {
     nav('/FirstPage');

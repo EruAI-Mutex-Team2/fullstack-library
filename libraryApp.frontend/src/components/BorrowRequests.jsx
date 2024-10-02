@@ -3,44 +3,21 @@ import { Link, useNavigate } from 'react-router-dom';
 
 export default function BorrowRequests() {
   
+  const [user, setUser] = useState({});
   const nav = useNavigate();
-
-  const [borrowRequests, setBorrowRequests] = useState([]); 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userData"));
     if (user === null) {
       nav("/login");
     }
-    else if( user.rolIsmi!=="gorevli" || user.rolIsmi !=="yonetici"){
+    else if( user.rolIsmi!=="gorevli" && user.rolIsmi !=="yonetici"){
        nav("/HomePage");
     }
     else{
       setUser(user);
     }
-  });
-
-  useEffect(() => {
-    const fetchBorrowRequests = async () => {
-      try {
-        // Replace with your API endpoint or mock data
-        const response = await fetch('https://jsonplaceholder.typicode.com/posts'); 
-        if (!response.ok) {
-          throw new Error('Failed to fetch borrow requests');
-        }
-        const data = await response.json();
-        setBorrowRequests(data.slice(0, 5)); 
-        setError(error.message); 
-      } finally {
-        setLoading(false); 
-      }
-    };
-
-    fetchBorrowRequests(); 
-  }, []); 
+  },[]);
 
   return (
     <div className="bg-white min-h-screen">
@@ -71,10 +48,6 @@ export default function BorrowRequests() {
       {/* Main Content */}
       <div className='pl-6 pr-6'>
         <div className="bg-white shadow-lg rounded-lg p-6">
-          {loading && <p>Loading borrow requests...</p>} {/* Display loading message */}
-          {error && <p className="text-red-500">{error}</p>} {/* Display error message if fetch fails */}
-
-          {!loading && !error && (
             <table className="min-w-full">
               <thead>
                 <tr className="bg-violet-600 text-white">
@@ -86,10 +59,9 @@ export default function BorrowRequests() {
                 </tr>
               </thead>
               <tbody>
-                {borrowRequests.map((request, index) => (
-                  <tr key={index} className="border-b">
-                    <td className="p-6">{request.title}</td> {/* Replace with real book name */}
-                    <td className="p-6">User {index + 1}</td> {/* Replace with real requestor */}
+                  <tr className="border-b">
+                    <td className="p-6"></td> {/* Replace with real book name */}
+                    <td className="p-6">User </td> {/* Replace with real requestor */}
                     <td className="p-6">01/01/2024</td> {/* Replace with real borrow date */}
                     <td className="p-6">15/01/2024</td> {/* Replace with real return date */}
                     <td className="p-6 flex space-x-2">
@@ -104,10 +76,8 @@ export default function BorrowRequests() {
                       </button>
                     </td>
                   </tr>
-                ))}
               </tbody>
             </table>
-          )}
         </div>
       </div>
     </div>

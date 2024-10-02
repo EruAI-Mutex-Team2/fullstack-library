@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 export default function HomePage() {
   const nav = useNavigate();
-  const [user,setUser] = useState({});
+  const [user, setUser] = useState({});
 
   const handleLogoutClick = () => {
     localStorage.removeItem("userData");
@@ -14,7 +14,7 @@ export default function HomePage() {
     const user = JSON.parse(localStorage.getItem("userData"));
     if (user === null) {
       nav("/login");
-    }else{
+    } else {
       setUser(user);
     }
 
@@ -35,51 +35,46 @@ export default function HomePage() {
         <h2 className="text-violet-700 text-xl mb-4">Select an Option:</h2>
 
 
-        {(user.rolIsmi === "yazar") && ( <Link to="/MyBooks">
-          <button className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64"> {/* Butonların genişliği belirlendi */}
+        {(user.rolIsmi === "yazar") && (<Link className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center" to="/MyBooks">
             My Books
-          </button>
         </Link>)}
 
 
-        <Link to="/BookList">
-          <button className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64">
-            Book List
-          </button>
+        <Link to="/BookList" className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
+          Book List
         </Link>
 
 
-         {(user.rolIsmi === "yonetici" || user.rolIsmi ==="gorevli") && (<Link to="/BorrowRequests">
-          <button className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64">
+        {(user.rolIsmi === "yonetici" || user.rolIsmi === "gorevli") && (<Link to="/BorrowRequests" className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
             Borrow Requests
-          </button>
         </Link>)}
 
 
 
-        <Link to="/BorrowedBooksList">
-          <button className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64">
-            Borrowed Books
-          </button>
+        <Link to="/BorrowedBooksList" className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
+            My borrowed Books
         </Link>
 
 
-        <Link to="/MessagePage">
-          <button className="bg-violet-700 text-white py-2 px-4 rounded-lg hover:bg-violet-600 transition-all w-64">
+        <Link to="/MessagePage" className="bg-violet-700 text-white py-2 px-4 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
             Messages
-          </button>
         </Link>
 
-        {(user.rolIsmi==="yonetici") && (<Link to="/changeRolePage">
-        <button  className="bg-violet-700 text-white py-2 px-4 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64">
-            Change Role
-          </button>
-          </Link>)}
+        {(user.rolIsmi === "yonetici") && (
+          <>
+            <Link to="/ChangeRole" className="bg-violet-700 text-white py-2 px-4 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
+                Change Role
+            </Link>
+            <Link to="/BookCreationRequests" className="bg-violet-700 text-white py-2 px-4 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
+                Book Publish requests
+            </Link>
+          </>
+          )}
 
         <button onClick={handleLogoutClick} className="bg-violet-700 text-white py-2 px-4 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64">
-            Logout
-          </button>
-          
+          Logout
+        </button>
+
       </div>
     </div>
   );

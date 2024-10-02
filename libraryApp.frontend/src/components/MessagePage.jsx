@@ -5,17 +5,16 @@ const MessagePage = () => {
   const [receiver, setReceiver] = useState('');//bu constlar sabit değerlerimiz
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
-  const[users,setUsers] = useState([]):
+  const [users, setUsers] = useState([]);
   const [user, setUser] = useState({});
   const nav = useNavigate();
 
   const fetchUsers = async (user) => {
-    const yanit=await fetch("http://localhost:5075/api/User/mesajGonderilebilecekUserlarGetir/"+user.rolId,
-      {method : "GET"}
+    const yanit = await fetch("http://localhost:5075/api/User/mesajGonderilebilecekUserlarGetir/" + user.rolId,
+      { method: "GET" }
     );
-    if(yanit.ok)
-    {
-      const data=await yanit.json();
+    if (yanit.ok) {
+      const data = await yanit.json();
       setUsers(data);
     }
   }
@@ -34,7 +33,7 @@ const MessagePage = () => {
   // Mesaj gönderildiğinde mesajları localStorage'a kaydet
   const handleSend = () => {
   };
-  
+
   return (
     <div className="min-h-screen bg-blue-50 text-black"> {/* Arka plan rengini pembe yaptık */}
       <div className="container mx-auto p-5">
@@ -57,51 +56,51 @@ const MessagePage = () => {
             </div>
 
             <div className="w-3/4 ml-4">
-                <div>
-                  <div className="mb-4">
-                    <label>Select receiver</label>
-                    <select
-                      className="w-full mt-1 p-2 rounded-lg bg-blue-50"
-                      value={receiver}
-                      onChange={(e) => setReceiver(e.target.value)}
-                    >
-                      <option>Select receiver</option>
-                      <option value="Beyzanur Aslan">Beyzanur Aslan</option>
-                      <option value="Ezgi Yücel">Ezgi Yücel</option>
-                    </select>
-                  </div>
-
-                  <div className="mb-4">
-                    <label>Title</label>
-                    <input
-                      type="text"
-                      className="w-full mt-1 p-2 rounded-lg bg-blue-50"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="mb-4">
-                    <label>Your message</label>
-                    <textarea
-                      className="w-full mt-1 p-2 rounded-lg bg-blue-50 h-24"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                    />
-                  </div>
-
-                  <button
-                    onClick={handleSend}
-                    className="bg-green-500 px-4 py-2 rounded-lg"
+              <div>
+                <div className="mb-4">
+                  <label>Select receiver</label>
+                  <select
+                    className="w-full mt-1 p-2 rounded-lg bg-blue-50"
+                    value={receiver}
+                    onChange={(e) => setReceiver(e.target.value)}
                   >
-                    Send
-                  </button>
+                    <option>Select receiver</option>
+                    <option value="Beyzanur Aslan">Beyzanur Aslan</option>
+                    <option value="Ezgi Yücel">Ezgi Yücel</option>
+                  </select>
                 </div>
+
+                <div className="mb-4">
+                  <label>Title</label>
+                  <input
+                    type="text"
+                    className="w-full mt-1 p-2 rounded-lg bg-blue-50"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label>Your message</label>
+                  <textarea
+                    className="w-full mt-1 p-2 rounded-lg bg-blue-50 h-24"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                  />
+                </div>
+
+                <button
+                  onClick={handleSend}
+                  className="bg-green-500 px-4 py-2 rounded-lg"
+                >
+                  Send
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      
+
     </div>
   );
 };
