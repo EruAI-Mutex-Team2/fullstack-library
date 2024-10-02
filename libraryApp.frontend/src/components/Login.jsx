@@ -7,14 +7,14 @@ export default function Login() {
   const [password,setPassword] = useState("");
   const nav = useNavigate();
 
-  const data = {
-    email: email,
-    password: password,
-  };
-
   const handleSigninClick = async (e) => {
     e.preventDefault();
     
+    const data = {
+      email: email,
+      password: password,
+    };
+
     const yanit = await fetch("http://localhost:5075/api/Account/girisYap",{
       method:"POST",
       headers: { "Content-Type": "application/json"},
@@ -31,23 +31,6 @@ export default function Login() {
     {
     }
   };
-  const handleSignInClick = async () =>{
-    const response = await fetch('http://localhost:5075/api/Account/girisYap', {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: 
-        JSON.stringify(
-          {
-           "email":mail ,
-           "password":password ,
-          }
-      ),
-    } ); 
-    if (response.ok) {
-      const user = response.json();// jsondan objeye dönüştü
-    }
-  
-  }
   return (
     <div className='bg-white px-10 py-20 rounded-3xl border-2 border-gray-50 max-w-lg mx-auto'>
       <h1 className='text-4xl font-bold text-center text-gray-800'>
