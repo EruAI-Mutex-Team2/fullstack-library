@@ -49,7 +49,7 @@ namespace libraryApp.backend.Controllers
         {
             // Beklemede olan kitap yayınlama isteklerini, ilgili kitap ve yazar bilgileri ile birlikte alır.
             //await: programın eş zamanlı çalışabilmesi için gerekli bilgilerin gelmesini bekler.
-            var kitapYayinlamaİstekleri = await _kitapYayinTalebiRepo.kitapYayinTalepleri.Where(kyt => kyt.BeklemedeMi).Include(kyt => kyt.kitap).ThenInclude(k => k.kitapYazarlari).ThenInclude(ky => ky.user).OrderBy(kyt => kyt.TalepTarihi).ToListAsync();
+            var kitapYayinlamaİstekleri = await _kitapYayinTalebiRepo.kitapYayinTalepleri.Where(kyt => kyt.BeklemedeMi).Include(kyt => kyt.kitap).ThenInclude(k => k.kitapYazarlari).ThenInclude(ky => ky.user).Where(kyt => !kyt.kitap.KitapYayinlandiMi).OrderBy(kyt => kyt.TalepTarihi).ToListAsync();
             
             return Ok(kitapYayinlamaİstekleri.Select(kyt => new kitapYayinTalepleridto 
             {
@@ -63,20 +63,21 @@ namespace libraryApp.backend.Controllers
 
         
         [HttpPost("yayinlamaIstegiAt")] //yazarın kitap yayınlama isteği atması
-        public async Task<IActionResult> yayinlamaIstegiAt([FromBody] int kitapId) 
+        public async Task<IActionResult> yayinlamaIstegiAt([FromBody] yayinTalebiDto yayinTalebi) 
         {
-            var kitap = await _kitapRepo.GetkitapByIdAsync(kitapId); // Kitabı ID ile bulur.
+            var kitap = await _kitapRepo.GetkitapByIdAsync(yayinTalebi.kitapId); // Kitabı ID ile bulur.
             if (kitap == null) return NotFound(new { Message = "Kitap bulunamadı." }); // Kitap yoksa hata döner.
             if (kitap.KitapYayinlandiMi) return BadRequest(new { Message = "Kitabın zaten yayınlandı." }); // Yayınlanmışsa hata döner.
             
             // Aynı kitaba ait bekleyen bir istek olup olmadığını kontrol eder.
-            if (_kitapYayinTalebiRepo.kitapYayinTalepleri.Any(kyt => kyt.BeklemedeMi && kyt.KitapId == kitapId)) 
+            if (_kitapYayinTalebiRepo.kitapYayinTalepleri.Any(kyt => kyt.BeklemedeMi && kyt.KitapId == yayinTalebi.kitapId)) 
                 return BadRequest(new { Message = "Aktif isteğin var." });
 
             // Yayınlama isteği oluşturur.
             await _kitapYayinTalebiRepo.AddkitapYayinTalebiAsync(new kitapYayinTalebi() 
             {
-                KitapId = kitapId,
+                KitapId = yayinTalebi.kitapId,
+                YazarId = yayinTalebi.yazarId,
                 BeklemedeMi = true,
                 TalepTarihi = DateTime.UtcNow,
             });
@@ -136,11 +137,9 @@ namespace libraryApp.backend.Controllers
             return Ok(new { Message = "Kitap oluşturuldu" });
         }
 
-        [HttpGet("oduncAlinanKitaplariGetir")]
+        [HttpGet("oduncAlinanKitaplariGetir/{oduncAlanId}")]
         public async Task<IActionResult> oduncAlinanKitaplariGetir([FromRoute] int oduncAlanId)
         {
-            if (!_userRepo.users.Any(u => u.Id == oduncAlanId)) return NotFound();
-
             var kitapoduncler = await _kitapOduncRepo.kitapOduncler.Where(ko => ko.UserId == oduncAlanId && ko.DondurulduMu == false && ko.OnaylandiMi == true).Include(ko => ko.kitap).ThenInclude(k => k.kitapYazarlari).ThenInclude(ky => ky.user).ToListAsync();
             var kitapdtos = kitapoduncler.Select(b => new kitapdto
             {
@@ -174,10 +173,11 @@ namespace libraryApp.backend.Controllers
         public async Task<IActionResult> sayfaEkle([FromBody] sayfa sf)
         {
             if (!_kitapRepo.kitaplar.Any(k => k.Id == sf.KitapId)) return NotFound();
+            kitap? k = await _kitapRepo.kitaplar.Include(k => k.sayfalar).FirstOrDefaultAsync(k => k.Id == sf.KitapId);
             await _sayfaRepo.AddsayfaAsync(new sayfa
             {
                 Icerik = sf.Icerik,
-                SayfaNo = sf.SayfaNo,
+                SayfaNo = k!.sayfalar.Count + 1,
                 KitapId = sf.KitapId,
             });
             return Ok();
@@ -186,11 +186,12 @@ namespace libraryApp.backend.Controllers
         [HttpPut("yayinlamaIstegineCevapVer")] //yazarın yayınlama isteğine görevli cevap verir
         public async Task<IActionResult> yayinlamaIstegineCevapVer([FromBody] yayinlamaIstegidto yayinIstekDto)
         {
-            var yayinlamaIstegi = await _kitapYayinTalebiRepo.kitapYayinTalepleri.FirstOrDefaultAsync(kyt => kyt.Id == yayinIstekDto.yayinIstekId);
+            var yayinlamaIstegi = await _kitapYayinTalebiRepo.kitapYayinTalepleri.Include(kyt => kyt.kitap).FirstOrDefaultAsync(kyt => kyt.Id == yayinIstekDto.yayinIstekId && !kyt.kitap.KitapYayinlandiMi);
             if (yayinlamaIstegi == null) return NotFound();
 
             yayinlamaIstegi.OnaylandiMi = yayinIstekDto.OnaylandiMi;
             yayinlamaIstegi.BeklemedeMi = false;
+            yayinlamaIstegi.kitap.KitapYayinlandiMi = yayinIstekDto.OnaylandiMi;
             await _kitapYayinTalebiRepo.UpdatekitapYayinTalebiAsync(yayinlamaIstegi);
             return Ok();
         }

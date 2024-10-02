@@ -21,6 +21,7 @@ function App() {
     <Router> 
       <Routes>
         <Route path="/" element={<FirstPage />} />
+        <Route path="/BookCreationRequests" element={<BookCreate/>} />
         <Route path="/ReadBook" element={<BookRead />} />
         <Route path="/MyBooks" element={<MyBooks />} />
         <Route path="/BookList" element={<BookList />} />

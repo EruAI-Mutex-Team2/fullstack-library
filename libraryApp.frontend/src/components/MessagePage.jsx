@@ -1,37 +1,40 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const MessagePage = () => {
   const [receiver, setReceiver] = useState('');//bu constlar sabit değerlerimiz
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);//bütün mesajları biz diziye atıyor
-  const [viewInbox, setViewInbox] = useState(false);
+  const[users,setUsers] = useState([]):
+  const [user, setUser] = useState({});
+  const nav = useNavigate();
 
-  // Sayfa yüklendiğinde localStorage'dan mesajları çek
-  useEffect(() => {
-    
-    const storedMessages = localStorage.getItem('messages');
-    if (storedMessages) {
-      setMessages(JSON.parse(storedMessages));
-      /*The JSON.parse function is used to convert this JSON string back into a JavaScript object. */
+  const fetchUsers = async (user) => {
+    const yanit=await fetch("http://localhost:5075/api/User/mesajGonderilebilecekUserlarGetir/"+user.rolId,
+      {method : "GET"}
+    );
+    if(yanit.ok)
+    {
+      const data=await yanit.json();
+      setUsers(data);
     }
+  }
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userData"));
+    if (user === null) {
+      nav("/login");
+    }
+    else {
+      setUser(user);
+    }
+    fetchUsers(user);
   }, []);
 
   // Mesaj gönderildiğinde mesajları localStorage'a kaydet
   const handleSend = () => {
-    if (receiver && title && message) {
-      const newMessages = [...messages, { receiver, title, message }];
-      setMessages(newMessages);
-      localStorage.setItem('messages', JSON.stringify(newMessages));//sayfa yenilensede mesajlar kalır
-
-      // Alanları sıfırlama
-      setReceiver('');
-      setTitle('');
-      setMessage('');
-    } else {
-      alert('Lütfen tüm alanlari doldurun.');
-    }
   };
+  
   return (
     <div className="min-h-screen bg-blue-50 text-black"> {/* Arka plan rengini pembe yaptık */}
       <div className="container mx-auto p-5">
@@ -54,7 +57,6 @@ const MessagePage = () => {
             </div>
 
             <div className="w-3/4 ml-4">
-              {!viewInbox ? (
                 <div>
                   <div className="mb-4">
                     <label>Select receiver</label>
@@ -95,27 +97,6 @@ const MessagePage = () => {
                     Send
                   </button>
                 </div>
-              ) : (
-                <div>
-                  <h3 className="text-lg font-bold mb-4">Inbox</h3>
-                  {messages.length === 0 ? (
-                    <p>No messages in your inbox.</p>
-                  ) : (
-                    <ul className="space-y-4">
-                    {messages.map((msg, index) => (
-                      <li
-                        key={index}
-                        className="p-4 rounded-lg bg-blue-50" // Tek renk olarak belirledik
-                      >
-                        <strong>To:</strong> {msg.receiver} <br />
-                        <strong>Title:</strong> {msg.title} <br />
-                        <strong>Message:</strong> {msg.message}
-                      </li>
-                    ))}
-                  </ul>
-                  )}
-                </div>
-              )}
             </div>
           </div>
         </div>

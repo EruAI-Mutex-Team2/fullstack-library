@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const WritePage = () => {
 
     const [user,setUser]=useState({});
+  const bookId = new URLSearchParams(location.search).get("bookId");
     
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userData"));
@@ -17,11 +18,8 @@ const WritePage = () => {
     else{
       setUser(user);
     }
-
-    
   },[]);
 
-  
   const nav = useNavigate();
   const [pageContent, setPageContent] = useState("");
 
@@ -38,49 +36,21 @@ const WritePage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          kitapId: 1,
-          sayfaNo: 11 + 1,  //sayfa numarasını gönderiyoruz
+          kitapId: bookId,
           icerik: pageContent,  //sayfa içeriği
         }),
       });
 
       if (!yanit.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        alert("başarısız");
       }
-      else if(yanit.ok){
-      const data = await yanit.json();
+      else{
       alert('Sayfa başarıyla kaydedildi!');
       }
     }
      catch (error)
     {
       console.error("Sayfa kaydedilirken bir hata oluştu", error);
-    }
-  };
-
-  const saveToFile = async () => {
-    try {
-      // File System Access API ile dosya seçme
-      const handle = await window.showSaveFilePicker({
-        suggestedName: "book.txt",
-        types: [
-          {
-            description: "Text Files",
-            accept: {
-              "text/plain": [".txt"],
-            },
-          },
-        ],
-      });
-
-      // Dosya yazma işlemi
-      const writableStream = await handle.createWritable();
-      await writableStream.write(pageContents.join("\n\n--- Page Break ---\n\n")); // Sayfaları ayırmak için bir ayırıcı eklenebilir
-      await writableStream.close();
-
-      alert("Dosya başarıyla kaydedildi!");
-    } catch (err) {
-      console.error("Dosya kaydedilirken bir hata oluştu:", err);
     }
   };
 
@@ -114,10 +84,6 @@ const WritePage = () => {
           type="file"
           className="file:bg-violet-600 file:text-white file:rounded-lg file:px-4 file:py-2  file:hover:bg-violet-700 cursor-pointer"
         />
-      </div>
-
-      <div className="mt-6">
-        <p className="text-lg font-semibold">Current Page: {currentPage}</p>
       </div>
     </div>
   </div>
