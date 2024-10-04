@@ -123,7 +123,7 @@ namespace libraryApp.backend.Controllers
                 return Ok(); // Ceza başarıyla kaldırıldı bilgisi döndürülür.
             }
         }
-        [HttpGet("mesajGonderilebilecekUserlarGetir")] // HTTP GET isteği ile "mesajGonderilebilecekUserlarGetir" metoduna ulaşılacağını belirttik.
+        [HttpGet("mesajGonderilebilecekUserlarGetir/{rolId}")] // HTTP GET isteği ile "mesajGonderilebilecekUserlarGetir" metoduna ulaşılacağını belirttik.
         public async Task<IActionResult> mesajGonderilebilecekUserlarGetir([FromRoute] int rolId) // Mesaj gönderilebilecek kullanıcıları getiren method.
         {
             // Mesaj gönderilebilecek roller belirlenir. Rol ID'ye göre mesaj gönderilebilecek roller listeye eklenir.

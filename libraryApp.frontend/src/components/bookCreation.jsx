@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 
-const App = () => {
+const bookCreation = () => {
   const [requests, setRequests] = useState([]); // dizi
   const nav = useNavigate();
   const [user, setUser] = useState({}); // obje
@@ -14,7 +14,7 @@ const App = () => {
     if (user === null) {//kullanıcı giriş yapmamışsa login sayfası
       nav("/login");
     }
-    else if (user.rolIsmi !== "yazar") {//giriş yapan yazar değilse homepage e at
+    else if (user.rolIsmi !== "yonetici") {//giriş yapan yonetici değilse homepage e at
       nav("/HomePage");
     }
     else {
@@ -39,34 +39,30 @@ const App = () => {
     fetchBooks();
   }, []);
 
-  const handlePendingBookClick = () => {
-    alert('This will show pending book creation requests');
-  };
-
   const handleLogoutClick = () => {
-    navigate('/FirstPage');
+    nav('/FirstPage');
   };
 
-const createBook = async () => {
-        const response = await fetch("http://localhost:5075/api/Kitap/yeniKitapOlustur", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                yazarId: user.id,        // Yazarın id'sini POST isteğine gönderiyoruz
-                yayinlanmaTarihi: new Date().toISOString(), // Yayınlanma tarihini ekliyoruz
-            }),
-        });
+  const handleApproveReject = async (isApproved, requestId) => {
+    const req = {
+      "yayinIstekId": requestId,
+      "onaylandiMi": isApproved
+    };
+    const yanit = await fetch("http://localhost:5075/api/Kitap/yayinlamaIstegineCevapVer", {
+      method:"PUT",
+      headers: {"Content-Type":"Application/json"},
+      body: JSON.stringify(req)
+    });
 
-        if (response.ok) {
-            alert("Kitap başarıyla oluşturuldu!");
-            fetchBooks(); // Yeni kitap oluşturulduktan sonra kitapları tekrar alıyoruz
-        } else {
-            console.error("Kitap oluşturulurken hata oluştu.");
-        }
+    if(yanit.ok)
+    {
+      alert("Gerçekleşti");
+      nav(0);
     }
-
+    else{
+      alert("başarısız");
+    }
+  };
 
   return (
     <div className="flex flex-col h-screen w-full">
@@ -99,10 +95,9 @@ const createBook = async () => {
                   <td className="p-3">{request.kitapYazarlari.join(" , ")}</td>
                   <td className="p-3">{request.talepTarihi}</td>
                   <td className="p-3 flex space-x-2">
-                    <button className="bg-green-500 hover:bg-green-600 text-black px-3 py-1 rounded">Read the book</button>
-                    <button className="bg-blue-500 hover:bg-blue-600 text-black px-3 py-1 rounded">Approve</button>
-                    <button className="bg-red-500 hover:bg-red-600 text-black px-3 py-1 rounded">Reject</button>
-                    <button className="bg-gray-500 text-black px-3 py-1 rounded opacity-50">Details</button>
+                    <Link to={`/ReadBook?bookId=` + request.kitapId} className="bg-green-500 hover:bg-green-600 text-black px-3 py-1 rounded">Read the book</Link>
+                    <button onClick={() => {handleApproveReject(true,request.id)}} className="bg-blue-500 hover:bg-blue-600 text-black px-3 py-1 rounded">Approve</button>
+                    <button onClick={() => {handleApproveReject(false,request.id)}} className="bg-red-500 hover:bg-red-600 text-black px-3 py-1 rounded">Reject</button>
                   </td>
                 </tr>
               ))}

@@ -8,17 +8,17 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const nav = useNavigate();
 
-  const data = {
-    email: email,
-    password: password,
-  };
-
   const handleSigninClick = async (e) => {
     e.preventDefault();
+    
+    const data = {
+      email: email,
+      password: password,
+    };
 
-    const yanit = await fetch("http://localhost:5075/api/Account/girisYap", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    const yanit = await fetch("http://localhost:5075/api/Account/girisYap",{
+      method:"POST",
+      headers: { "Content-Type": "application/json"},
       body: JSON.stringify(data)
     });
 
@@ -31,8 +31,6 @@ export default function Login() {
     } else {
     }
   };
-  
-
   return (
     <div className="flex w-full h-screen">
 

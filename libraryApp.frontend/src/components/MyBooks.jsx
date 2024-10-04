@@ -22,7 +22,7 @@ export default function MyBooks() {
     }, []);
 
 
-    const fetchBooks = async () => {
+    const fetchBooks = async (user) => {
         const yanit = await fetch("http://localhost:5075/api/Kitap/yazarinKitaplariniGetir/" + user.id, {
             method: "GET",
         });
@@ -42,18 +42,35 @@ export default function MyBooks() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                yazarId: user.id, //yazarın id sini gönderiyoruz
-            }),
+            body: JSON.stringify(user.id),
         });
 
         if (yanit2.ok) {
             alert("Kitap başarıyla oluşturuldu!");
-            fetchBooks(); // Yeni kitap oluşturulduktan sonra kitapları tekrar alıyoruz
-        } else {
+            nav(0);
+          } else {
             console.error("Kitap oluşturulurken hata oluştu.");
         }
     }
+
+    const handleRequestClick = async (kitapId) => {
+      const yanit = await fetch("http://localhost:5075/api/Kitap/yayinlamaIstegiAt", {
+        method:"POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({
+          yazarId: user.id,
+          kitapId: kitapId
+        })
+      });
+
+      if(yanit.ok) 
+      {
+        alert("başarılı");
+      }else
+      {
+        alert("başarısız");
+      }
+    };
 
     return (
         <div className="p-6 bg-white min-h-screen">
@@ -96,15 +113,15 @@ export default function MyBooks() {
                                         placeholder="Enter new name"
                                         className="p-1 rounded-md text-black"
                                     />
-                                    <Link className="bg-blue-500 text-white py-1 px-2 rounded-lg" to="/WritePage">
+                                    <Link className="bg-blue-500 text-white py-1 px-2 rounded-lg" to={"/WritePage?bookId="+book.id}>
                                         Write
                                     </Link>
-                                    <button className="bg-green-500 text-white py-1 px-2 rounded-lg">
+                                    <button onClick={() => {handleRequestClick(book.id)}} className="bg-green-500 text-white py-1 px-2 rounded-lg">
                                         Request publishment
                                     </button>
-                                    <button className="bg-gray-500 text-white py-1 px-2 rounded-lg">
+                                    <Link to={"/ReadBook?bookId="+book.id} className="bg-gray-500 text-white py-1 px-2 rounded-lg">
                                         Read
-                                    </button>
+                                    </Link>
                                 </td>
                             </tr>
                         ))}
