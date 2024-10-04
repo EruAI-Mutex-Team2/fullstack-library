@@ -13,6 +13,7 @@ import HomePage from './components/HomePage';
 import BookCreate from './components/bookCreation';
 import ChangeRole from './components/changeRolePage';
 import BookRead from './components/BookRead';
+import MessageBox from './components/MessageBox';
 
 
 
@@ -33,6 +34,7 @@ function App() {
         <Route path="/Register" element={<Register />} />
         <Route path="/WritePage" element={<WritePage />} />
         <Route path="/HomePage" element={<HomePage />} />
+        <Route path="/MessageBox" element={<MessageBox/>} />
       </Routes>
     </Router>
   );

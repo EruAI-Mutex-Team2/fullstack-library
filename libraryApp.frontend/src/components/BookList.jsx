@@ -1,16 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 
 export default function BookList() {
-const [books, setBooks] = useState([]); // State to hold books
+const [books, setBooks] = useState([]); 
 const [bookName , setBookName] = useState("");
+const [user,setUser] =useState({});
+const nav = useNavigate();
 
-const handleSearchClick=async() => {
+useEffect(() => {
+  const user = JSON.parse(localStorage.getItem("userData"));
+  if (user === null)
+  {
+    nav("/login");
+  }
+  else
+  {
+    setUser(user);
+    fetchBooks("");
+  }
+}, []);
+
+const fetchBooks =async(bookName) => {
 const yanit= await fetch("http://localhost:5075/api/Kitap/kitapArama?kitapIsmi=" + bookName);
 if(yanit.ok){
   const data = await yanit.json();
   setBooks(data);
   }
+};
+
+const handleSearch = () => {
+  fetchBooks(bookName); 
 };
 
   return (
@@ -37,14 +56,11 @@ if(yanit.ok){
             />
 
             <button 
-            onClick={handleSearchClick}
+             onClick={handleSearch}
             className="bg-violet-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
               Search
             </button>
 
-            <button className="bg-violet-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
-              view borrow books
-            </button>
           </div>
         </div>
       </div>
