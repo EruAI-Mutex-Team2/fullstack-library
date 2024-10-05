@@ -13,6 +13,8 @@ import HomePage from './components/HomePage';
 import BookCreate from './components/bookCreation';
 import ChangeRole from './components/changeRolePage';
 import BookRead from './components/BookRead';
+import Punishment from './components/Punishment';
+
 
 
 
@@ -20,9 +22,10 @@ function App() {
   return (
     <Router> 
       <Routes>
-        <Route path="/" element={<FirstPage />} />
+        <Route path="/" element={<BookCreate />} />
+        <Route path="/Punishment" element={<Punishment />} />
         <Route path="/ChangeRole" element={<ChangeRole />} />
-        <Route path="/BookCreationRequests" element={<BookCreate/>} />
+        <Route path="/BookCreation" element={<BookCreate/>} />
         <Route path="/ReadBook" element={<BookRead />} />
         <Route path="/MyBooks" element={<MyBooks />} />
         <Route path="/BookList" element={<BookList />} />

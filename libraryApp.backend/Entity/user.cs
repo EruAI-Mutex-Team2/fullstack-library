@@ -9,4 +9,5 @@ public class user
     public int RolId { get; set; }
 
     public rol rol { get; set; }
+    public List<ceza> cezalar {get;set;}
 }

@@ -1,176 +1,147 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const ChangeRole = () => { 
-  const [users, setUsers] = useState([]); // Kullanıcıları tutmak için state
-  const [roles, setRoles] = useState([]); 
-  const [selectedUser, setSelectedUser] = useState('');
+const ChangeRole = () => {
+  const [users, setUsers] = useState([]);
+  const [roles, setRoles] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
-  const [isPunishmentModalOpen, setIsPunishmentModalOpen] = useState(false);
-  const [punishmentType, setPunishmentType] = useState('');
   const nav = useNavigate();
+  const [user, setUser] = useState({});
+
+  
+  const handleLogoutClick = () => {
+    localStorage.removeItem("userData");
+    nav("/");
+  };
+  const handleHomePageClick = () => {
+    nav("/HomePage");
+  };
+
   useEffect(() => {
-    // Burada kullanıcıları API'den alıyormuş gibi sabit bir veri kullanıyoruz.
+    const user = JSON.parse(localStorage.getItem("userData"));
+    if (user === null) {
+      nav("/login");
+    }
+    else if ( user.rolIsmi !== "yonetici") {
+      nav("/HomePage");
+    }
+    else {
+      setUser(user);
+    }
+   
+
     const fetchUsers = async () => {
-      // Bu kısımda API çağrısı yapmalısınız.
-      const response = await fetch("http://localhost:5075/api/User/rolDegistirilecekUserlariGetir",{
+      const response = await fetch("http://localhost:5075/api/User/rolDegistirilecekUserlariGetir/" + user.rolId, {
         method: "GET",
-        //yanıtı json türünden aldık
-
       });
       if (response.ok) {
-        const dummyUsers = await response.json();// jsondan objeye dönüştü
-        setUsers(dummyUsers); 
-        console.log(dummyUsers);
+        const dummyUsers = await response.json();
+        setUsers(dummyUsers);
       }
-    
     };
-    const fetchRoles = async () => {
-      // Bu kısımda API çağrısı yapmalısınız.
-      const response = await fetch("http://localhost:5075/api/User/rolleriGetir",{
-        method: "GET",
-        //yanıtı json türünden aldık
 
+    const fetchRoles = async () => {
+      const response = await fetch("http://localhost:5075/api/User/rolleriGetir", {
+        method: "GET",
       });
       if (response.ok) {
-        const dummyRoles = await response.json();// jsondan objeye dönüştü
-        setRoles(dummyRoles); 
+        const dummyRoles = await response.json();
+        setRoles(dummyRoles);
       }
-    
-    };     
+    };
 
-    fetchUsers();
     fetchRoles();
+    fetchUsers();
   }, []);
 
-  const handleUpdate = () => {
-    const updateRole = async () => {
-      // Bu kısımda API çağrısı yapmalısınız.
-      const response = await fetch("http://localhost:5075/api/User/roluGuncelle",{
-        method: "PUT",
-        headers: {"Content-Type": "application/json"},
-        body: 
-          JSON.stringify(
-            {"userId": selectedUser,
-          "yeniRolId": selectedRole,}
-        ),
-        
-        //yanıtı json türünden aldık
-      }); 
-    };
-    updateRole();
+  const handleUpdateClick = async () => {
+    const yanit= await fetch("http://localhost:5075/api/User/roluGuncelle" ,{
+      method:"PUT",
+      headers:{
+        "Content-Type" : "application/json" 
+      },
+      body:JSON.stringify(
+        {
+          
+              "userId": selectedUserId,
+              "yeniRolId": selectedRole,
+        }
+      ),
 
-    nav(0);
-  };
+    });
 
-  const handlePunishmentSubmit = () => {
-    alert('User: ${selectedUser}, Punishment: ${punishmentType} applied!');
-    setIsPunishmentModalOpen(false); // Modalı kapat
-  };
+    if (yanit.ok){
+      alert("Güncellendi...")
+      nav(0);
+
+    }
+    else{
+      alert("Güncelleme olmadı...")
+    }
+  }
+
+  useEffect(() => {
+    console.log(selectedUserId);
+
+  }, [selectedUserId]);
+  //selecteduserıd değişince bu useeffect içibndeki fonksiyon calışır 
 
   return (
-    <div className="flex h-screen bg-white">
-      {/* Sidebar */}
-      <aside className="w-1/4 bg-indigo-200 p-4 text-black">
-        <h2 className="text-xl mb-6">General Operations</h2>
-        <button 
-          className="w-full bg-purple-600 py-2 mb-4 rounded hover:bg-purple-700"
-          onClick={() => setIsPunishmentModalOpen(true)} // Open punishment modal
-        >
-          Set punishment of a user
-        </button>
-      </aside>
+    <div className=" flex flex-col h-screen bg-white">
+      <div className="flex justify-between items-center bg-violet-500 text-white p-4 rounded-md shadow-lg mb-6 ">
+        <h1 className="text-3xl font-bold">Punishment Page</h1>
+        <div className="flex">
+            <button onClick={handleLogoutClick} className="hover:text-gray-300 p-2">Logout</button>
+            <button onClick={handleHomePageClick} className="hover:text-gray-300 p-2 ">Home Page</button>
 
+        </div>
+      </div>
       {/* Main Content */}
-      <main className="w-2/4 p-8 text-black">
-        <h1 className="text-2xl mb-10 mt-10">Change Role</h1>
-       <div>
-       <div className="mb-6">
-          <label className="block mb-2">Select user</label>
-          <select
-            value={selectedUser}
-            onChange={(e) => setSelectedUser(e.target.value)}
-            className="w-full p-2 bg-blue-50 border bg-blue-50 rounded"
-          >
-            <option value="">Select someone</option>
-            {users.map(user => (
-              <option key={user.userId} value={user.userId}>{user.isım + " " + user.soyisim + " - " + user.rolIsmi}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-        <select
-            value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
-            className="w-full p-2 bg-blue-50 border bg-blue-50 rounded"
-          >
-            <option value="">Select role</option>
-            {roles.map(role => (
-              <option key={role.id} value={role.id}>{role.rolIsmi}</option>
-            ))}
-          </select>
-        </div>
-       </div>
-
-     <div>
-         <button
-          className="bg-green-600 mt-5 hover:bg-green-700 text-white py-2 px-4 rounded"
-          onClick={handleUpdate}
-        >
-          Update
-        </button>
-     </div>
-      </main>
-
-      {/* Top Bar */}
-      <header className="absolute top-0 right-0 w-3/4 bg-indigo-200 text-white p-4 flex justify-between items-center">
-        <span></span>
-        <nav className="space-x-4">
-          <a href="#reports" className="hover:underline">Reports</a>
-          <a href="#settings" className="hover:underline">Settings</a>
-          <a href="#logout" className="hover:underline">Logout</a>
-        </nav>
-      </header>
-
-      {/* Punishment Modal */}
-      {isPunishmentModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-blue-50 bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-md w-1/3">
-            <h2 className="text-xl mb-4">Set Punishment</h2>
-            <label className="block mb-2">Select User</label>
+      <main className="flex flex-col justify-center items-center p-8 text-black">
+        <div className=' flex flex-col w-3/5 '>
+          <h1 className="text-2xl mb-10 mt-10">Change Role</h1>
+          <div>
+            <label className="block mb-2">Select user</label>
             <select
-              value={selectedUser}
-              onChange={(e) => setSelectedUser(e.target.value)}
-              className="w-full p-2 bg-blue-50 border rounded mb-4"
+              value={selectedUserId}
+              onChange={(e) => {
+                setSelectedUserId(e.target.value);
+              }}
+              className="w-full p-2 bg-blue-50 border rounded"
             >
-              <option value="">Select user</option>
+              <option value="">Select someone</option>
               {users.map(user => (
-                <option key={user.id} value={user.id}>{user.isım + " " + user.soyisim + " - " + user.rolIsmi}</option>
+                <option key={user.userId} value={user.userId}>{user.isım + " " + user.soyisim + " - " + user.rolIsmi}</option>
               ))}
             </select>
-           
-            <label className="block mb-2">Select Punishment Type</label>
-            <p></p>
+          </div>
 
-            <div className="flex justify-between">
-              <button
-                className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded"
-                onClick={() => setIsPunishmentModalOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded"
-                onClick={handlePunishmentSubmit}
-              >
-                Apply Punishment
-              </button>
-            </div>
+          <div>
+            <label className="block mb-2">Select role</label>
+            <select
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
+              className="w-full p-2 bg-blue-50 border rounded"
+            >
+              <option value="">Select role</option>
+              {roles.map(role => (
+                <option key={role.id} value={role.id}>{role.rolIsmi}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className='self-end'>
+            <button
+              className="bg-green-600 mt-5 hover:bg-green-700 text-white py-2 px-4 rounded"
+              onClick={handleUpdateClick}
+            >
+              Update
+            </button>
           </div>
         </div>
-      )}
-    </div>
+      </main >
+    </div >
   );
 };
 

@@ -22,9 +22,10 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="h-screen flex flex-col items-center justify-start bg-white"> {/* Arka plan beyaz yapıldı */}
-      {/* Ana içerik */}
-      <div className="text-center mt-20"> {/* Yukarıda ortalandı */}
+    <div className="h-screen flex flex-col items-center justify-start bg-blue-50"> {/* Arka plan beyaz yapıldı */}
+     <div className=''>
+ {/* Ana içerik */}
+ <div className="text-center mt-20"> {/* Yukarıda ortalandı */}
         <h1 className="text-5xl font-bold mb-4 text-violet-700" style={{ fontFamily: "cursive" }}>
           Welcome to Your Library!
         </h1>
@@ -76,6 +77,7 @@ export default function HomePage() {
         </button>
 
       </div>
+     </div>
     </div>
   );
 }

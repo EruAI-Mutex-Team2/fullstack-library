@@ -7,6 +7,13 @@ const bookCreation = () => {
   const [requests, setRequests] = useState([]); // dizi
   const nav = useNavigate();
   const [user, setUser] = useState({}); // obje
+  const handleLogoutClick = () => {
+    localStorage.removeItem("userData");
+    nav("/");
+  };
+  const handleHomePageClick = () => {
+    nav("/HomePage");
+  };
 
 
   useEffect(() => {
@@ -39,9 +46,6 @@ const bookCreation = () => {
     fetchBooks();
   }, []);
 
-  const handleLogoutClick = () => {
-    nav('/FirstPage');
-  };
 
   const handleApproveReject = async (isApproved, requestId) => {
     const req = {
@@ -49,17 +53,16 @@ const bookCreation = () => {
       "onaylandiMi": isApproved
     };
     const yanit = await fetch("http://localhost:5075/api/Kitap/yayinlamaIstegineCevapVer", {
-      method:"PUT",
-      headers: {"Content-Type":"Application/json"},
+      method: "PUT",
+      headers: { "Content-Type": "Application/json" },
       body: JSON.stringify(req)
     });
 
-    if(yanit.ok)
-    {
+    if (yanit.ok) {
       alert("Gerçekleşti");
       nav(0);
     }
-    else{
+    else {
       alert("başarısız");
     }
   };
@@ -72,9 +75,11 @@ const bookCreation = () => {
         <header className="flex justify-between items-center p-4 bg-violet-500">
           <nav className="flex w-full items-center bg-violet-500">
             <h1 className='text-2xl font-bold'>Book Create</h1>
-            <button onClick={handleLogoutClick} className="ml-auto hover:underline">
-              Logout
-            </button>
+            <div className="flex">
+            <button onClick={handleLogoutClick} className="hover:text-gray-300 p-2">Logout</button>
+            <button onClick={handleHomePageClick} className="hover:text-gray-300 p-2 ">Home Page</button>
+
+        </div>
           </nav>
         </header>
         {/* İçerik Tablosu */}
@@ -91,13 +96,13 @@ const bookCreation = () => {
             <tbody>
               {requests.map((request, index) => (
                 <tr key={index} className="bg-blue-50 text-black">
-                  <td className="p-3">{request.kitapIsmi}</td> 
+                  <td className="p-3">{request.kitapIsmi}</td>
                   <td className="p-3">{request.kitapYazarlari.join(" , ")}</td>
                   <td className="p-3">{request.talepTarihi}</td>
                   <td className="p-3 flex space-x-2">
                     <Link to={`/ReadBook?bookId=` + request.kitapId} className="bg-green-500 hover:bg-green-600 text-black px-3 py-1 rounded">Read the book</Link>
-                    <button onClick={() => {handleApproveReject(true,request.id)}} className="bg-blue-500 hover:bg-blue-600 text-black px-3 py-1 rounded">Approve</button>
-                    <button onClick={() => {handleApproveReject(false,request.id)}} className="bg-red-500 hover:bg-red-600 text-black px-3 py-1 rounded">Reject</button>
+                    <button onClick={() => { handleApproveReject(true, request.id) }} className="bg-blue-500 hover:bg-blue-600 text-black px-3 py-1 rounded">Approve</button>
+                    <button onClick={() => { handleApproveReject(false, request.id) }} className="bg-red-500 hover:bg-red-600 text-black px-3 py-1 rounded">Reject</button>
                   </td>
                 </tr>
               ))}
