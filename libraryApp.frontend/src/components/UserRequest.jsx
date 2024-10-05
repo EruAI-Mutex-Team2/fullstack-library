@@ -8,6 +8,14 @@ const UserRequest = () => {
 
   const borrowRequests = [];
 
+  const handleLogoutClick = () => {
+    localStorage.removeItem("userData");
+    nav("/");
+};
+const handleHomePageClick = () => {
+    nav("/HomePage");
+};
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userData"));
     if (user === null) {
@@ -27,11 +35,10 @@ const UserRequest = () => {
         {/* Üst Menü (Navbar) */}
         <div className="flex justify-between items-center bg-violet-500 text-white p-4 shadow-lg">
           <h1 className="text-3xl font-bold">User Request</h1>
-          <div className="flex space-x-6">
-            <Link to="/FirstPage">
-              <a href="/logout" className="hover:text-gray-300">Logout</a>
-            </Link>
-          </div>
+          <div className="flex">
+            <button onClick={handleHomePageClick} className="hover:text-gray-300 p-2 ">Home Page</button>
+            <button onClick={handleLogoutClick} className="hover:text-gray-300 p-2">Logout</button>
+        </div>
         </div>
 
         {/* Search or Filter Section */}

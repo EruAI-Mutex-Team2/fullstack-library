@@ -7,14 +7,20 @@ const bookCreation = () => {
   const [requests, setRequests] = useState([]); // dizi
   const nav = useNavigate();
   const [user, setUser] = useState({}); // obje
-
+  const handleLogoutClick = () => {
+    localStorage.removeItem("userData");
+    nav("/");
+  };
+  const handleHomePageClick = () => {
+    nav("/HomePage");
+  };
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userData"));
     if (user === null) {//kullanıcı giriş yapmamışsa login sayfası
       nav("/login");
     }
-    else if (user.rolIsmi !== "yonetici") {//giriş yapan yonetici değilse homepage e at
+    else if (user.rolIsmi !== "yonetici") {//giriş yapan yazar değilse homepage e at
       nav("/HomePage");
     }
     else {
@@ -39,9 +45,10 @@ const bookCreation = () => {
     fetchBooks();
   }, []);
 
-  const handleLogoutClick = () => {
-    nav('/FirstPage');
+  const handlePendingBookClick = () => {
+    alert('This will show pending book creation requests');
   };
+
 
   const handleApproveReject = async (isApproved, requestId) => {
     const req = {
@@ -70,12 +77,12 @@ const bookCreation = () => {
       <div className="flex-grow bg-white text-white flex flex-col">
         {/* Üst Menü */}
         <header className="flex justify-between items-center p-4 bg-violet-500">
-          <nav className="flex w-full items-center bg-violet-500">
             <h1 className='text-2xl font-bold'>Book Create</h1>
-            <button onClick={handleLogoutClick} className="ml-auto hover:underline">
-              Logout
-            </button>
-          </nav>
+            <div className="flex">
+            <button onClick={handleLogoutClick} className="hover:text-gray-300 p-2">Logout</button>
+            <button onClick={handleHomePageClick} className="hover:text-gray-300 p-2 ">Home Page</button>
+
+        </div>
         </header>
         {/* İçerik Tablosu */}
         <div className="p-5 flex-grow overflow-auto">
