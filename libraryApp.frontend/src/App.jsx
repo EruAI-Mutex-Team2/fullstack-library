@@ -36,6 +36,7 @@ function App() {
         <Route path="/Register" element={<Register />} />
         <Route path="/WritePage" element={<WritePage />} />
         <Route path="/HomePage" element={<HomePage />} />
+        <Route path="/MessageBox" element={<MessageBox/>} />
       </Routes>
     </Router>
   );

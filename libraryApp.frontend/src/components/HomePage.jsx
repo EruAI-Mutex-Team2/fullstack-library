@@ -36,43 +36,49 @@ export default function HomePage() {
         <h2 className="text-violet-700 text-xl mb-4">Select an Option:</h2>
 
 
-        {(user.rolIsmi === "yazar") && (<Link className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center" to="/MyBooks">
+        {(user.rolIsmi === "yazar") && (<Link className="bg-violet-700 text-white py-2 px-4 mb-2 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center" to="/MyBooks">
             My Books
         </Link>)}
 
 
-        <Link to="/BookList" className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
+        <Link to="/BookList" className="bg-violet-700 text-white py-2 px-4 mb-2 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
           Book List
         </Link>
 
 
-        {(user.rolIsmi === "yonetici" || user.rolIsmi === "gorevli") && (<Link to="/BorrowRequests" className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
+        {(user.rolIsmi === "yonetici" || user.rolIsmi === "gorevli") && (<Link to="/BorrowRequests" className="bg-violet-700 text-white py-2 px-4 mb-2 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
             Borrow Requests
         </Link>)}
 
 
 
-        <Link to="/BorrowedBooksList" className="bg-violet-700 text-white py-2 px-4 mb-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
+        <Link to="/BorrowedBooksList" className="bg-violet-700 text-white py-2 px-4 mb-2 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
             My borrowed Books
         </Link>
 
 
-        <Link to="/MessagePage" className="bg-violet-700 text-white py-2 px-4 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
-            Messages
+        <Link to="/MessagePage" className="bg-violet-700 text-white py-2 px-4 mb-2 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
+            Send Message
         </Link>
+
+
+        <Link to="/MessageBox" className="bg-violet-700 text-white py-2 px-4 rounded-lg mb-2 mt-2 hover:bg-violet-600 transition-all w-64 text-center">
+            Message Inbox
+        </Link>
+
 
         {(user.rolIsmi === "yonetici") && (
           <>
-            <Link to="/ChangeRole" className="bg-violet-700 text-white py-2 px-4 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
+            <Link to="/ChangeRole" className="bg-violet-700 text-white py-2 px-4 mb-2 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
                 Change Role
             </Link>
-            <Link to="/BookCreationRequests" className="bg-violet-700 text-white py-2 px-4 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
+            <Link to="/BookCreationRequests" className="bg-violet-700 text-white py-2 px-4 mb-2 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
                 Book Publish requests
             </Link>
           </>
           )}
 
-        <button onClick={handleLogoutClick} className="bg-violet-700 text-white py-2 px-4 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64">
+        <button onClick={handleLogoutClick} className="bg-violet-700 text-white py-2 px-4 mb-2 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64">
           Logout
         </button>
 

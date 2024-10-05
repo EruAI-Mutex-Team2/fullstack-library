@@ -42,7 +42,6 @@ namespace libraryApp.backend.Controllers
                 GonderenId = dto.gonderenId,
                 Icerik = dto.detaylar,
                 Konu = dto.baslik,
-
             };
             await _mesajRepo.AddmesajAsync(msj);
             return Ok();
