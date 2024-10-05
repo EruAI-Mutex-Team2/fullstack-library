@@ -5,6 +5,7 @@ export default function BorrowRequests() {
   
   const [user, setUser] = useState({});
   const nav = useNavigate();
+  const [books,setBooks] = useState([]);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userData"));
@@ -16,12 +17,78 @@ export default function BorrowRequests() {
     }
     else{
       setUser(user);
+      fetchRequest();
     }
   },[]);
 
+  const fetchRequest = async () => {
+    try {
+      const yanit = await fetch("http://localhost:5075/api/Kitap/kitapOduncIstekleri");
+      if (yanit.ok) {
+        const data = await yanit.json();
+        setBooks(data);
+      }
+    }
+    catch (error) {
+      console.log("Mesajlar çağırılırken hata oluştu.");
+    }
+  }
+
+  const handleApproveClick = async (bookId) => {
+   try {
+    const yanit = await fetch("http://localhost:5075/api/Kitap/gorevliOduncCevapVer",
+      {
+        method : "PUT",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify ({
+          oduncIstegiId : bookId,
+          onaylandiMi : true,
+        }),
+      });
+
+      if(yanit.ok)
+      {
+        nav(0);
+      }
+  }
+  catch
+  {
+    console.log("Hata oluştu.");
+  }
+  }
+
+
+  const handleRejectClick = async (bookId) => {
+    try {
+     const yanit = await fetch("http://localhost:5075/api/Kitap/gorevliOduncCevapVer",
+       {
+         method : "PUT",
+         headers: {
+           'Content-Type': 'application/json',
+         },
+         body: JSON.stringify ({
+           oduncIstegiId : bookId,
+           onaylandiMi : false,
+         }),
+       });
+
+       if(yanit.ok)
+        {
+          nav(0);
+        }
+   }
+   catch
+   {
+     console.log("Hata oluştu.");
+   }
+   }
+
+
   return (
     <div className="bg-white min-h-screen">
-      {/* Üst Menü (Navbar) */}
+
       <div className="flex justify-between items-center bg-violet-500 text-white p-4 shadow-lg">
         <h1 className="text-3xl font-bold">Borrow Request</h1>
         <div className="flex space-x-6">
@@ -30,22 +97,7 @@ export default function BorrowRequests() {
         </Link>
         </div>
       </div>
-
-      {/* Search or Filter Section */}
-      <div className='pl-6 pr-6 pt-2'>
-        <div className="flex justify-between items-center bg-violet-500 text-white p-4 rounded-md shadow-lg mb-6">
-          <div className="flex">
-            <h2 className="text-2xl font-bold">Pending Borrow Requests</h2>
-            <Link to="/UserRequest">
-            <button className="bg-violet-700 text-white py-2 px-6 ml-2 rounded-lg shadow-lg">
-              See pending member registrations
-            </button>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
+     
       <div className='pl-6 pr-6'>
         <div className="bg-white shadow-lg rounded-lg p-6">
             <table className="min-w-full">
@@ -59,23 +111,27 @@ export default function BorrowRequests() {
                 </tr>
               </thead>
               <tbody>
+              {books.map( (book,index) => (
+              
                   <tr className="border-b">
-                    <td className="p-6"></td> {/* Replace with real book name */}
-                    <td className="p-6">User </td> {/* Replace with real requestor */}
-                    <td className="p-6">01/01/2024</td> {/* Replace with real borrow date */}
-                    <td className="p-6">15/01/2024</td> {/* Replace with real return date */}
+                    <td className="p-6">{book.kitapIsmi}</td> 
+                    <td className="p-6">{book.isteyenKisiIsmi} </td> 
+                    <td className="p-6">{book.talepTarihi}</td>
+                    <td className="p-6">{book.donusTarihi}</td> 
                     <td className="p-6 flex space-x-2">
-                      <button className="bg-green-500 text-white py-2 px-4 rounded-lg">
+                      <button
+                      onClick={() => handleApproveClick(book.id)
+                      }
+                       className="bg-green-500 text-white py-2 px-4 rounded-lg">
                         Approve
                       </button>
-                      <button className="bg-red-500 text-white py-2 px-4 rounded-lg">
+                      <button
+                      onClick={() => handleRejectClick(book.id)}
+                      className="bg-red-500 text-white py-2 px-4 rounded-lg">
                         Reject
                       </button>
-                      <button className="bg-gray-500 text-white py-2 px-4 rounded-lg">
-                        Details
-                      </button>
                     </td>
-                  </tr>
+                  </tr>))}
               </tbody>
             </table>
         </div>

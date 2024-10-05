@@ -11,6 +11,6 @@ namespace libraryApp.backend.Dtos
         [Column(TypeName = "TARİH")]
         public DateTime donusTarihi { get; set; }
 
-        public kitapdto? kitapdto { get; set; }
+        public string? kitapIsmi { get; set; }
     }
 }

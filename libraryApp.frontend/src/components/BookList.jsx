@@ -25,12 +25,43 @@ const yanit= await fetch("http://localhost:5075/api/Kitap/kitapArama?kitapIsmi="
 if(yanit.ok){
   const data = await yanit.json();
   setBooks(data);
+  console.log(data);
   }
 };
 
 const handleSearch = () => {
   fetchBooks(bookName); 
 };
+
+const handleBorrowClick = async (bookId) => {
+  try{
+    const yanit = await fetch ("http://localhost:5075/api/Kitap/kitapOduncTalepEt",
+      {
+        method : "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify ({
+          isteyenId : user.id,
+          kitapId : bookId,
+        }),
+      });
+
+      if(yanit.ok)
+      {
+        alert("Ödünç isteği atıldı.");
+      }
+      else
+      {
+        alert("Ödünç isteği başarısız!");
+
+      }
+  }
+  catch
+  {
+    console.log("Ödünç isteği atılırken hata oluştu.");
+  }
+}
 
   return (
     <div>
@@ -83,13 +114,16 @@ const handleSearch = () => {
                           <td className="p-6">{book.kitapIsmi}</td>
                           <td className="p-6">{book.kitapYazarlari.join(" , ")}</td>
                           <td className="p-6">{book.yayinlanmaTarihi}</td>
-                          <td className="p-6">{book.oduncAlindiMi}</td>
+                          <td className="p-6">{book.oduncAlindiMi?"Yes":"No"}</td>
 
                           <td className="p-6">
                             <Link to={"/ReadBook?bookId="+book.id} className="bg-blue-500 text-white py-1 px-2 rounded-lg mr-2">
                               Read
                             </Link>
-                            <button className="bg-green-500 text-white py-1 px-2 rounded-lg">
+                            <button
+                            onClick={ () => handleBorrowClick(book.id)}
+                            disabled={book.oduncAlindiMi}
+                            className="bg-green-500 text-white py-1 px-2 rounded-lg disabled:bg-green-500/50">
                               Borrow
                             </button>
                           </td>
