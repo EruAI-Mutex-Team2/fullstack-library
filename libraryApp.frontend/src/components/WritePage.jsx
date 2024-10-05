@@ -6,7 +6,14 @@ const WritePage = () => {
 
     const [user,setUser]=useState({});
   const bookId = new URLSearchParams(location.search).get("bookId");
-    
+  const handleLogoutClick = () => {
+    localStorage.removeItem("userData");
+    nav("/");
+};
+const handleHomePageClick = () => {
+    nav("/HomePage");
+};
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userData"));
     if (user === null) {
@@ -59,8 +66,9 @@ const WritePage = () => {
     <header className="flex items-center justify-between p-4 bg-indigo-200 text-white shadow-lg">
       <h1 className="text-3xl font-bold">Book Editor</h1>
       <div className="flex">
-        <a href="/logout" className="hover:text-gray-300">Logout</a>
-      </div>
+            <button onClick={handleHomePageClick} className="hover:text-gray-300 p-2 ">Home Page</button>
+            <button onClick={handleLogoutClick} className="hover:text-gray-300 p-2">Logout</button>
+        </div>
     </header>
 
     <div className="flex flex-col items-center justify-center mt-10 w-full">

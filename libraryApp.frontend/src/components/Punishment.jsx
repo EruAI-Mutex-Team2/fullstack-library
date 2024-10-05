@@ -11,6 +11,13 @@ const PunishmentPage = () => {
           const [punishmentDays, setPunishmentDays] = useState('');
           const nav = useNavigate();
           const [user, setUser] = useState({});
+          const handleLogoutClick = () => {
+                    localStorage.removeItem("userData");
+                    nav("/");
+          };
+          const handleHomePageClick = () => {
+                    nav("/HomePage");
+          };
 
           useEffect(() => {
                     const user = JSON.parse(localStorage.getItem("userData"));
@@ -86,9 +93,8 @@ const PunishmentPage = () => {
                               <div className="flex justify-between items-center bg-violet-500 text-white p-4 rounded-md shadow-lg mb-6 ">
                                         <h1 className="text-3xl font-bold">Punishment Page</h1>
                                         <div className="flex">
-                                                  <Link to="/FirstPage">
-                                                            <a href="/logout" className="hover:text-gray-300">Logout</a>
-                                                  </Link>
+                                                  <button onClick={handleHomePageClick} className="hover:text-gray-300 p-2 ">Home Page</button>
+                                                  <button onClick={handleLogoutClick} className="hover:text-gray-300 p-2">Logout</button>
                                         </div>
                               </div>
 

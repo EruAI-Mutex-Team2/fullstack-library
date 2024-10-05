@@ -8,6 +8,13 @@ const MessageBox = () => {
   const [showModal, setShowModal] = useState(false);
   const nav = useNavigate();
 
+  const handleLogoutClick = () => {
+    localStorage.removeItem("userData");
+    nav("/");
+  };
+  const handleHomePageClick = () => {
+    nav("/HomePage");
+  };
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userData"));
     if (user === null) {
@@ -46,7 +53,8 @@ const MessageBox = () => {
       <header className="flex items-center justify-between p-4 bg-violet-500 text-white shadow-lg">
         <h1 className="text-3xl font-bold">Message Box</h1>
         <div className="flex">
-          <a href="/logout" className="hover:text-gray-300">Logout</a>
+            <button onClick={handleHomePageClick} className="hover:text-gray-300 p-2 ">Home Page</button>
+            <button onClick={handleLogoutClick} className="hover:text-gray-300 p-2">Logout</button>
         </div>
       </header>
 

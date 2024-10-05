@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
-
+//LOGİN OLDUYSA LOGİN VE REGİSTER SYAFASINA GİRMESİN
 export default function BookList() {
 const [books, setBooks] = useState([]); 
 const [bookName , setBookName] = useState("");
 const [user,setUser] =useState({});
 const nav = useNavigate();
+const handleLogoutClick = () => {
+  localStorage.removeItem("userData");
+  nav("/");
+};
+const handleHomePageClick = () => {
+  nav("/HomePage");
+};
 
 useEffect(() => {
   const user = JSON.parse(localStorage.getItem("userData"));
@@ -68,9 +75,10 @@ const handleBorrowClick = async (bookId) => {
       <div className="flex justify-between items-center bg-violet-500 text-white p-4 rounded-md shadow-lg mb-6 ">
         <h1 className="text-3xl font-bold">Books List</h1>
         <div className="flex">
-          <Link to="/FirstPage">
-            <a href="/logout" className="hover:text-gray-300">Logout</a>
-          </Link>
+            <button onClick={handleHomePageClick} className="hover:text-gray-300 p-2 ">Home Page</button>
+            <button onClick={handleLogoutClick} className="hover:text-gray-300 p-2">Logout</button>
+
+
         </div>
       </div>
 
