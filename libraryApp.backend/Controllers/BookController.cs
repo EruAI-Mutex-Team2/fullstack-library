@@ -94,8 +94,9 @@ namespace libraryApp.backend.Controllers
                 Id = k.Id,
                 kitapIsmi = k.Isim,
                 kitapYazarlari = k.kitapYazarlari.Select(ky => ky.user.Isim + " " + ky.user.SoyIsim).ToList(),
-                oduncAlindiMi = k.kitapOduncIstekleri.Any(koi => koi.KitapId == k.Id && koi.BeklemedeMi == false && koi.OnaylandiMi && koi.DondurulduMu),
+                oduncAlindiMi = k.kitapOduncIstekleri.Any(koi => koi.KitapId == k.Id && koi.BeklemedeMi == false && koi.OnaylandiMi && !koi.DondurulduMu),
                 yayinlanmaTarihi = k.YayinlanmaTarihi,
+                
             }).ToListAsync();
             return Ok(kitaplar);
         }
@@ -106,12 +107,13 @@ namespace libraryApp.backend.Controllers
         public async Task<IActionResult> kitapOduncIstekleri()
         {
 
-            var kitapOduncIstekleridto = await _kitapOduncRepo.kitapOduncler.Where(ko => !ko.OnaylandiMi).Include(ko => ko.kitap).Include(ko => ko.user).OrderBy(ko => ko.TalepTarihi).Select(ko => new kitapOduncIstekleridto
+            var kitapOduncIstekleridto = await _kitapOduncRepo.kitapOduncler.Where(ko => ko.BeklemedeMi).Include(ko => ko.kitap).Include(ko => ko.user).OrderBy(ko => ko.TalepTarihi).Select(ko => new kitapOduncIstekleridto
             {
                 Id = ko.Id,
                 isteyenKisiIsmi = ko.user.Isim + " " + ko.user.SoyIsim,
                 talepTarihi = ko.TalepTarihi,
                 donusTarihi = ko.DonusTarihi,
+                kitapIsmi = ko.kitap.Isim,
             }).ToListAsync();
 
             return Ok(kitapOduncIstekleridto);
@@ -224,11 +226,15 @@ namespace libraryApp.backend.Controllers
             return Ok(okudto);
         }
 
+        //isborrowed gözüksün
+        //kitap okuyamasın
+        //kitap isim değişsin
+
         [HttpPost("kitapOduncTalepEt")] //kitap ödünç istekleri
         public async Task<IActionResult> kitapOduncTalepEt([FromBody] kitapOduncTalebidto oduncTalebidto)
         {
-            if (_kitapOduncRepo.kitapOduncler.Any(ko => !ko.DondurulduMu && ko.OnaylandiMi)) return BadRequest();
-
+            if (_kitapOduncRepo.kitapOduncler.Any(ko => !ko.DondurulduMu && ko.OnaylandiMi && ko.KitapId == oduncTalebidto.kitapId)) return BadRequest(new {message="ewfwrfwr"});
+            if(_kitapOduncRepo.kitapOduncler.Any(ko => ko.BeklemedeMi && ko.UserId == oduncTalebidto.isteyenId && ko.KitapId == oduncTalebidto.kitapId)) return BadRequest(new {message="ergrtgt"});
             kitapOdunc kodunc = new kitapOdunc
             {
                 BeklemedeMi = true,
@@ -247,11 +253,21 @@ namespace libraryApp.backend.Controllers
         public async Task<IActionResult> gorevliOduncCevapVer([FromBody] oduncCevapdto oduncdto)
         {
             kitapOdunc odunc = await _kitapOduncRepo.GetkitapOduncByIdAsync(oduncdto.oduncIstegiId);
-            if (_kitapOduncRepo == null) return NotFound();
+            if (odunc == null) return NotFound();
 
             odunc.BeklemedeMi = false;
             odunc.OnaylandiMi = oduncdto.OnaylandiMi;
             await _kitapOduncRepo.UpdatekitapOduncAsync(odunc);
+
+
+           if(oduncdto.OnaylandiMi){
+           var DigerIstekler= _kitapOduncRepo.kitapOduncler.Where(ko => ko.KitapId==odunc.KitapId && ko.BeklemedeMi && ko.Id != oduncdto.oduncIstegiId ).ToList();
+           foreach (var istek in DigerIstekler)
+           {
+            istek.BeklemedeMi=false;
+            istek.OnaylandiMi=false;
+            await _kitapOduncRepo.UpdatekitapOduncAsync(istek);
+           }}
 
             return Ok();
         }

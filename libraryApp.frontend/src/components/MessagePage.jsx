@@ -8,7 +8,6 @@ const MessagePage = () => {
   const [message, setMessage] = useState("");
   const [aliciId, setAliciId] = useState("");
 
-  // Sayfa yüklendiğinde localStorage'dan mesajları çek
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userData"));
     if (user === null) {
@@ -120,7 +119,6 @@ const MessagePage = () => {
 
       </div>
     </div>
-  </div>
   );
 };
 
