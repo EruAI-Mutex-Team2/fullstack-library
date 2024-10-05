@@ -6,6 +6,7 @@ using libraryApp.backend.Repository.Abstract;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic;
 
@@ -19,6 +20,8 @@ namespace libraryApp.backend.Controllers
         private readonly IuserRepository _userRepo; // kullanıcı veri tabanına ulaşabilmek için kullandık.
         private readonly IrolRepository _rolRepo;// rol veri tabanına ulaşabilmek için kullandık.
         private readonly IConfiguration _configuration;// Konfigürasyon verilerine (örn. JWT için gizli anahtar) erişim sağlamak için kullandık.
+
+        private readonly IhesapAcmaTalebiRepository _hesapTalepRepo;
 
         public AccountController(IuserRepository userRepo, IrolRepository rolRepo, IConfiguration configuration)
         {
@@ -97,6 +100,34 @@ namespace libraryApp.backend.Controllers
             });
             // Başarılı kayıt mesajı döndürülür.
             return Ok(new { message = "Kayıt gerçekleşti" });
+        }
+
+        [HttpGet("HesapAcmaTalepleriniGotruntule")]
+        public async Task<IActionResult> HesapAcmaTalepleriniGoruntule()
+        {
+
+            var hesapAcmaTalebi = await _hesapTalepRepo.hesapAcmaTalepleri.Where(ht => ht.BeklemedeMi == true).ToListAsync();
+            return Ok(hesapAcmaTalebi);
+
+        }
+
+        [HttpPut("HesapAcmaTaleplerineYanıtVer")]
+        public async Task<IActionResult> HesapAcmaTaleplerineYanıtVer([FromBody] hesapOnaydto hesapOnay)
+        {
+            var hesapAcmaTalebi = await _hesapTalepRepo.GethesapAcmaTalebiByIdAsync(hesapOnay.Id);
+            if (hesapAcmaTalebi == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                hesapAcmaTalebi.BeklemedeMi = false;
+                hesapAcmaTalebi.OnaylandiMi = hesapOnay.OnaylandiMi;
+                await _hesapTalepRepo.UpdatehesapAcmaTalebiAsync(hesapAcmaTalebi);
+                return Ok();
+            }
+
+
         }
     }
 }
