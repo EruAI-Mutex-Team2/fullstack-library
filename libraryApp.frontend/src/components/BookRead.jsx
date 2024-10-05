@@ -8,6 +8,13 @@ const BookReader = ({ }) => {
   const navigate = useNavigate(); // Yönlendirme işlemi için useNavigate kullanıyoruz
   const bookId = new URLSearchParams(location.search).get("bookId");
 
+  const handleLogoutClick = () => {
+    localStorage.removeItem("userData");
+    nav("/");
+  };
+  const handleHomePageClick = () => {
+    nav("/HomePage");
+  };
   // useEffect, sayfa numarası değiştiğinde tetiklenecek ve veriyi backend'den çekecek
   useEffect(() => {
     const fetchPageContent = async () => {
@@ -36,12 +43,12 @@ const BookReader = ({ }) => {
       {/* Navbar */}
       <nav className="bg-violet-500 text-white p-4 flex justify-between items-center shadow-md">
         <h1 className="text-2xl font-bold">Book Read</h1>
-        <button
-          onClick={handleLogout}
-          className="bg-violet-700 hover:bg-violet-500 text-white px-4 py-2 rounded"
-        >
-          Logout
-        </button>
+        <div className="flex">
+            <button onClick={handleHomePageClick} className="hover:text-gray-300 p-2 ">Home Page</button>
+            <button onClick={handleLogoutClick} className="hover:text-gray-300 p-2">Logout</button>
+
+
+        </div>
       </nav>
 
       {/* Main Content */}

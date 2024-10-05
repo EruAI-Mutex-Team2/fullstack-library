@@ -14,6 +14,8 @@ import BookCreate from './components/bookCreation';
 import ChangeRole from './components/changeRolePage';
 import BookRead from './components/BookRead';
 import Punishment from './components/Punishment';
+import MessageBox from './components/MessageBox';
+
 
 
 
@@ -22,7 +24,7 @@ function App() {
   return (
     <Router> 
       <Routes>
-        <Route path="/" element={<BookCreate />} />
+        <Route path="/" element={<FirstPage />} />
         <Route path="/Punishment" element={<Punishment />} />
         <Route path="/ChangeRole" element={<ChangeRole />} />
         <Route path="/BookCreation" element={<BookCreate/>} />

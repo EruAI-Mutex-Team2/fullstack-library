@@ -6,6 +6,13 @@ export default function MyBooks() {
     const [user, setUser] = useState({});
     const [books, setBooks] = useState([]);
     const nav = useNavigate();
+    const handleLogoutClick = () => {
+        localStorage.removeItem("userData");
+        nav("/");
+      };
+      const handleHomePageClick = () => {
+        nav("/HomePage");
+      };
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("userData"));
@@ -78,8 +85,9 @@ export default function MyBooks() {
             <div className="flex justify-between items-center bg-violet-700 text-white p-4 rounded-md shadow-lg mb-6">
                 <h1 className="text-2xl font-bold">My Books</h1>
                 <div className="flex">
-                    <a href="/logout" className="hover:text-gray-300">Logout</a>
-                </div>
+            <button onClick={handleHomePageClick} className="hover:text-gray-300 p-2 ">Home Page</button>
+            <button onClick={handleLogoutClick} className="hover:text-gray-300 p-2">Logout</button>
+        </div>
             </div>
 
 

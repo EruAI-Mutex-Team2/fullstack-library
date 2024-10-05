@@ -72,7 +72,7 @@ export default function HomePage() {
             <Link to="/ChangeRole" className="bg-violet-700 text-white py-2 px-4 mb-2 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
                 Change Role
             </Link>
-            <Link to="/BookCreationRequests" className="bg-violet-700 text-white py-2 px-4 mb-2 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
+            <Link to="/BookCreation" className="bg-violet-700 text-white py-2 px-4 mb-2 mt-2 rounded-lg hover:bg-violet-600 transition-all w-64 text-center">
                 Book Publish requests
             </Link>
           </>
