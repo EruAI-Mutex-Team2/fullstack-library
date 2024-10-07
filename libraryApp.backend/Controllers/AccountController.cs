@@ -23,19 +23,19 @@ namespace libraryApp.backend.Controllers
 
         private readonly IhesapAcmaTalebiRepository _hesapTalepRepo;
 
-        public AccountController(IuserRepository userRepo, IrolRepository rolRepo, IConfiguration configuration)
+        public AccountController(IuserRepository userRepo, IrolRepository rolRepo, IConfiguration configuration, IhesapAcmaTalebiRepository hesapTalepRepo)
         {
             _userRepo = userRepo; // Kullanıcı deposunu dışarıdan alıyoruz.
             _rolRepo = rolRepo;   // Rol deposunu dışarıdan alıyoruz.
             _configuration = configuration;  // Konfigürasyon verilerini alıyoruz.
-
+            _hesapTalepRepo = hesapTalepRepo;
 
         }
         [HttpPost("girisYap")]
         public async Task<IActionResult> girisYap(girisYapdto girisdto) //kullanıcı giriş fonksiyonu
         {
             // Veritabanında email'e göre kullanıcıyı ve kullanıcının rolünü kontrol eder.
-            var user = await _userRepo.users.Include(u => u.rol).FirstOrDefaultAsync(u => u.Email == girisdto.Email);
+            var user = await _userRepo.users.Include(u => u.hesapAcmaTalepleri).Include(u => u.rol).Where(u => u.hesapAcmaTalepleri.Any(hat => hat.OnaylandiMi)).FirstOrDefaultAsync(u => u.Email == girisdto.Email);
             if (user == null) return NotFound(new { message = "Kullanıcı bulunamadı." });// Kullanıcı bulunamazsa hata döndürür.
             if (!BCrypt.Net.BCrypt.Verify(girisdto.Password, user.Password)) return StatusCode(401, new { message = "Şifre doğru değil." });// Şifre kontrolü yapar. Şifre yanlışsa hata kodu 401 döndürür..
 
@@ -90,14 +90,26 @@ namespace libraryApp.backend.Controllers
             if (_userRepo.users.Any(u => u.Email == kayitdto.Email)) return BadRequest("Email zaten kayıtlı."); // Email veritabanında zaten var mı kontrol edilir.
 
             // Yeni kullanıcı veritabanına eklenir.
-            await _userRepo.AdduserAsync(new user
+            var user = new user
             {
                 RolId = 1,
                 Isim = kayitdto.Isim,
                 SoyIsim = kayitdto.SoyIsim,
                 Email = kayitdto.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(kayitdto.Password), // Şifre hash'lenir.
-            });
+            };
+            await _userRepo.AdduserAsync(user);
+
+            var talep = new hesapAcmaTalebi
+            {
+                UserId = user.Id,
+                BeklemedeMi = true,
+                OnaylandiMi = false,
+                TalepTarihi = DateTime.UtcNow,
+            };
+
+            await _hesapTalepRepo.AddhesapAcmaTalebiAsync(talep);
+
             // Başarılı kayıt mesajı döndürülür.
             return Ok(new { message = "Kayıt gerçekleşti" });
         }
@@ -106,8 +118,16 @@ namespace libraryApp.backend.Controllers
         public async Task<IActionResult> HesapAcmaTalepleriniGoruntule()
         {
 
-            var hesapAcmaTalebi = await _hesapTalepRepo.hesapAcmaTalepleri.Where(ht => ht.BeklemedeMi == true).ToListAsync();
-            return Ok(hesapAcmaTalebi);
+            var hesapAcmaTalebi = await _hesapTalepRepo.hesapAcmaTalepleri.Where(ht => ht.BeklemedeMi == true).Include(hat => hat.user).ToListAsync();
+            var talepDtolar = hesapAcmaTalebi.Select(hat => new hesapAcmaTalebidto
+            {
+                Id = hat.Id,
+                Email = hat.user.Email,
+                Isim = hat.user.Isim,
+                SoyIsim = hat.user.SoyIsim,
+                TalepTarihi = hat.TalepTarihi
+            });
+            return Ok(talepDtolar);
 
         }
 

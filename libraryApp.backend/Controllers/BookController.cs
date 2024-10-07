@@ -226,8 +226,8 @@ namespace libraryApp.backend.Controllers
             return Ok(okudto);
         }
 
-        //isborrowed gözüksün
-        //kitap okuyamasın
+        //register hesap istei atsın
+        //kitap herkes okuyamasın
         //kitap isim değişsin
 
         [HttpPost("kitapOduncTalepEt")] //kitap ödünç istekleri

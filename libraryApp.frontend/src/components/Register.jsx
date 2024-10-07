@@ -45,6 +45,7 @@ export default function Register() {
 
       if (response.ok) {
         alert("Başvurunuz başarıyla alındı!");
+        nav("/");
       } else {
         alert("Bir hata oluştu, lütfen tekrar deneyin.");
       }
