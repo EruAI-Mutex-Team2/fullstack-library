@@ -9,10 +9,10 @@ export default function MyBooks() {
     const handleLogoutClick = () => {
         localStorage.removeItem("userData");
         nav("/");
-      };
-      const handleHomePageClick = () => {
+    };
+    const handleHomePageClick = () => {
         nav("/HomePage");
-      };
+    };
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("userData"));
@@ -55,28 +55,57 @@ export default function MyBooks() {
         if (yanit2.ok) {
             alert("Kitap başarıyla oluşturuldu!");
             nav(0);
-          } else {
+        } else {
             console.error("Kitap oluşturulurken hata oluştu.");
         }
     }
 
     const handleRequestClick = async (kitapId) => {
-      const yanit = await fetch("http://localhost:5075/api/Kitap/yayinlamaIstegiAt", {
-        method:"POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({
-          yazarId: user.id,
-          kitapId: kitapId
-        })
-      });
+        const yanit = await fetch("http://localhost:5075/api/Kitap/yayinlamaIstegiAt", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                yazarId: user.id,
+                kitapId: kitapId
+            })
+        });
 
-      if(yanit.ok) 
-      {
-        alert("başarılı");
-      }else
-      {
-        alert("başarısız");
-      }
+        if (yanit.ok) {
+            alert("başarılı");
+        } else {
+            alert("başarısız");
+        }
+    };
+
+    const handleChangeNameInput = (e, bookId) => {
+        const book = books.find(b => b.id == bookId);
+        book.kitapIsmi = e.target.value;
+    };
+
+    const handleChangeNameClick = async (bookId) => {
+        const book = books.find(b => b.id == bookId);
+        console.log(book);
+
+        const yanit = await fetch("http://localhost:5075/api/Kitap/kitapIsimDegis", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "kitapId": bookId,
+                "yeniIsim": book.kitapIsmi,
+            })
+        });
+
+        if(yanit.ok)
+        {
+            alert("başarılı");
+            nav(0);
+        }
+        else
+        {
+            alert("başarısız");
+        }
     };
 
     return (
@@ -85,9 +114,9 @@ export default function MyBooks() {
             <div className="flex justify-between items-center bg-violet-700 text-white p-4 rounded-md shadow-lg mb-6">
                 <h1 className="text-2xl font-bold">My Books</h1>
                 <div className="flex">
-            <button onClick={handleHomePageClick} className="hover:text-gray-300 p-2 ">Home Page</button>
-            <button onClick={handleLogoutClick} className="hover:text-gray-300 p-2">Logout</button>
-        </div>
+                    <button onClick={handleHomePageClick} className="hover:text-gray-300 p-2 ">Home Page</button>
+                    <button onClick={handleLogoutClick} className="hover:text-gray-300 p-2">Logout</button>
+                </div>
             </div>
 
 
@@ -120,14 +149,18 @@ export default function MyBooks() {
                                         type="text"
                                         placeholder="Enter new name"
                                         className="p-1 rounded-md text-black"
+                                        onChange={(e) => handleChangeNameInput(e, book.id)}
                                     />
-                                    <Link className="bg-blue-500 text-white py-1 px-2 rounded-lg" to={"/WritePage?bookId="+book.id}>
+                                    <button onClick={() => { handleChangeNameClick(book.id) }} className="bg-green-500 text-white py-1 px-2 rounded-lg">
+                                        Change name
+                                    </button>
+                                    <Link className="bg-blue-500 text-white py-1 px-2 rounded-lg" to={"/WritePage?bookId=" + book.id}>
                                         Write
                                     </Link>
-                                    <button onClick={() => {handleRequestClick(book.id)}} className="bg-green-500 text-white py-1 px-2 rounded-lg">
+                                    <button onClick={() => { handleRequestClick(book.id) }} className="bg-green-500 text-white py-1 px-2 rounded-lg">
                                         Request publishment
                                     </button>
-                                    <Link to={"/ReadBook?bookId="+book.id} className="bg-gray-500 text-white py-1 px-2 rounded-lg">
+                                    <Link to={"/ReadBook?bookId=" + book.id} className="bg-gray-500 text-white py-1 px-2 rounded-lg">
                                         Read
                                     </Link>
                                 </td>

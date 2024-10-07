@@ -1,3 +1,4 @@
+using libraryApp.backend.Dtos;
 using libraryApp.backend.Entity;
 using libraryApp.backend.Repository.Abstract;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -22,14 +23,16 @@ namespace libraryApp.backend.Controllers
         private readonly IrolRepository _rolRepo;
 
         private readonly IcezaRepository _cezaRepo;
+        private readonly ImesajRepository _mesajRepo;
 
         // Constructor aracılığıyla bağımlılıkları (userRepo, rolRepo, cezaRepo) sınıfa aktardık.
         // Constructer:
-        public UserController(IuserRepository userRepo, IrolRepository rolRepo, IcezaRepository cezaRepo)
+        public UserController(IuserRepository userRepo, IrolRepository rolRepo, IcezaRepository cezaRepo, ImesajRepository mesajRepo)
         {
             _userRepo = userRepo; // userRepo'yu sınıf içinde kullanmak için _userRepo'ya atadık.(user veri tabanına ulaşabilmek için)
             _rolRepo = rolRepo; // rolRepo'yu sınıf içinde kullanmak için _rolRepo'ya atadık.
             _cezaRepo = cezaRepo; // cezaRepo'yu sınıf içinde kullanmak için _cezaRepo'ya atadık.
+            _mesajRepo = mesajRepo;
         }
         [HttpGet("rolleriGetir")] // HTTP GET isteği ile "rolleriGetir" metoduna ulaşılacağını belirttik.
         public async Task<IActionResult> rolleriGetir() // rolleri veritabanından alıp dönderen bir method.
@@ -86,9 +89,9 @@ namespace libraryApp.backend.Controllers
         }
 
         [HttpPost("cezaVer")] // HTTP POST isteği ile "cezaVer" metoduna ulaşılacağını belirttik.
-        public async Task<IActionResult> cezaVer([FromBody] int userId) // Ceza verme işlemini yapan method.
+        public async Task<IActionResult> cezaVer([FromBody] cezaVerdto cezaVer) // Ceza verme işlemini yapan method.
         {
-            var user = await _userRepo.GetuserByIdAsync(userId); // Verilen userId ile kullanıcıyı veritabanından buluruz.
+            var user = await _userRepo.GetuserByIdAsync(cezaVer.userId); // Verilen userId ile kullanıcıyı veritabanından buluruz.
             if (user == null) // Eğer kullanıcı bulunamazsa
             {
                 return NotFound(); // Kullanıcı bulunamadı hatası döndürülür (HTTP 404 Not Found).
@@ -97,12 +100,20 @@ namespace libraryApp.backend.Controllers
             {
                 var ceza = new ceza // Yeni ceza kaydı oluştururuz.
                 {
-                    UserId = userId, // Cezanın kullanıcısının ID'si.
+                    UserId = cezaVer.userId, // Cezanın kullanıcısının ID'si.
                     CezaAktifMi = true, // Ceza aktif olarak işaretlenir.
                     CezaBitisGunu = DateTime.UtcNow.AddDays(14), // Cezanın bitiş tarihi(14 gün sonra).
                     CezaGunu = DateTime.UtcNow, // Cezanın başlama tarihi (şu anki zaman).
                 };
                 await _cezaRepo.AddcezaAsync(ceza); // Yeni ceza kaydı veritabanına eklenir.
+
+                await _mesajRepo.AddmesajAsync(new mesaj{
+                    AlanId = cezaVer.userId,
+                    GonderenId = cezaVer.cezaVerenId,
+                    Konu = cezaVer.mesajBaslik,
+                    Icerik = cezaVer.mesajIcerik,
+                });
+                
                 return Ok(); // Ceza başarıyla eklendi bilgisi döndürülür.
             }
 
