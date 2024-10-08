@@ -37,6 +37,7 @@ export default function MyBooks() {
         if (yanit.ok) {
             const data = await yanit.json();
             setBooks(data);
+            console.log(data);
         }
         else {
             console.error("Kitaplar alınırken hata oluştu.");
@@ -97,13 +98,11 @@ export default function MyBooks() {
             })
         });
 
-        if(yanit.ok)
-        {
+        if (yanit.ok) {
             alert("başarılı");
             nav(0);
         }
-        else
-        {
+        else {
             alert("başarısız");
         }
     };
@@ -142,24 +141,28 @@ export default function MyBooks() {
                         {books.map((book, index) => (
                             <tr key={index} className="border-b border-gray-700">
                                 <td className="p-4">{book.kitapIsmi}</td>
-                                <td className="p-4">{"Eklenecek"}</td>
+                                <td className="p-4">{book.yayinlandiMi ? "Yes": "No"}</td>
                                 <td className="p-4">{book.yayinlanmaTarihi}</td>
                                 <td className="p-4 flex space-x-2">
-                                    <input
-                                        type="text"
-                                        placeholder="Enter new name"
-                                        className="p-1 rounded-md text-black"
-                                        onChange={(e) => handleChangeNameInput(e, book.id)}
-                                    />
-                                    <button onClick={() => { handleChangeNameClick(book.id) }} className="bg-green-500 text-white py-1 px-2 rounded-lg">
-                                        Change name
-                                    </button>
-                                    <Link className="bg-blue-500 text-white py-1 px-2 rounded-lg" to={"/WritePage?bookId=" + book.id}>
-                                        Write
-                                    </Link>
-                                    <button onClick={() => { handleRequestClick(book.id) }} className="bg-green-500 text-white py-1 px-2 rounded-lg">
-                                        Request publishment
-                                    </button>
+                                    {(!book.yayinlandiMi) && (
+                                        <>
+                                            <input
+                                                type="text"
+                                                placeholder="Enter new name"
+                                                className="p-1 rounded-md text-black"
+                                                onChange={(e) => handleChangeNameInput(e, book.id)}
+                                            />
+                                            <button onClick={() => { handleChangeNameClick(book.id) }} className="bg-green-500 text-white py-1 px-2 rounded-lg">
+                                                Change name
+                                            </button>
+                                            <Link className="bg-blue-500 text-white py-1 px-2 rounded-lg" to={"/WritePage?bookId=" + book.id}>
+                                                Write
+                                            </Link>
+                                            <button onClick={() => { handleRequestClick(book.id) }} className="bg-green-500 text-white py-1 px-2 rounded-lg">
+                                                Request publishment
+                                            </button>
+                                        </>
+                                    )}
                                     <Link to={"/ReadBook?bookId=" + book.id} className="bg-gray-500 text-white py-1 px-2 rounded-lg">
                                         Read
                                     </Link>

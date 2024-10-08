@@ -126,7 +126,7 @@ const handleBorrowClick = async (bookId) => {
 
                           <td className="p-6">
                             <Link to={"/ReadBook?bookId="+book.id} className="bg-blue-500 text-white py-1 px-2 rounded-lg mr-2">
-                              Read
+                              Preview
                             </Link>
                             <button
                             onClick={ () => handleBorrowClick(book.id)}

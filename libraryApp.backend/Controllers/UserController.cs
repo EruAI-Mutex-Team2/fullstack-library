@@ -59,7 +59,7 @@ namespace libraryApp.backend.Controllers
         [HttpGet("rolDegistirilecekUserlariGetir/{rolId}")] // HTTP GET isteği ile "rolDegistirilecekUserlariGetir" metoduna ulaşılacağını belirttik.
         public async Task<IActionResult> rolUserGetir(int rolId) // Rolü değiştirilebilecek kullanıcıları getiren method.
         {
-            List<user> userlar = await _userRepo.users.Where(user => user.RolId < rolId).Include(user => user.rol).ToListAsync(); // RollId'si 4'ten küçük olan kullanıcıları (kısıtlı roller) ve onlara ait rolleri veritabanından çektik.
+            List<user> userlar = await _userRepo.users.Where(user => user.RolId < rolId).Include(user => user.rol).Include(u => u.hesapAcmaTalepleri).Where(u => u.hesapAcmaTalepleri.Any(hat => hat.OnaylandiMi)).ToListAsync(); // RollId'si 4'ten küçük olan kullanıcıları (kısıtlı roller) ve onlara ait rolleri veritabanından çektik.
 
             List<rolUserGetirdto> userGetirdtolar = userlar.Select(user => new rolUserGetirdto // Kullanıcıları DTO'ya dönüştürürüz.
             {
@@ -75,7 +75,7 @@ namespace libraryApp.backend.Controllers
         [HttpGet("cezaVerilebilecekUserlariGetir/{rolId}")] // HTTP GET isteği ile "cezaVerilebilecekUserlariGetir" metoduna ulaşılacağını belirttik.
         public async Task<IActionResult> cezaUserGetir([FromRoute] int rolId) // Ceza verilebilecek kullanıcıları getiren method.
         {
-            var users = await _userRepo.users.Where(u => u.RolId < rolId).Include(u => u.rol).Include(u => u.cezalar).ToListAsync();  // rolId'den küçük rollere sahip kullanıcıları ve onlara ait rolleri veritabanından çekeriz.
+            var users = await _userRepo.users.Where(u => u.RolId < rolId).Include(u => u.rol).Include(u => u.cezalar).Include(u => u.hesapAcmaTalepleri).Where(u => u.hesapAcmaTalepleri.Any(hat => hat.OnaylandiMi)).ToListAsync();  // rolId'den küçük rollere sahip kullanıcıları ve onlara ait rolleri veritabanından çekeriz.
             var userGetirdtolar = users.Select(u => new rolUserGetirdto // Kullanıcıları DTO'ya dönüştürürüz.
             {
                 Isım = u.Isim, // Kullanıcının ismi.
@@ -102,7 +102,7 @@ namespace libraryApp.backend.Controllers
                 {
                     UserId = cezaVer.userId, // Cezanın kullanıcısının ID'si.
                     CezaAktifMi = true, // Ceza aktif olarak işaretlenir.
-                    CezaBitisGunu = DateTime.UtcNow.AddDays(14), // Cezanın bitiş tarihi(14 gün sonra).
+                    CezaBitisGunu = DateTime.UtcNow.AddDays(5), // Cezanın bitiş tarihi(14 gün sonra).
                     CezaGunu = DateTime.UtcNow, // Cezanın başlama tarihi (şu anki zaman).
                 };
                 await _cezaRepo.AddcezaAsync(ceza); // Yeni ceza kaydı veritabanına eklenir.
@@ -162,7 +162,7 @@ namespace libraryApp.backend.Controllers
                 roller.Add(3);
             }
 
-            var users = await _userRepo.users.Where(u => roller.Contains(u.RolId)).Include(u => u.rol).ToListAsync(); // Yukarıda belirlenen rollerle eşleşen kullanıcıları ve onların rollerini veritabanından çekeriz.
+            var users = await _userRepo.users.Where(u => roller.Contains(u.RolId)).Include(u => u.rol).Include(u => u.hesapAcmaTalepleri).Where(u => u.hesapAcmaTalepleri.Any(hat => hat.OnaylandiMi)).ToListAsync(); // Yukarıda belirlenen rollerle eşleşen kullanıcıları ve onların rollerini veritabanından çekeriz.
             var userGetirdtolar = users.Select(u => new rolUserGetirdto // Kullanıcıları DTO'ya dönüştürürüz.
             {
                 Isım = u.Isim, // Kullanıcının ismi.

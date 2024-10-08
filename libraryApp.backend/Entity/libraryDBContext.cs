@@ -133,7 +133,7 @@ public class libraryDBContext : DbContext
 
         modelBuilder.Entity<sayfa>().HasData(
      // Pages for KitapId = 1
-     new sayfa { Id = 1, Icerik = "Introduction to Coding: Coding is the process of using a programming language to get a computer to behave how you want. In this chapter, we will cover the basics of what coding is and how it works.", SayfaNo = 1, KitapId = 1 },
+     new sayfa { Id = 1, Icerik = "Introduction to Coding Coding is the process of using a programming language to get a computer to behave how you want. In this chapter, we will cover the basics of what coding is and how it works.", SayfaNo = 1, KitapId = 1 },
      new sayfa { Id = 2, Icerik = "Coding Basics: Understanding syntax, variables, loops, and functions is essential in every programming language. We'll explore how these basic building blocks work in various coding languages.", SayfaNo = 2, KitapId = 1 },
      new sayfa { Id = 3, Icerik = "Advanced Coding Techniques: Once you grasp the basics, you can start using more advanced techniques like recursion, data structures, and algorithms to optimize your code.", SayfaNo = 3, KitapId = 1 },
      new sayfa { Id = 4, Icerik = "Debugging Tips: Debugging is a critical skill for every developer. This chapter focuses on tools and techniques for identifying and resolving issues in your code.", SayfaNo = 4, KitapId = 1 },

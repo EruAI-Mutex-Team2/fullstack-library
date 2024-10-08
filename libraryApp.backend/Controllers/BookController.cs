@@ -31,9 +31,10 @@ namespace libraryApp.backend.Controllers
         private readonly IuserRepository _userRepo;
         private readonly ImesajRepository _mesajRepo;
         private readonly IkitapYayinTalebiRepository _kitapYayinTalebiRepo;
+        private readonly IcezaRepository _cezaRepo;
 
         //controller'ın çalışabilmesi için ihtiyaç duyduğu repository'ler, constructor'a dışarıdan otomatik olarak aktarılır ve bu sayede controller içinde kullanılabilir hale gelir
-        public KitapController(IkitapRepository kitapRepo, IkitapOduncRepository kitapOduncRepo, IuserRepository userRepo, IkitapYayinTalebiRepository kitapYayinTalebiRepository, IsayfaRepository sayfaRepository, ImesajRepository mesajRepository)
+        public KitapController(IcezaRepository cezaRepo, IkitapRepository kitapRepo, IkitapOduncRepository kitapOduncRepo, IuserRepository userRepo, IkitapYayinTalebiRepository kitapYayinTalebiRepository, IsayfaRepository sayfaRepository, ImesajRepository mesajRepository)
         {
             _kitapRepo = kitapRepo;
             _kitapOduncRepo = kitapOduncRepo;
@@ -41,6 +42,7 @@ namespace libraryApp.backend.Controllers
             _kitapYayinTalebiRepo = kitapYayinTalebiRepository;
             _sayfaRepo = sayfaRepository;
             _mesajRepo = mesajRepository;
+            _cezaRepo = cezaRepo;
         }
 
         // Kitap yayınlama isteklerini getirir.
@@ -65,13 +67,13 @@ namespace libraryApp.backend.Controllers
         [HttpPost("yayinlamaIstegiAt")] //yazarın kitap yayınlama isteği atması
         public async Task<IActionResult> yayinlamaIstegiAt([FromBody] yayinTalebiDto yayinTalebi)
         {
-            var kitap = await _kitapRepo.GetkitapByIdAsync(yayinTalebi.kitapId); // Kitabı ID ile bulur.
+            var kitap = await _kitapRepo.kitaplar.Include(k => k.kitapYazarlari).Include(k => k.kitapYayinTalepleri).FirstOrDefaultAsync(k => k.Id == yayinTalebi.kitapId); // Kitabı ID ile bulur.
             if (kitap == null) return NotFound(new { Message = "Kitap bulunamadı." }); // Kitap yoksa hata döner.
-            if (kitap.KitapYayinlandiMi) return BadRequest(new { Message = "Kitabın zaten yayınlandı." }); // Yayınlanmışsa hata döner.
+            if (kitap.kitapYayinTalepleri.Any(kyt => kyt.OnaylandiMi)) return BadRequest(new { Message = "Kitabın zaten yayınlandı." }); // Yayınlanmışsa hata döner.
 
             // Aynı kitaba ait bekleyen bir istek olup olmadığını kontrol eder.
-            if (_kitapYayinTalebiRepo.kitapYayinTalepleri.Any(kyt => kyt.BeklemedeMi && kyt.KitapId == yayinTalebi.kitapId))
-                return BadRequest(new { Message = "Aktif isteğin var." });
+            if (kitap.kitapYayinTalepleri.Any(kyt => kyt.BeklemedeMi))
+                return NotFound(new { Message = "Aktif isteğin var." });
 
             // Yayınlama isteği oluşturur.
             await _kitapYayinTalebiRepo.AddkitapYayinTalebiAsync(new kitapYayinTalebi()
@@ -169,13 +171,14 @@ namespace libraryApp.backend.Controllers
 
         public async Task<IActionResult> yazarinKitaplariniGetir([FromRoute] int yazarId)
         {
-            var kitaplar = await _kitapRepo.kitaplar.Include(k => k.kitapYazarlari).Where(k => k.kitapYazarlari.Any(ky => ky.UserId == yazarId)).ToListAsync();
+            var kitaplar = await _kitapRepo.kitaplar.Include(k => k.kitapYazarlari).Include(k => k.kitapYayinTalepleri).Where(k => k.kitapYazarlari.Any(ky => ky.UserId == yazarId)).ToListAsync();
 
             var kitapdtos = kitaplar.Select(b => new kitapdto
             {
                 Id = b.Id,
                 kitapIsmi = b.Isim,
                 yayinlanmaTarihi = b.YayinlanmaTarihi,
+                yayinlandiMi = b.kitapYayinTalepleri.Any(kyt => kyt.OnaylandiMi)
             });
 
             return Ok(kitapdtos);
@@ -222,15 +225,19 @@ namespace libraryApp.backend.Controllers
         }
 
         [HttpGet("kitapOku")]
-        public async Task<IActionResult> kitapOku([FromQuery] int kitapId)
+        public async Task<IActionResult> kitapOku([FromQuery] int kitapId, [FromQuery] int isteyenId)
         {
-            kitap? kitapp = await _kitapRepo.kitaplar.Include(k => k.sayfalar).FirstOrDefaultAsync(k => k.Id == kitapId);
-
+            kitap? kitapp = await _kitapRepo.kitaplar.Include(k => k.sayfalar).Include(k => k.kitapYazarlari).Include(k => k.kitapOduncIstekleri).FirstOrDefaultAsync(k => k.Id == kitapId);
+            
             if (kitapp == null) return NotFound();
+
+            var userYoneticiMi = (await _userRepo.GetuserByIdAsync(isteyenId)).RolId == 4;
+            var kitabinYazariMi = kitapp.kitapYazarlari.Any(ka => ka.UserId == isteyenId);
+            var oduncAlindiMi = kitapp.kitapOduncIstekleri.Any(koi => koi.UserId == isteyenId && koi.OnaylandiMi && !koi.DondurulduMu);
 
             kitapOkudto okudto = new kitapOkudto
             {
-                sayfalar = kitapp.sayfalar,
+                sayfalar = (userYoneticiMi || kitabinYazariMi || oduncAlindiMi) ? kitapp.sayfalar : kitapp.sayfalar.Take(3).ToList(),
                 kitapIsmi = kitapp.Isim,
             };
 
@@ -246,6 +253,18 @@ namespace libraryApp.backend.Controllers
         {
             if (_kitapOduncRepo.kitapOduncler.Any(ko => !ko.DondurulduMu && ko.OnaylandiMi && ko.KitapId == oduncTalebidto.kitapId)) return BadRequest(new { message = "ewfwrfwr" });
             if (_kitapOduncRepo.kitapOduncler.Any(ko => ko.BeklemedeMi && ko.UserId == oduncTalebidto.isteyenId && ko.KitapId == oduncTalebidto.kitapId)) return BadRequest(new { message = "ergrtgt" });
+
+            var ceza = await _cezaRepo.cezalar.FirstOrDefaultAsync(c => c.UserId == oduncTalebidto.isteyenId && c.CezaAktifMi);
+            if (ceza != null)
+            {
+                if (ceza.CezaBitisGunu < DateTime.UtcNow)
+                {
+                    ceza.CezaAktifMi = false;
+                    await _cezaRepo.UpdatecezaAsync(ceza);
+                }
+                return BadRequest(new { Message = "Kullanıcı cezalı" });
+            }
+
             kitapOdunc kodunc = new kitapOdunc
             {
                 BeklemedeMi = true,

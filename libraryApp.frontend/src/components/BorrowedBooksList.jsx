@@ -114,7 +114,7 @@ export default function BorrowedBooksList() {
                   <td className="p-6">{book.kitapYazarlari}</td>
                   <td className="p-6">{book.yayinlanmaTarihi}</td>
                   <td className="p-6">
-                    <Link to={"/ReadBook?BookId="+book.id} className="bg-blue-500 text-white py-1 px-2 rounded-lg mr-2">
+                    <Link to={"/ReadBook?bookId="+book.id} className="bg-blue-500 text-white py-1 px-2 rounded-lg mr-2">
                       Read
                     </Link>
                     <button
