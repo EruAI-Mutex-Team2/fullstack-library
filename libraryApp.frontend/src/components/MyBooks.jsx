@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function MyBooks() {
 
@@ -9,10 +10,10 @@ export default function MyBooks() {
     const handleLogoutClick = () => {
         localStorage.removeItem("userData");
         nav("/");
-      };
-      const handleHomePageClick = () => {
+    };
+    const handleHomePageClick = () => {
         nav("/HomePage");
-      };
+    };
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("userData"));
@@ -39,7 +40,8 @@ export default function MyBooks() {
             setBooks(data);
         }
         else {
-            console.error("Kitaplar alınırken hata oluştu.");
+            toast.error("Kitaplar alınırken hata oluştu.");
+
         }
     }
 
@@ -53,30 +55,30 @@ export default function MyBooks() {
         });
 
         if (yanit2.ok) {
-            alert("Kitap başarıyla oluşturuldu!");
-            nav(0);
-          } else {
-            console.error("Kitap oluşturulurken hata oluştu.");
+            toast.success("Kitap başarıyla oluşturuldu", {
+                onClose: () => nav(0)
+            });
+        } else {
+            toast.error("Kitap oluşturulurken hata oldu");
         }
     }
 
     const handleRequestClick = async (kitapId) => {
-      const yanit = await fetch("http://localhost:5075/api/Kitap/yayinlamaIstegiAt", {
-        method:"POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({
-          yazarId: user.id,
-          kitapId: kitapId
-        })
-      });
+        const yanit = await fetch("http://localhost:5075/api/Kitap/yayinlamaIstegiAt", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                yazarId: user.id,
+                kitapId: kitapId
+            })
+        });
 
-      if(yanit.ok) 
-      {
-        alert("başarılı");
-      }else
-      {
-        alert("başarısız");
-      }
+        if (yanit.ok) {
+            toast.success("Başarılı");
+        } else {
+            toast.error("Başarısız");
+
+        }
     };
 
     return (
@@ -85,9 +87,9 @@ export default function MyBooks() {
             <div className="flex justify-between items-center bg-violet-700 text-white p-4 rounded-md shadow-lg mb-6">
                 <h1 className="text-2xl font-bold">My Books</h1>
                 <div className="flex">
-            <button onClick={handleHomePageClick} className="hover:text-gray-300 p-2 ">Home Page</button>
-            <button onClick={handleLogoutClick} className="hover:text-gray-300 p-2">Logout</button>
-        </div>
+                    <button onClick={handleHomePageClick} className="hover:text-gray-300 p-2 ">Home Page</button>
+                    <button onClick={handleLogoutClick} className="hover:text-gray-300 p-2">Logout</button>
+                </div>
             </div>
 
 
@@ -121,13 +123,13 @@ export default function MyBooks() {
                                         placeholder="Enter new name"
                                         className="p-1 rounded-md text-black"
                                     />
-                                    <Link className="bg-blue-500 text-white py-1 px-2 rounded-lg" to={"/WritePage?bookId="+book.id}>
+                                    <Link className="bg-blue-500 text-white py-1 px-2 rounded-lg" to={"/WritePage?bookId=" + book.id}>
                                         Write
                                     </Link>
-                                    <button onClick={() => {handleRequestClick(book.id)}} className="bg-green-500 text-white py-1 px-2 rounded-lg">
+                                    <button onClick={() => { handleRequestClick(book.id) }} className="bg-green-500 text-white py-1 px-2 rounded-lg">
                                         Request publishment
                                     </button>
-                                    <Link to={"/ReadBook?bookId="+book.id} className="bg-gray-500 text-white py-1 px-2 rounded-lg">
+                                    <Link to={"/ReadBook?bookId=" + book.id} className="bg-gray-500 text-white py-1 px-2 rounded-lg">
                                         Read
                                     </Link>
                                 </td>

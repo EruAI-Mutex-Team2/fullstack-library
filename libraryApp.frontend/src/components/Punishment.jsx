@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const PunishmentPage = () => {
           const [users, setUsers] = useState([]);
@@ -64,11 +65,14 @@ const PunishmentPage = () => {
                               body: JSON.stringify(selectedUserId),
                     });
                     if (response.ok) {
-                              nav(0);
-                              alert("ceza verildi");
+                              toast.success("Ceza verildi", {
+                                        onClose: () => nav(0)
+                              });
                     } else {
-                              alert("ceza verilemedi");
+                              toast.error("Ceza verilemedi");
                     }
+
+
           };
 
           const RemovePunishment = async () => {
@@ -80,10 +84,11 @@ const PunishmentPage = () => {
                               body: JSON.stringify(selectedUserId),
                     });
                     if (response.ok) {
-                              nav(0);
-                              alert("ceza kaldırıldı");
+                              toast.success("Ceza kaldırıldı", {
+                                        onClose: () => nav(0)
+                              });
                     } else {
-                              alert("ceza kaldırılamadı");
+                              toast.error("Ceza verilemedi");
                     }
           };
 

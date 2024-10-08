@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function RegisterRequests() {
 
@@ -38,7 +39,8 @@ export default function RegisterRequests() {
       }
     }
     catch (error) {
-      console.log("talepler çağırılırken hata oluştu.");
+      toast.error("talepler çağırılırken hata oluştu.",error);
+
     }
   }
 
@@ -57,11 +59,13 @@ export default function RegisterRequests() {
         });
 
       if (yanit.ok) {
-        nav(0);
+        toast.success("Approved", {
+          onClose: () => nav(0)
+        });
       }
     }
     catch {
-      console.log("Hata oluştu.");
+      toast.error("Hata oluştu",);
     }
   }
 
@@ -81,11 +85,13 @@ export default function RegisterRequests() {
         });
 
       if (yanit.ok) {
-        nav(0);
+        toast.success("Rejected", {
+          onClose: () => nav(0)
+        });
       }
     }
     catch {
-      console.log("Hata oluştu.");
+      toast.error("Hata oluştu",);
     }
   }
 

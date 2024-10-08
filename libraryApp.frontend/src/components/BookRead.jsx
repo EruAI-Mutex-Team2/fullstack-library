@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // React Router'dan navigate almak için
 import { useLocation } from "react-router-dom";
+import { toast } from 'react-toastify';
+
 
 const BookReader = ({ }) => {
   const [book, setBook] = useState({}); 
@@ -22,9 +24,13 @@ const BookReader = ({ }) => {
         `http://localhost:5075/api/Kitap/kitapOku?kitapId=${bookId}`
       );
 
-      if (!response.ok) {
-        throw new Error("Kitap verisi alınamadı.");
-      }
+      if (!response.ok) 
+        {
+          toast.error("Kitap verisi alınamadı", {
+            onClose: () => nav(0)
+          });
+        }
+      
 
       const data = await response.json();
       setBook(data);

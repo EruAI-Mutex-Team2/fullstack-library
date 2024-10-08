@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function Login() {
   // http://localhost:5075/api/Account/girisYap
@@ -31,6 +32,7 @@ export default function Login() {
     } else {
       alert("Your account could not found");
     }
+    
   };
   return (
     <div className="flex w-full h-screen">

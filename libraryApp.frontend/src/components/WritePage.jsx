@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 
 const WritePage = () => {
@@ -48,16 +49,21 @@ const handleHomePageClick = () => {
         }),
       });
 
-      if (!yanit.ok) {
-        alert("başarısız");
+      
+    if(!yanit.ok)
+      {
+        toast.error("Başarısız", {
+          onClose: () => nav(0)
+        });
       }
       else{
-      alert('Sayfa başarıyla kaydedildi!');
+        toast.success("Sayfa başarıyla kaydedildi");
       }
     }
      catch (error)
     {
-      console.error("Sayfa kaydedilirken bir hata oluştu", error);
+      toast.success("Sayfa kaydedilirken bir hata oluştu", error);
+
     }
   };
 

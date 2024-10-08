@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 const bookCreation = () => {
@@ -63,11 +64,12 @@ const bookCreation = () => {
 
     if(yanit.ok)
     {
-      alert("Gerçekleşti");
-      nav(0);
+      toast.success("Succesfull", {
+        onClose: () => nav(0)
+      });
     }
     else{
-      alert("başarısız");
+      toast.error("Failed");
     }
   };
 

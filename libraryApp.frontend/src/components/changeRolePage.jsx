@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const ChangeRole = () => {
   const [users, setUsers] = useState([]);
@@ -71,14 +72,15 @@ const ChangeRole = () => {
 
     });
 
-    if (yanit.ok){
-      alert("Güncellendi...")
-      nav(0);
-
-    }
-    else{
-      alert("Güncelleme olmadı...")
-    }
+    if(yanit.ok)
+      {
+        toast.success("Güncellendi", {
+          onClose: () => nav(0)
+        });
+      }
+      else{
+        toast.error("Güncelleme olmadı");
+      }
   }
 
   useEffect(() => {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const MessagePage = () => {
   const [user, setUser] = useState({});
@@ -63,17 +64,20 @@ const MessagePage = () => {
         }),
       });
 
-      if (!yanit2.ok) {
-        alert("başarısız");
-      }
+      if (!yanit2.ok)  {
+          toast.error("Mesaj gönderilemedi", {
+            onClose: () => nav(0)
+          });
+        }
       else {
-        alert('Mesaj Başarıyla gönderildi.');
-        nav(0);
+        toast.success("Mesaj başarıyla gönderildi", {
+          onClose: () => nav(0)
+        });
       }
     }
 
     catch (error) {
-      console.error("Mesaj gönderilirken bir hata oluştu", error);
+      toast.error("Mesaj gönderilemedi",error);
     }
   }
 

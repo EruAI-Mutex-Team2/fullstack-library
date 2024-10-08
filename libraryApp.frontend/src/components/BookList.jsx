@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 //LOGİN OLDUYSA LOGİN VE REGİSTER SYAFASINA GİRMESİN
 export default function BookList() {
 const [books, setBooks] = useState([]); 
@@ -54,19 +56,21 @@ const handleBorrowClick = async (bookId) => {
         }),
       });
 
-      if(yanit.ok)
+     
+    if(yanit.ok)
       {
-        alert("Ödünç isteği atıldı.");
+        toast.success("Ödünç isteği atıldı", {
+          onClose: () => nav(0)
+        });
       }
-      else
-      {
-        alert("Ödünç isteği başarısız!");
-
+      else{
+        toast.error("Ödünç isteği başarısız");
       }
   }
   catch
   {
-    console.log("Ödünç isteği atılırken hata oluştu.");
+    toast.error("Ödünç isteği atılırken hata oluştu");
+
   }
 }
 

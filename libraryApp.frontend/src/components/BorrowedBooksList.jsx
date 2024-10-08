@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 
 export default function BorrowedBooksList() {
 
@@ -54,17 +56,18 @@ export default function BorrowedBooksList() {
         });
 
       if (!yanit2.ok) {
-        alert("başarısız");
+        toast.error("Başarısız")
       }
       else
       {
       setBorrowedBooks(borrowedBooks.filter(book => book.id !== kitapId));
-      alert("başarılı");
-      }
+      toast.success("Başarılı")
+    }
 
     }
     catch (error) {                //belirli şartları sağlıyorsa dizide kalır sağlamıyorsa diziden atılır filterın kullanışı bu şekildedir.
-      console.error(error);
+      toast.error(error);
+
     }
   };
 
