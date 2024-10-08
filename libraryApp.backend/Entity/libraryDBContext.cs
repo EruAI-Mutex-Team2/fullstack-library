@@ -37,16 +37,20 @@ public class libraryDBContext : DbContext
  );
 
         modelBuilder.Entity<hesapAcmaTalebi>().HasData(
-            new hesapAcmaTalebi { Id = 1, UserId = 4, TalepTarihi = DateTime.UtcNow.AddDays(-5), OnaylandiMi = true, BeklemedeMi = false },
-            new hesapAcmaTalebi { Id = 2, UserId = 5, TalepTarihi = DateTime.UtcNow.AddDays(-10), OnaylandiMi = true, BeklemedeMi = false },
-            new hesapAcmaTalebi { Id = 3, UserId = 6, TalepTarihi = DateTime.UtcNow.AddDays(-15), OnaylandiMi = false, BeklemedeMi = true },
-            new hesapAcmaTalebi { Id = 4, UserId = 7, TalepTarihi = DateTime.UtcNow.AddDays(-20), OnaylandiMi = true, BeklemedeMi = false },
-            new hesapAcmaTalebi { Id = 5, UserId = 8, TalepTarihi = DateTime.UtcNow.AddDays(-25), OnaylandiMi = false, BeklemedeMi = true },
-            new hesapAcmaTalebi { Id = 6, UserId = 9, TalepTarihi = DateTime.UtcNow.AddDays(-30), OnaylandiMi = true, BeklemedeMi = false },
-            new hesapAcmaTalebi { Id = 7, UserId = 10, TalepTarihi = DateTime.UtcNow.AddDays(-35), OnaylandiMi = false, BeklemedeMi = true },
-            new hesapAcmaTalebi { Id = 8, UserId = 11, TalepTarihi = DateTime.UtcNow.AddDays(-40), OnaylandiMi = true, BeklemedeMi = false },
-            new hesapAcmaTalebi { Id = 9, UserId = 12, TalepTarihi = DateTime.UtcNow.AddDays(-45), OnaylandiMi = false, BeklemedeMi = true },
-            new hesapAcmaTalebi { Id = 10, UserId = 13, TalepTarihi = DateTime.UtcNow.AddDays(-50), OnaylandiMi = true, BeklemedeMi = false }
+            new hesapAcmaTalebi { Id = 1, UserId = 1, TalepTarihi = DateTime.UtcNow.AddDays(-5), OnaylandiMi = true, BeklemedeMi = false },
+            new hesapAcmaTalebi { Id = 2, UserId = 2, TalepTarihi = DateTime.UtcNow.AddDays(-5), OnaylandiMi = true, BeklemedeMi = false },
+            new hesapAcmaTalebi { Id = 3, UserId = 3, TalepTarihi = DateTime.UtcNow.AddDays(-5), OnaylandiMi = true, BeklemedeMi = false },
+            new hesapAcmaTalebi { Id = 4, UserId = 4, TalepTarihi = DateTime.UtcNow.AddDays(-5), OnaylandiMi = true, BeklemedeMi = false },
+            new hesapAcmaTalebi { Id = 5, UserId = 5, TalepTarihi = DateTime.UtcNow.AddDays(-10), OnaylandiMi = true, BeklemedeMi = false },
+            new hesapAcmaTalebi { Id = 6, UserId = 6, TalepTarihi = DateTime.UtcNow.AddDays(-15), OnaylandiMi = true, BeklemedeMi = false },
+            new hesapAcmaTalebi { Id = 7, UserId = 7, TalepTarihi = DateTime.UtcNow.AddDays(-20), OnaylandiMi = true, BeklemedeMi = false },
+            new hesapAcmaTalebi { Id = 8, UserId = 8, TalepTarihi = DateTime.UtcNow.AddDays(-25), OnaylandiMi = true, BeklemedeMi = false },
+            new hesapAcmaTalebi { Id = 9, UserId = 9, TalepTarihi = DateTime.UtcNow.AddDays(-30), OnaylandiMi = true, BeklemedeMi = false },
+            new hesapAcmaTalebi { Id = 10, UserId = 10, TalepTarihi = DateTime.UtcNow.AddDays(-35), OnaylandiMi = true, BeklemedeMi = false },
+            new hesapAcmaTalebi { Id = 11, UserId = 11, TalepTarihi = DateTime.UtcNow.AddDays(-40), OnaylandiMi = true, BeklemedeMi = false },
+            new hesapAcmaTalebi { Id = 12, UserId = 12, TalepTarihi = DateTime.UtcNow.AddDays(-45), OnaylandiMi = true, BeklemedeMi = false },
+            new hesapAcmaTalebi { Id = 13, UserId = 13, TalepTarihi = DateTime.UtcNow.AddDays(-50), OnaylandiMi = true, BeklemedeMi = false },
+            new hesapAcmaTalebi { Id = 14, UserId = 14, TalepTarihi = DateTime.UtcNow.AddDays(-50), OnaylandiMi = true, BeklemedeMi = false }
         );
 
         modelBuilder.Entity<kitap>().HasData(

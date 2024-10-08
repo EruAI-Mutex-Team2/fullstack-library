@@ -10,4 +10,5 @@ public class user
 
     public rol rol { get; set; }
     public List<ceza> cezalar {get;set;}
+    public List<hesapAcmaTalebi> hesapAcmaTalepleri {get;set;}
 }

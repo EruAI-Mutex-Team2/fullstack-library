@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using libraryApp.backend.Entity;
@@ -11,9 +12,11 @@ using libraryApp.backend.Entity;
 namespace libraryApp.backend.Migrations
 {
     [DbContext(typeof(libraryDBContext))]
-    partial class libraryDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241007164342_changeSeedData")]
+    partial class changeSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

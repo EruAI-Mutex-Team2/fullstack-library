@@ -7,6 +7,7 @@ const MessagePage = () => {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [aliciId, setAliciId] = useState("");
+  const nav =useNavigate();
 
   const handleLogoutClick = () => {
     localStorage.removeItem("userData");
@@ -67,6 +68,7 @@ const MessagePage = () => {
       }
       else {
         alert('Mesaj Başarıyla gönderildi.');
+        nav(0);
       }
     }
 

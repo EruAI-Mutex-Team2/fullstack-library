@@ -15,6 +15,7 @@ import ChangeRole from './components/changeRolePage';
 import BookRead from './components/BookRead';
 import Punishment from './components/Punishment';
 import MessageBox from './components/MessageBox';
+import RegisterRequests from './components/RegisterRequests';
 
 
 
@@ -39,6 +40,7 @@ function App() {
         <Route path="/WritePage" element={<WritePage />} />
         <Route path="/HomePage" element={<HomePage />} />
         <Route path="/MessageBox" element={<MessageBox/>} />
+        <Route path="/RegisterRequests" element={<RegisterRequests/>} />
       </Routes>
     </Router>
   );
