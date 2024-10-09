@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { toast } from 'react-toastify';
 
 export default function Register() {
+
+  const nav = useNavigate();
   
   const [formData, setFormData] = useState({
     isim: "",
@@ -51,8 +53,8 @@ export default function Register() {
           });
         }
         else{
-          toast.success("Your application has been successfully registered.", {
-            onClose: () => nav(0)
+          toast.success("Register request has sent.", {
+            onClose: () => nav("/login")
           });
         }
     } catch (error) {

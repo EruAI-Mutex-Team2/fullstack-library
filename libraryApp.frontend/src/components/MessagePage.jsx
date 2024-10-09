@@ -125,13 +125,6 @@ const MessagePage = () => {
             Send
           </button>
         </div>
-
-        <div className="w-full max-w-5xl flex justify-between items-center mt-4">
-          <button className="ml-auto px-4 py-2 bg-violet-600 text-white rounded-lg shadow hover:bg-violet-700">
-            Sent Messages
-          </button>
-        </div>
-
       </div>
     </div>
   );

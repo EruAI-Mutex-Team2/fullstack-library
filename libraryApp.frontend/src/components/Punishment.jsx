@@ -127,7 +127,7 @@ const PunishmentPage = () => {
                         ))}
                     </select>
 
-                    <label className="block mb-2">Select Punishment Type</label>
+                    <label className="block mb-2">Punishment Title</label>
                     <input
                         type="text"
                         className="w-full p-2 bg-blue-50 border rounded mb-4"

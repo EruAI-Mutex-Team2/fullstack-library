@@ -58,12 +58,14 @@ export default function BorrowRequests() {
         });
 
       if (yanit.ok) {
-        nav(0);
+        toast.success("Approved", {
+          onClose: () => nav(0)
+        })
       }
     }
     catch {
       {
-        toast.error("Hata oluştu...");
+        toast.error("Error occured");
       }
     }
   }
@@ -84,11 +86,15 @@ export default function BorrowRequests() {
         });
 
       if (yanit.ok) {
-        nav(0);
+        if (yanit.ok) {
+          toast.success("Rejected", {
+            onClose: () => nav(0)
+          })
+        }
       }
     }
     catch {
-      toast.error("Hata oluştu...");
+      toast.error("Error occured");
     }
   }
 

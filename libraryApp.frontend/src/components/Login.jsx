@@ -30,7 +30,7 @@ export default function Login() {
       localStorage.setItem("userData", JSON.stringify(data.userdto));
       nav("/HomePage");
     } else {
-      alert("Your account could not found");
+      toast.error("Your account could not found");
     }
     
   };

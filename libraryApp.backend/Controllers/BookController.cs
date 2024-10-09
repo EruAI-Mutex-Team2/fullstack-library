@@ -205,6 +205,8 @@ namespace libraryApp.backend.Controllers
             var yayinlamaIstegi = await _kitapYayinTalebiRepo.kitapYayinTalepleri.Include(kyt => kyt.kitap).FirstOrDefaultAsync(kyt => kyt.Id == yayinIstekDto.yayinIstekId && !kyt.kitap.KitapYayinlandiMi);
             if (yayinlamaIstegi == null) return NotFound();
 
+            if(yayinIstekDto.OnaylandiMi) yayinlamaIstegi.kitap.YayinlanmaTarihi = DateTime.UtcNow;
+            
             yayinlamaIstegi.OnaylandiMi = yayinIstekDto.OnaylandiMi;
             yayinlamaIstegi.BeklemedeMi = false;
             yayinlamaIstegi.kitap.KitapYayinlandiMi = yayinIstekDto.OnaylandiMi;

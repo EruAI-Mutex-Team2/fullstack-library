@@ -81,24 +81,6 @@ export default function BorrowedBooksList() {
         </div>
       </div>
 
-
-      <div className='pl-6 pr-6 pt-2'>
-        <div className="flex justify-between items-center bg-violet-500 text-white p-4 rounded-md shadow-lg mb-6">
-          <div className="flex">
-            <input
-              id="book-search"
-              className="pr-10 pl-10 border text-black border-gray-300 rounded-lg shadow-sm"
-              type="text"
-              placeholder="Book Name..."
-            />
-            <button className="bg-violet-700 text-white py-2 px-4 ml-2 rounded-lg shadow-lg">
-              Search
-            </button>
-          </div>
-        </div>
-      </div>
-
-
       <div className='pl-10 pr-10'>
         <div className="bg-white shadow-lg rounded-lg p-6">
           <table className="min-w-full">

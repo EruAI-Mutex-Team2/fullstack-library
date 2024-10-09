@@ -75,9 +75,7 @@ export default function MyBooks() {
             toast.success("Success.", {
                 onClose: () => nav(0) })
         } else {
-            toast.error("Failed." , {
-                onClose: () => nav(0) 
-            })
+            toast.error("Failed.")
         }
     };
 
@@ -102,11 +100,11 @@ export default function MyBooks() {
         });
 
         if (yanit.ok) {
-            alert("başarılı");
-            nav(0);
+            toast.success("Success.", {
+                onClose: () => nav(0) })
         }
         else {
-            alert("başarısız");
+            toast.error("Failed.")
         }
     };
 
