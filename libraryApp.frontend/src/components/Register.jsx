@@ -29,9 +29,9 @@ export default function Register() {
     }
 
 
-    // POST isteği ile backend'e form verilerini gönderme
+   
     try {
-      const response = await fetch("http://localhost:5075/api/Account/KayitOl", {
+      const yanit = await fetch("http://localhost:5075/api/Account/KayitOl", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -44,15 +44,19 @@ export default function Register() {
         })
       });
 
-      if (response.ok) {
-        alert("Başvurunuz başarıyla alındı!");
-        nav("/");
-      } else {
-        alert("Bir hata oluştu, lütfen tekrar deneyin.");
-      }
+      if (!yanit.ok) 
+        {
+          toast.su("Error occurred.", {
+            onClose: () => nav(0)
+          });
+        }
+        else{
+          toast.success("Your application has been successfully registered.", {
+            onClose: () => nav(0)
+          });
+        }
     } catch (error) {
       console.error("Error:", error);
-      alert("Sunucuya bağlanırken bir hata oluştu.");
     }
   };
   return (

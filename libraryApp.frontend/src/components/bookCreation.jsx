@@ -5,17 +5,22 @@ import { toast } from 'react-toastify';
 
 
 const bookCreation = () => {
-  const [requests, setRequests] = useState([]); // dizi
+  const [requests, setRequests] = useState([]);
   const nav = useNavigate();
-  const [user, setUser] = useState({}); // obje
+  const [user, setUser] = useState({});
+
+
   const handleLogoutClick = () => {
     localStorage.removeItem("userData");
     nav("/");
   };
+
+
   const handleHomePageClick = () => {
     nav("/HomePage");
   };
 
+  
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userData"));
     if (user === null) {//kullanıcı giriş yapmamışsa login sayfası
@@ -73,6 +78,7 @@ const bookCreation = () => {
     }
   };
 
+  
   return (
     <div className="flex flex-col h-screen w-full">
       {/* Sağ İçerik */}

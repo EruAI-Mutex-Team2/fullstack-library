@@ -33,7 +33,7 @@ const handleHomePageClick = () => {
 
     <div>
       <div className="bg-white min-h-screen">
-        {/* Üst Menü (Navbar) */}
+
         <div className="flex justify-between items-center bg-violet-500 text-white p-4 shadow-lg">
           <h1 className="text-3xl font-bold">User Request</h1>
           <div className="flex">
@@ -42,7 +42,7 @@ const handleHomePageClick = () => {
         </div>
         </div>
 
-        {/* Search or Filter Section */}
+
         <div className='pl-6 pr-6 pt-2'>
           <div className="flex justify-between items-center bg-violet-500 text-white p-4 rounded-md shadow-lg mb-6">
             <div className="flex">
@@ -50,7 +50,7 @@ const handleHomePageClick = () => {
             </div>
           </div>
 
-          {/* Main Content */}
+
           <div className='pl-6 pr-6'>
             <div className="bg-white shadow-lg rounded-lg p-6">
               <table className="min-w-full">
@@ -68,10 +68,10 @@ const handleHomePageClick = () => {
                 <tbody>
                   {borrowRequests.map((request, index) => (
                     <tr key={index} className="border-b">
-                      <td className="p-6">{request.title}</td> {/* Replace with real book name */}
-                      <td className="p-6">User {index + 1}</td> {/* Replace with real requestor */}
-                      <td className="p-6">01/01/2024</td> {/* Replace with real borrow date */}
-                      <td className="p-6">15/01/2024</td> {/* Replace with real return date */}
+                      <td className="p-6">{request.title}</td>
+                      <td className="p-6">User {index + 1}</td>
+                      <td className="p-6">01/01/2024</td>
+                      <td className="p-6">15/01/2024</td>
                       <td className="p-6 flex space-x-2">
                         <button className="bg-green-500 text-white py-2 px-4 rounded-lg">
                           Approve

@@ -7,6 +7,7 @@ export default function MyBooks() {
     const [user, setUser] = useState({});
     const [books, setBooks] = useState([]);
     const nav = useNavigate();
+
     const handleLogoutClick = () => {
         localStorage.removeItem("userData");
         nav("/");
@@ -40,10 +41,6 @@ export default function MyBooks() {
             setBooks(data);
             console.log(data);
         }
-        else {
-            toast.error("Kitaplar alınırken hata oluştu.");
-
-        }
     }
 
     const createBook = async () => {
@@ -56,11 +53,11 @@ export default function MyBooks() {
         });
 
         if (yanit2.ok) {
-            toast.success("Kitap başarıyla oluşturuldu", {
+            toast.success("Book created successfully.", {
                 onClose: () => nav(0)
             });
         } else {
-            toast.error("Kitap oluşturulurken hata oldu");
+            toast.error("An error occurred while creating the book.");
         }
     }
 
@@ -75,9 +72,12 @@ export default function MyBooks() {
         });
 
         if (yanit.ok) {
-            alert("başarılı");
+            toast.success("Success.", {
+                onClose: () => nav(0) })
         } else {
-            alert("başarısız");
+            toast.error("Failed." , {
+                onClose: () => nav(0) 
+            })
         }
     };
 

@@ -91,7 +91,7 @@ export default function RegisterRequests() {
       }
     }
     catch {
-      toast.error("Hata oluştu",);
+      toast.error("Error occurred.",);
     }
   }
 

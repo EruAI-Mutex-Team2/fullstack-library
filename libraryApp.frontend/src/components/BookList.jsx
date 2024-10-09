@@ -2,16 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-//LOGİN OLDUYSA LOGİN VE REGİSTER SYAFASINA GİRMESİN
 export default function BookList() {
 const [books, setBooks] = useState([]); 
 const [bookName , setBookName] = useState("");
 const [user,setUser] =useState({});
 const nav = useNavigate();
+
 const handleLogoutClick = () => {
   localStorage.removeItem("userData");
   nav("/");
 };
+
 const handleHomePageClick = () => {
   nav("/HomePage");
 };
@@ -59,17 +60,17 @@ const handleBorrowClick = async (bookId) => {
      
     if(yanit.ok)
       {
-        toast.success("Ödünç isteği atıldı", {
+        toast.success("Borrowing request sent.", {
           onClose: () => nav(0)
         });
       }
       else{
-        toast.error("Ödünç isteği başarısız");
+        toast.error("Borrow request failed.");
       }
   }
   catch
   {
-    toast.error("Ödünç isteği atılırken hata oluştu");
+    toast.error("An error occurred while submitting a borrowing request");
 
   }
 }

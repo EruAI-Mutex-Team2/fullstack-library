@@ -52,17 +52,17 @@ const handleHomePageClick = () => {
       
     if(!yanit.ok)
       {
-        toast.error("Başarısız", {
+        toast.error("Unsuccessful", {
           onClose: () => nav(0)
         });
       }
       else{
-        toast.success("Sayfa başarıyla kaydedildi");
+        toast.success("Page saved successfully.");
       }
     }
      catch (error)
     {
-      toast.success("Sayfa kaydedilirken bir hata oluştu", error);
+      toast.success("An error occurred while saving the page.", error);
 
     }
   };

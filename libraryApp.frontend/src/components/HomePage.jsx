@@ -23,7 +23,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="h-screen flex flex-col items-center justify-start bg-blue-50"> {/* Arka plan beyaz yapıldı */}
+    <div className="h-screen flex flex-col items-center justify-start bg-white"> {/* Arka plan beyaz yapıldı */}
       <div className=''>
         {/* Ana içerik */}
         <div className="text-center mt-20"> {/* Yukarıda ortalandı */}
