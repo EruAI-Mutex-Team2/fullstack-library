@@ -6,6 +6,7 @@
         public string kitapIsmi { get; set; } = string.Empty;
         public DateTime yayinlanmaTarihi { get; set; }
         public bool oduncAlindiMi { get; set; }
+        public bool yayinlandiMi { get; set; }
 
         public List<string> kitapYazarlari { get; set; } = new();
     }
